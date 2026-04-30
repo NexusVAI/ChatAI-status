@@ -747,12 +747,12 @@
 const STATUS_DATA = {
     "overallStatus": "incident",
     "incident": {
-        "title": "DeepSeek-R1 服务异常",
-        "description": "强推理模型暂时不可用",
+        "title": "部分服务异常",
+        "description": "DeepSeek-V4-Flash线路一、DeepSeek-R1、GLM-5.1线路二、Qwen3-Coder暂时不可用",
         "startedAt": "2026-05-01T01:05:00+08:00"
     },
     "services": [
-        { "name": "DeepSeek-V4-Flash", "description": "闪电 · 快速 · 线路一", "status": "operational" },
+        { "name": "DeepSeek-V4-Flash", "description": "闪电 · 快速 · 线路一", "status": "down" },
         { "name": "DeepSeek-V4-Flash", "description": "闪电 · 快速 · 线路三", "status": "operational" },
         { "name": "DeepSeek-V4-Pro",   "description": "Pro 研究级模型",       "status": "operational" },
         { "name": "Step-3.5",          "description": "阶跃星辰 · 快准狠",    "status": "operational" },
@@ -763,12 +763,12 @@ const STATUS_DATA = {
         { "name": "spark-x2",          "description": "星火推理模型",          "status": "operational" },
         { "name": "DeepSeek-R1",       "description": "强推理",               "status": "down" },
         { "name": "Qwen-3.5",          "description": "多模态 · 全能型 AI",   "status": "operational" },
-        { "name": "Qwen3-Coder",       "description": "多模态 · 编码专项",    "status": "operational" },
+        { "name": "Qwen3-Coder",       "description": "多模态 · 编码专项",    "status": "down" },
         { "name": "Kimi-K2.5",         "description": "多模态 · 复杂任务处理","status": "operational" },
         { "name": "Kimi-K2.6",         "description": "多模态 · 超复杂编程",  "status": "operational" },
         { "name": "GLM-5",             "description": "深度编程",             "status": "operational" },
         { "name": "GLM-5.1",           "description": "复杂编码处理 · 线路一","status": "operational" },
-        { "name": "GLM-5.1",           "description": "复杂编码处理 · 线路三","status": "operational" },
+        { "name": "GLM-5.1",           "description": "复杂编码处理 · 线路二","status": "down" },
         { "name": "qwen3.6-max-preview","description": "预览",               "status": "operational" },
         { "name": "qwen3.6-plus",      "description": "多模态 · 均衡之选",    "status": "operational" },
         { "name": "MiniMax-M2.5",      "description": "新 · 性价比之选 快速", "status": "operational" }
