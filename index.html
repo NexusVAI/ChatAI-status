@@ -5,516 +5,920 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>服务状态 | AI Services</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        * {
+        *, *::before, *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
         :root {
-            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --bg: #0a0a0f;
+            --bg-card: #111118;
+            --bg-card-hover: #16161f;
+            --bg-elevated: #1a1a26;
+            --border: rgba(255,255,255,0.06);
+            --border-strong: rgba(255,255,255,0.12);
+
+            --text-primary: #f0f0f8;
+            --text-secondary: #8888aa;
+            --text-muted: #4a4a6a;
+
+            --green: #22c55e;
+            --green-dim: rgba(34,197,94,0.1);
+            --green-glow: rgba(34,197,94,0.25);
+
+            --amber: #f59e0b;
+            --amber-dim: rgba(245,158,11,0.1);
+
+            --red: #ef4444;
+            --red-dim: rgba(239,68,68,0.08);
+            --red-glow: rgba(239,68,68,0.2);
+
+            --blue: #6366f1;
+            --blue-dim: rgba(99,102,241,0.1);
+
+            --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
             --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+            --ease-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
+
+        html { scroll-behavior: smooth; }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #ffffff;
-            color: #1a1a1a;
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
             overflow-x: hidden;
+            line-height: 1.5;
         }
 
-        .gradient-orb {
+        /* ── 背景装饰 ── */
+        .bg-mesh {
             position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-mesh::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -20%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(99,102,241,0.06) 0%, transparent 65%);
+            animation: drift 20s ease-in-out infinite alternate;
+        }
+
+        .bg-mesh::after {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            left: -15%;
             width: 600px;
             height: 600px;
-            border-radius: 50%;
-            filter: blur(120px);
-            opacity: 0;
-            animation: fadeIn 1.2s var(--ease-out-expo) forwards;
+            background: radial-gradient(circle, rgba(239,68,68,0.05) 0%, transparent 65%);
+            animation: drift 25s ease-in-out infinite alternate-reverse;
+        }
+
+        .bg-grid {
+            position: fixed;
+            inset: 0;
             pointer-events: none;
+            z-index: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+            background-size: 48px 48px;
+            mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 100%);
         }
 
-        .gradient-orb.orb-1 {
-            top: -200px;
-            right: -200px;
-            background: radial-gradient(circle, rgba(248, 250, 252, 0.8) 0%, rgba(255, 255, 255, 0) 70%);
+        @keyframes drift {
+            from { transform: translate(0, 0) scale(1); }
+            to   { transform: translate(40px, -30px) scale(1.05); }
         }
 
-        .gradient-orb.orb-2 {
-            bottom: -300px;
-            left: -200px;
-            background: radial-gradient(circle, rgba(243, 244, 246, 0.6) 0%, rgba(255, 255, 255, 0) 70%);
-        }
-
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
-
+        /* ── 布局 ── */
         .container {
-            max-width: 720px;
+            max-width: 760px;
             margin: 0 auto;
-            padding: 80px 24px;
-            width: 100%;
+            padding: 64px 24px 80px;
             position: relative;
             z-index: 1;
         }
 
-        header {
-            margin-bottom: 48px;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: slideUp 0.8s var(--ease-out-expo) 0.1s forwards;
+        /* ── Header ── */
+        .header {
+            margin-bottom: 40px;
+            animation: slideUp 0.7s var(--ease-expo) both;
+        }
+
+        .header-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .header-eyebrow::before {
+            content: '';
+            display: block;
+            width: 16px;
+            height: 1px;
+            background: var(--text-muted);
         }
 
         h1 {
-            font-size: 32px;
-            font-weight: 600;
-            letter-spacing: -0.03em;
-            margin-bottom: 8px;
-            background: linear-gradient(135deg, #1a1a1a 0%, #4b5563 100%);
+            font-size: clamp(28px, 5vw, 40px);
+            font-weight: 700;
+            letter-spacing: -0.04em;
+            line-height: 1.1;
+            color: var(--text-primary);
+        }
+
+        h1 span {
+            background: linear-gradient(135deg, #a5b4fc 0%, #818cf8 50%, #6366f1 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
-        .subtitle {
-            font-size: 15px;
-            color: #9ca3af;
-            font-weight: 400;
-            letter-spacing: 0.01em;
+        .header-subtitle {
+            margin-top: 10px;
+            font-size: 14px;
+            color: var(--text-muted);
         }
 
+        /* ── 事故横幅 ── */
         .incident-banner {
-            background: linear-gradient(135deg, #fef2f2 0%, #fff5f5 100%);
-            border: 1px solid #fecaca;
-            border-radius: 12px;
+            position: relative;
+            border-radius: 14px;
             padding: 20px 24px;
-            margin-bottom: 40px;
-            opacity: 0;
-            transform: translateY(20px) scale(0.98);
-            animation: slideUpSpring 0.7s var(--ease-spring) 0.2s forwards;
+            margin-bottom: 32px;
+            overflow: hidden;
+            border: 1px solid rgba(239,68,68,0.2);
+            background: var(--red-dim);
+            animation: slideUp 0.6s var(--ease-spring) 0.1s both;
         }
 
-        .incident-banner.hidden {
-            display: none;
+        .incident-banner.hidden { display: none; }
+
+        .incident-banner::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(239,68,68,0.08) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .incident-glow {
+            position: absolute;
+            top: -40px;
+            right: -40px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(239,68,68,0.15) 0%, transparent 70%);
+            pointer-events: none;
         }
 
         .incident-header {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 8px;
+            gap: 10px;
+            margin-bottom: 6px;
         }
 
-        .incident-dot {
-            width: 8px;
-            height: 8px;
+        .incident-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 3px 10px;
+            border-radius: 100px;
+            background: rgba(239,68,68,0.15);
+            border: 1px solid rgba(239,68,68,0.3);
+            font-size: 11px;
+            font-weight: 600;
+            color: #fca5a5;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .pulse-dot {
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
             background: #ef4444;
-            animation: pulseRed 2s ease-in-out infinite;
+            animation: pulseDot 1.5s ease infinite;
         }
 
-        @keyframes pulseRed {
-            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
-            50% { opacity: 0.8; box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
         }
 
         .incident-title {
             font-size: 15px;
             font-weight: 600;
-            color: #991b1b;
+            color: #fca5a5;
         }
 
         .incident-desc {
-            font-size: 14px;
-            color: #b91c1c;
-            margin-left: 20px;
-            line-height: 1.5;
+            font-size: 13px;
+            color: rgba(252,165,165,0.7);
+            line-height: 1.6;
+            margin-bottom: 8px;
         }
 
         .incident-time {
-            font-size: 12px;
-            color: #f87171;
-            margin-left: 20px;
-            margin-top: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: rgba(239,68,68,0.5);
+        }
+
+        /* ── 统计卡片 ── */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 32px;
+            animation: slideUp 0.6s var(--ease-expo) 0.15s both;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px 20px;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.3s, background 0.3s;
+        }
+
+        .stat-card:hover {
+            border-color: var(--border-strong);
+            background: var(--bg-card-hover);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 2px;
+            border-radius: 0 0 12px 12px;
+            transition: opacity 0.3s;
+        }
+
+        .stat-card.green::before { background: var(--green); opacity: 0.5; }
+        .stat-card.red::before   { background: var(--red);   opacity: 0.5; }
+        .stat-card.blue::before  { background: var(--blue);  opacity: 0.5; }
+
+        .stat-label {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.04em;
+            line-height: 1;
             font-variant-numeric: tabular-nums;
         }
 
-        .status-overview {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 40px;
-            padding-bottom: 24px;
-            border-bottom: 1px solid #f3f4f6;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: slideUp 0.8s var(--ease-out-expo) 0.3s forwards;
+        .stat-value.green { color: var(--green); }
+        .stat-value.red   { color: var(--red);   }
+        .stat-value.blue  { color: var(--text-secondary); }
+
+        .stat-sub {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
         }
 
-        .status-dot {
-            width: 10px;
-            height: 10px;
+        /* ── 状态总览条 ── */
+        .status-bar-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            animation: slideUp 0.6s var(--ease-expo) 0.2s both;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-ring {
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
-            background: #22c55e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             position: relative;
         }
 
-        .status-dot::after {
+        .status-ring.operational { background: var(--green-dim); }
+        .status-ring.incident    { background: var(--red-dim); }
+        .status-ring.degraded    { background: var(--amber-dim); }
+
+        .status-ring svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .status-ring::after {
             content: '';
             position: absolute;
             inset: -4px;
             border-radius: 50%;
-            border: 1px solid #22c55e;
+            border: 1px solid currentColor;
             opacity: 0;
-            animation: ripple 2s ease-out infinite;
+            animation: ringPulse 2.5s ease-out infinite;
         }
 
-        .status-dot.degraded {
-            background: #f59e0b;
+        .status-ring.incident { color: var(--red); }
+        .status-ring.operational { color: var(--green); }
+
+        @keyframes ringPulse {
+            0%  { transform: scale(0.8); opacity: 0.8; }
+            100% { transform: scale(1.6); opacity: 0; }
         }
 
-        .status-dot.degraded::after {
-            border-color: #f59e0b;
+        .status-text-wrap h2 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
         }
 
-        .status-dot.down {
-            background: #ef4444;
+        .status-text-wrap p {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
         }
 
-        .status-dot.down::after {
-            border-color: #ef4444;
-            animation: rippleRed 2s ease-out infinite;
-        }
-
-        @keyframes ripple {
-            0% { transform: scale(0.5); opacity: 1; }
-            100% { transform: scale(2); opacity: 0; }
-        }
-
-        @keyframes rippleRed {
-            0%, 100% { transform: scale(0.5); opacity: 1; }
-            50% { transform: scale(2); opacity: 0; }
-        }
-
-        .status-text {
-            font-size: 15px;
-            font-weight: 500;
-            color: #374151;
-        }
-
-        .last-updated {
-            margin-left: auto;
-            font-size: 13px;
-            color: #9ca3af;
-            font-variant-numeric: tabular-nums;
-        }
-
-        .services {
+        /* ── 筛选标签 ── */
+        .filter-tabs {
             display: flex;
-            flex-direction: column;
-            gap: 0;
+            gap: 6px;
+            margin-bottom: 20px;
+            animation: slideUp 0.6s var(--ease-expo) 0.25s both;
         }
 
-        .service {
-            padding: 18px 0;
-            border-bottom: 1px solid #f9fafb;
+        .filter-tab {
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 500;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s var(--ease-expo);
+            outline: none;
+        }
+
+        .filter-tab:hover {
+            border-color: var(--border-strong);
+            color: var(--text-secondary);
+        }
+
+        .filter-tab.active {
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(255,255,255,0.15);
+            color: var(--text-primary);
+        }
+
+        .filter-tab .count {
+            display: inline-block;
+            margin-left: 5px;
+            padding: 1px 6px;
+            border-radius: 100px;
+            font-size: 10px;
+            background: rgba(255,255,255,0.08);
+        }
+
+        .filter-tab.active .count.red-count {
+            background: rgba(239,68,68,0.2);
+            color: #fca5a5;
+        }
+
+        .filter-tab.active .count.green-count {
+            background: rgba(34,197,94,0.15);
+            color: #86efac;
+        }
+
+        /* ── 服务列表 ── */
+        .services-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            animation: slideUp 0.6s var(--ease-expo) 0.3s both;
+        }
+
+        .service-item {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            gap: 16px;
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s var(--ease-smooth);
+            cursor: default;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-item:last-child { border-bottom: none; }
+
+        .service-item::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 3px;
             opacity: 0;
-            transform: translateX(-10px);
-            animation: slideInRight 0.6s var(--ease-out-expo) forwards;
-            transition: all 0.3s var(--ease-out-expo);
+            transition: opacity 0.2s;
         }
 
-        .service:nth-child(1) { animation-delay: 0.35s; }
-        .service:nth-child(2) { animation-delay: 0.4s; }
-        .service:nth-child(3) { animation-delay: 0.45s; }
-        .service:nth-child(4) { animation-delay: 0.5s; }
-        .service:nth-child(5) { animation-delay: 0.55s; }
+        .service-item.down::before    { background: var(--red);   }
+        .service-item.degraded::before { background: var(--amber); }
+        .service-item.operational::before { background: var(--green); }
 
-        @keyframes slideInRight {
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+        .service-item:hover {
+            background: var(--bg-card-hover);
         }
 
-        @keyframes slideUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .service-item:hover::before {
+            opacity: 1;
         }
 
-        @keyframes slideUpSpring {
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+        .service-item.hidden-item {
+            display: none;
         }
 
-        .service:hover {
-            padding-left: 8px;
-            color: #6b7280;
+        /* 序号 */
+        .service-index {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--text-muted);
+            width: 24px;
+            text-align: right;
+            flex-shrink: 0;
+            user-select: none;
         }
 
+        /* 状态灯 */
+        .service-led {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .service-led.operational {
+            background: var(--green);
+            box-shadow: 0 0 6px var(--green-glow);
+        }
+
+        .service-led.degraded {
+            background: var(--amber);
+        }
+
+        .service-led.down {
+            background: var(--red);
+            box-shadow: 0 0 6px var(--red-glow);
+        }
+
+        .service-led.down::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            border: 1px solid var(--red);
+            opacity: 0;
+            animation: ledPulse 2s ease-out infinite;
+        }
+
+        @keyframes ledPulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(2.5); opacity: 0; }
+        }
+
+        /* 服务信息 */
         .service-info {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
+            flex: 1;
+            min-width: 0;
         }
 
         .service-name {
-            font-size: 14px;
-            font-weight: 500;
-            color: #1f2937;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
             letter-spacing: -0.01em;
         }
 
-        .service:hover .service-name {
-            color: #111827;
-        }
-
         .service-desc {
-            font-size: 12px;
-            color: #9ca3af;
-            font-weight: 400;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 1px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .service-status {
-            display: flex;
+        /* 状态标签 */
+        .service-badge {
+            flex-shrink: 0;
+            display: inline-flex;
             align-items: center;
-            gap: 8px;
-            font-size: 13px;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 100px;
+            font-size: 11px;
             font-weight: 500;
+            letter-spacing: 0.02em;
             transition: transform 0.2s var(--ease-spring);
         }
 
-        .service:hover .service-status {
-            transform: translateX(4px);
+        .service-item:hover .service-badge {
+            transform: scale(1.05);
         }
 
-        .service-status.operational {
-            color: #16a34a;
+        .service-badge.operational {
+            background: rgba(34,197,94,0.1);
+            color: #86efac;
+            border: 1px solid rgba(34,197,94,0.15);
         }
 
-        .service-status.degraded {
-            color: #d97706;
+        .service-badge.degraded {
+            background: rgba(245,158,11,0.1);
+            color: #fcd34d;
+            border: 1px solid rgba(245,158,11,0.15);
         }
 
-        .service-status.down {
-            color: #dc2626;
+        .service-badge.down {
+            background: rgba(239,68,68,0.1);
+            color: #fca5a5;
+            border: 1px solid rgba(239,68,68,0.15);
         }
 
-        .status-icon {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            transition: transform 0.3s var(--ease-spring);
+        .service-badge svg {
+            width: 10px;
+            height: 10px;
         }
 
-        .service:hover .status-icon {
-            transform: scale(1.3);
-        }
-
-        .status-icon.operational {
-            background: #22c55e;
-        }
-
-        .status-icon.degraded {
-            background: #f59e0b;
-        }
-
-        .status-icon.down {
-            background: #ef4444;
-        }
-
-        footer {
-            margin-top: auto;
-            padding: 32px 24px;
+        /* 空状态 */
+        .empty-state {
+            padding: 48px 24px;
             text-align: center;
-            opacity: 0;
-            animation: fadeIn 1s ease 1s forwards;
+            color: var(--text-muted);
+            font-size: 13px;
+            display: none;
+        }
+
+        .empty-state.show { display: block; }
+
+        /* ── Footer ── */
+        footer {
+            margin-top: 48px;
+            text-align: center;
+            animation: fadeIn 1s ease 0.8s both;
+        }
+
+        .footer-inner {
+            display: inline-flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .footer-dot {
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            background: var(--text-muted);
         }
 
         .footer-text {
-            font-size: 12px;
-            color: #d1d5db;
-            letter-spacing: 0.02em;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 0.04em;
         }
 
-        @media (max-width: 640px) {
-            .container {
-                padding: 48px 20px;
-            }
-            
-            h1 {
-                font-size: 26px;
-            }
-
-            .gradient-orb {
-                width: 400px;
-                height: 400px;
-                filter: blur(80px);
-            }
+        /* ── 动画 ── */
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        .service-item {
+            opacity: 0;
+            transform: translateY(8px);
+            animation: slideUp 0.4s var(--ease-expo) both;
+        }
+
+        /* ── 响应式 ── */
+        @media (max-width: 560px) {
+            .container { padding: 40px 16px 60px; }
+            .stats-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+            .stat-card { padding: 12px 14px; }
+            .stat-value { font-size: 22px; }
+            .filter-tabs { flex-wrap: wrap; }
+            .service-index { display: none; }
+        }
+
+        /* ── 滚动条 ── */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.12); }
     </style>
 </head>
 <body>
-    <div class="gradient-orb orb-1"></div>
-    <div class="gradient-orb orb-2"></div>
 
-    <div class="container">
-        <header>
-            <h1>服务状态</h1>
-            <p class="subtitle">AI 服务实时运行状态</p>
-        </header>
+<div class="bg-grid"></div>
+<div class="bg-mesh"></div>
 
-        <div class="incident-banner hidden" id="incident-banner">
-            <div class="incident-header">
-                <div class="incident-dot"></div>
-                <span class="incident-title" id="incident-title">正在调查</span>
+<div class="container">
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-eyebrow">AI Services</div>
+        <h1>服务<span>状态</span></h1>
+        <p class="header-subtitle">实时监控各项 AI 服务运行情况</p>
+    </header>
+
+    <!-- 事故横幅 -->
+    <div class="incident-banner hidden" id="incident-banner">
+        <div class="incident-glow"></div>
+        <div class="incident-header">
+            <div class="incident-badge">
+                <div class="pulse-dot"></div>
+                正在处理
             </div>
-            <p class="incident-desc" id="incident-desc"></p>
-            <p class="incident-time" id="incident-time"></p>
+            <span class="incident-title" id="incident-title"></span>
         </div>
+        <p class="incident-desc" id="incident-desc"></p>
+        <p class="incident-time" id="incident-time"></p>
+    </div>
 
-        <div class="status-overview">
-            <div class="status-dot" id="overall-dot"></div>
-            <span class="status-text" id="overall-status">加载中...</span>
-            <span class="last-updated" id="last-updated"></span>
+    <!-- 统计卡片 -->
+    <div class="stats-grid" id="stats-grid">
+        <div class="stat-card green">
+            <div class="stat-label">正常运行</div>
+            <div class="stat-value green" id="stat-operational">—</div>
+            <div class="stat-sub">services</div>
         </div>
-
-        <div class="services" id="services-list">
+        <div class="stat-card red">
+            <div class="stat-label">服务中断</div>
+            <div class="stat-value red" id="stat-down">—</div>
+            <div class="stat-sub">services</div>
+        </div>
+        <div class="stat-card blue">
+            <div class="stat-label">服务总计</div>
+            <div class="stat-value blue" id="stat-total">—</div>
+            <div class="stat-sub">services</div>
         </div>
     </div>
 
-    <footer>
-        <p class="footer-text">手动更新 · 仅供内部使用</p>
-    </footer>
+    <!-- 总览状态条 -->
+    <div class="status-bar-wrap">
+        <div class="status-indicator">
+            <div class="status-ring" id="status-ring">
+                <svg viewBox="0 0 16 16" fill="none" id="status-icon">
+                    <!-- 动态填充 -->
+                </svg>
+            </div>
+            <div class="status-text-wrap">
+                <h2 id="overall-status-text">加载中...</h2>
+            </div>
+        </div>
+    </div>
 
-    <script>
-        // 在这里直接修改状态数据
-        const STATUS_DATA = {
-            "lastUpdated": "2026-04-30T19:59:00+08:00",
-            "overallStatus": "incident",
-            "incident": {
-                "title": "后端服务异常",
-                "description": "工作人员正在排查问题中",
-                "startedAt": "2026-04-30T19:59:00+08:00"
-            },
-            "services": [
-                { "name": "DeepSeek-V4-Flash", "description": "闪电 · 快速 · 线路一", "status": "down" },
-                { "name": "DeepSeek-V4-Flash", "description": "闪电 · 快速 · 线路三", "status": "down" },
-                { "name": "DeepSeek-V4-Pro", "description": "Pro研究级模型", "status": "down" },
-                { "name": "Step-3.5", "description": "阶跃星辰 · 快准狠", "status": "down" },
-                { "name": "混元3", "description": "国产腾讯旗下最新AI · 低限额", "status": "down" },
-                { "name": "chatGPT-OSS", "description": "OpenAI · 慢", "status": "down" },
-                { "name": "Nemotron-3-super", "description": "英伟达", "status": "down" },
-                { "name": "ling-2.6", "description": "蚂蚁集团百灵 · 大多数", "status": "down" },
-                { "name": "spark-x2", "description": "星火推理模型", "status": "down" },
-                { "name": "DeepSeek-R1", "description": "强推理", "status": "down" },
-                { "name": "Qwen-3.5", "description": "多模态 · 全能型AI", "status": "down" },
-                { "name": "Qwen3-Coder", "description": "多模态 · 编码专项", "status": "down" },
-                { "name": "Kimi-K2.5", "description": "多模态 · 复杂任务处理", "status": "down" },
-                { "name": "Kimi-K2.6", "description": "多模态 · 超复杂编程", "status": "down" },
-                { "name": "GLM-5", "description": "深度编程", "status": "down" },
-                { "name": "GLM-5.1", "description": "复杂编码处理 · 线路一", "status": "down" },
-                { "name": "GLM-5.1", "description": "复杂编码处理 · 线路三", "status": "down" },
-                { "name": "qwen3.6-max-preview", "description": "预览", "status": "down" },
-                { "name": "qwen3.6-plus", "description": "多模态 · 均衡之选", "status": "down" },
-                { "name": "MiniMax-M2.5", "description": "新 · 性价比之选 快速", "status": "down" }
-            ]
-        };
+    <!-- 筛选标签 -->
+    <div class="filter-tabs" id="filter-tabs">
+        <button class="filter-tab active" data-filter="all">
+            全部 <span class="count" id="tab-all-count">0</span>
+        </button>
+        <button class="filter-tab" data-filter="down">
+            中断 <span class="count red-count" id="tab-down-count">0</span>
+        </button>
+        <button class="filter-tab" data-filter="operational">
+            正常 <span class="count green-count" id="tab-ok-count">0</span>
+        </button>
+    </div>
 
-        function renderStatus() {
-            const data = STATUS_DATA;
-            
-            document.getElementById('last-updated').textContent = 
-                '更新于 ' + new Date(data.lastUpdated).toLocaleString('zh-CN', {
-                    month: '2-digit',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-            
-            const incidentBanner = document.getElementById('incident-banner');
-            if (data.incident && data.overallStatus === 'incident') {
-                incidentBanner.classList.remove('hidden');
-                document.getElementById('incident-title').textContent = data.incident.title;
-                document.getElementById('incident-desc').textContent = data.incident.description;
-                
-                const startTime = new Date(data.incident.startedAt);
-                const now = new Date();
-                const diff = Math.floor((now - startTime) / 1000 / 60);
-                const timeText = diff < 1 ? '刚刚发生' : 
-                    diff < 60 ? `${diff} 分钟前` :
-                    `${Math.floor(diff / 60)} 小时 ${diff % 60} 分钟前`;
-                document.getElementById('incident-time').textContent = 
-                    `${startTime.toLocaleString('zh-CN')} 开始 · 已持续 ${timeText}`;
-            } else {
-                incidentBanner.classList.add('hidden');
-            }
-            
-            const servicesList = document.getElementById('services-list');
-            servicesList.innerHTML = '';
-            
-            let allOperational = true;
-            let hasDown = false;
-            
-            data.services.forEach((service, index) => {
-                if (service.status !== 'operational') allOperational = false;
-                if (service.status === 'down') hasDown = true;
-                
-                const serviceEl = document.createElement('div');
-                serviceEl.className = 'service';
-                serviceEl.style.animationDelay = `${0.35 + index * 0.05}s`;
-                serviceEl.innerHTML = `
-                    <div class="service-info">
-                        <span class="service-name">${service.name}</span>
-                        ${service.description ? `<span class="service-desc">${service.description}</span>` : ''}
-                    </div>
-                    <div class="service-status ${service.status}">
-                        <span class="status-icon ${service.status}"></span>
-                        <span>${getStatusText(service.status)}</span>
-                    </div>
-                `;
-                servicesList.appendChild(serviceEl);
-            });
-            
-            const overallDot = document.getElementById('overall-dot');
-            const overallStatus = document.getElementById('overall-status');
-            
-            if (allOperational) {
-                overallDot.className = 'status-dot';
-                overallStatus.textContent = '所有服务正常运行';
-            } else if (hasDown) {
-                overallDot.className = 'status-dot down';
-                overallStatus.textContent = '服务中断';
-            } else {
-                overallDot.className = 'status-dot degraded';
-                overallStatus.textContent = '部分服务降级';
-            }
-        }
-        
-        function getStatusText(status) {
-            const texts = {
-                operational: '正常运行',
-                degraded: '性能降级',
-                down: '服务中断'
-            };
-            return texts[status] || status;
-        }
-        
-        renderStatus();
-    </script>
+    <!-- 服务列表 -->
+    <div class="services-container">
+        <div id="services-list"></div>
+        <div class="empty-state" id="empty-state">该分类暂无服务</div>
+    </div>
+
+</div>
+
+<script>
+/* ─── 数据 ─── */
+const STATUS_DATA = {
+    "overallStatus": "incident",
+    "incident": {
+        "title": "DeepSeek-R1 服务异常",
+        "description": "强推理模型暂时不可用",
+        "startedAt": "2026-05-01T01:05:00+08:00"
+    },
+    "services": [
+        { "name": "DeepSeek-V4-Flash", "description": "闪电 · 快速 · 线路一", "status": "operational" },
+        { "name": "DeepSeek-V4-Flash", "description": "闪电 · 快速 · 线路三", "status": "operational" },
+        { "name": "DeepSeek-V4-Pro",   "description": "Pro 研究级模型",       "status": "operational" },
+        { "name": "Step-3.5",          "description": "阶跃星辰 · 快准狠",    "status": "operational" },
+        { "name": "混元3",             "description": "腾讯旗下最新 AI · 低限额", "status": "operational" },
+        { "name": "chatGPT-OSS",       "description": "OpenAI · 慢",          "status": "operational" },
+        { "name": "Nemotron-3-super",  "description": "英伟达",               "status": "operational" },
+        { "name": "ling-2.6",          "description": "蚂蚁集团百灵 · 大多数","status": "operational" },
+        { "name": "spark-x2",          "description": "星火推理模型",          "status": "operational" },
+        { "name": "DeepSeek-R1",       "description": "强推理",               "status": "down" },
+        { "name": "Qwen-3.5",          "description": "多模态 · 全能型 AI",   "status": "operational" },
+        { "name": "Qwen3-Coder",       "description": "多模态 · 编码专项",    "status": "operational" },
+        { "name": "Kimi-K2.5",         "description": "多模态 · 复杂任务处理","status": "operational" },
+        { "name": "Kimi-K2.6",         "description": "多模态 · 超复杂编程",  "status": "operational" },
+        { "name": "GLM-5",             "description": "深度编程",             "status": "operational" },
+        { "name": "GLM-5.1",           "description": "复杂编码处理 · 线路一","status": "operational" },
+        { "name": "GLM-5.1",           "description": "复杂编码处理 · 线路三","status": "operational" },
+        { "name": "qwen3.6-max-preview","description": "预览",               "status": "operational" },
+        { "name": "qwen3.6-plus",      "description": "多模态 · 均衡之选",    "status": "operational" },
+        { "name": "MiniMax-M2.5",      "description": "新 · 性价比之选 快速", "status": "operational" }
+    ]
+};
+
+/* ─── 工具 ─── */
+const statusMeta = {
+    operational: {
+        label: '正常运行',
+        iconSvg: `<path d="M3 8l3.5 3.5L13 4.5" stroke="#22c55e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`,
+        ringClass: 'operational'
+    },
+    degraded: {
+        label: '性能降级',
+        iconSvg: `<path d="M8 4v5M8 11v1.5" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round"/>`,
+        ringClass: 'degraded'
+    },
+    incident: {
+        label: '服务中断',
+        iconSvg: `<path d="M8 4v5M8 11v1.5" stroke="#ef4444" stroke-width="1.8" stroke-linecap="round"/>`,
+        ringClass: 'incident'
+    }
+};
+
+const badgeIcon = {
+    operational: `<svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    degraded:    `<svg viewBox="0 0 10 10" fill="none"><path d="M5 2.5v3.5M5 7.5v.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>`,
+    down:        `<svg viewBox="0 0 10 10" fill="none"><path d="M3 3l4 4M7 3l-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>`
+};
+
+const badgeLabel = {
+    operational: '正常运行',
+    degraded:    '性能降级',
+    down:        '服务中断'
+};
+
+function formatTime(iso) {
+    return new Date(iso).toLocaleString('zh-CN', {
+        month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit'
+    });
+}
+
+function timeSince(iso) {
+    const diff = Math.floor((Date.now() - new Date(iso)) / 60000);
+    if (diff < 1)  return '刚刚';
+    if (diff < 60) return `${diff} 分钟前`;
+    const h = Math.floor(diff / 60), m = diff % 60;
+    return m > 0 ? `${h} 小时 ${m} 分钟前` : `${h} 小时前`;
+}
+
+/* ─── 渲染 ─── */
+let currentFilter = 'all';
+
+function renderPage() {
+    const data = STATUS_DATA;
+    const services = data.services;
+    const cntDown = services.filter(s => s.status === 'down').length;
+    const cntOk   = services.filter(s => s.status === 'operational').length;
+    const cntTotal = services.length;
+
+    /* 统计卡片 */
+    document.getElementById('stat-operational').textContent = cntOk;
+    document.getElementById('stat-down').textContent        = cntDown;
+    document.getElementById('stat-total').textContent       = cntTotal;
+
+    /* Tab 计数 */
+    document.getElementById('tab-all-count').textContent  = cntTotal;
+    document.getElementById('tab-down-count').textContent = cntDown;
+    document.getElementById('tab-ok-count').textContent   = cntOk;
+
+    /* 总状态 */
+    const overallKey = data.overallStatus === 'incident' ? 'incident'
+                     : cntDown > 0 ? 'incident'
+                     : services.some(s => s.status === 'degraded') ? 'degraded'
+                     : 'operational';
+    const meta = statusMeta[overallKey];
+    const ring = document.getElementById('status-ring');
+    ring.className = `status-ring ${meta.ringClass}`;
+    document.getElementById('status-icon').innerHTML = meta.iconSvg;
+    document.getElementById('overall-status-text').textContent = meta.label;
+
+    /* 事故横幅 */
+    const banner = document.getElementById('incident-banner');
+    if (data.incident && data.overallStatus === 'incident') {
+        banner.classList.remove('hidden');
+        document.getElementById('incident-title').textContent = data.incident.title;
+        document.getElementById('incident-desc').textContent  = data.incident.description;
+        const start = data.incident.startedAt;
+        document.getElementById('incident-time').textContent =
+            `${formatTime(start)} 开始 · 已持续 ${timeSince(start)}`;
+    } else {
+        banner.classList.add('hidden');
+    }
+
+    /* 服务列表 */
+    renderList(services);
+}
+
+function renderList(services) {
+    const list = document.getElementById('services-list');
+    const empty = document.getElementById('empty-state');
+    list.innerHTML = '';
+
+    const filtered = currentFilter === 'all'
+        ? services
+        : services.filter(s =>
+            currentFilter === 'down' ? s.status !== 'operational'
+            : s.status === 'operational'
+        );
+
+    if (filtered.length === 0) {
+        empty.classList.add('show');
+    } else {
+        empty.classList.remove('show');
+        filtered.forEach((svc, i) => {
+            const el = document.createElement('div');
+            el.className = `service-item ${svc.status}`;
+            el.style.animationDelay = `${0.3 + i * 0.035}s`;
+            const globalIdx = services.indexOf(svc) + 1;
+            el.innerHTML = `
+                <span class="service-index">${String(globalIdx).padStart(2,'0')}</span>
+                <div class="service-led ${svc.status}"></div>
+                <div class="service-info">
+                    <div class="service-name">${svc.name}</div>
+                    ${svc.description ? `<div class="service-desc">${svc.description}</div>` : ''}
+                </div>
+                <div class="service-badge ${svc.status}">
+                    ${badgeIcon[svc.status]}
+                    ${badgeLabel[svc.status]}
+                </div>
+            `;
+            list.appendChild(el);
+        });
+    }
+}
+
+/* ─── 筛选交互 ─── */
+document.getElementById('filter-tabs').addEventListener('click', e => {
+    const btn = e.target.closest('.filter-tab');
+    if (!btn) return;
+    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.dataset.filter;
+    renderList(STATUS_DATA.services);
+});
+
+/* ─── 启动 ─── */
+renderPage();
+</script>
 </body>
 </html>
