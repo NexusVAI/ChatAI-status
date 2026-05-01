@@ -176,6 +176,11 @@
       "name": "DeepSeek-R1-0528",
       "description": "强推理 · 线路三 · 百炼",
       "status": "operational"
+    },
+    {
+      "name": "MiMo-2.5-Pro",
+      "description": "小米 · 长程任务第一",
+      "status": "operational"
     }
   ]
 }
