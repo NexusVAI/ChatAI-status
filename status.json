@@ -1,11 +1,7 @@
 {
   "lastUpdated": "2026-05-01T16:01:00+08:00",
-  "overallStatus": "incident",
-  "incident": {
-    "title": "部分模型服务异常",
-    "description": "DeepSeek-V4-Pro、Nemotron-3-super、ling-2.6、Qwen 3.5、Qwen3-Coder、Kimi K2.5、GLM-5.1、GLM-4.7、MiniMax-M2.5、DeepSeek-V3.2-Exp、DeepSeek-V3.1、Kimi-K2-Instruct 等模型不可用",
-    "startedAt": "2026-05-01T16:01:00+08:00"
-  },
+  "overallStatus": "operational",
+  "incident": null,
   "services": [
     {
       "name": "DeepSeek-V4-Flash",
@@ -15,7 +11,7 @@
     {
       "name": "DeepSeek-V4-Pro",
       "description": "Pro研究级模型",
-      "status": "down"
+      "status": "operational"
     },
     {
       "name": "Step-3.5",
@@ -55,17 +51,17 @@
     {
       "name": "Qwen 3.5",
       "description": "多模态 · 全能型AI",
-      "status": "down"
+      "status": "operational"
     },
     {
       "name": "Qwen3-Coder",
       "description": "多模态 · 编码专项",
-      "status": "down"
+      "status": "operational"
     },
     {
       "name": "Kimi K2.5",
       "description": "多模态 · 复杂任务处理",
-      "status": "down"
+      "status": "operational"
     },
     {
       "name": "Kimi K2.6",
@@ -85,7 +81,7 @@
     {
       "name": "GLM-5.1",
       "description": "复杂编码处理 · 线路一",
-      "status": "down"
+      "status": "operational"
     },
     {
       "name": "GLM-5.1",
@@ -95,7 +91,7 @@
     {
       "name": "GLM-4.7",
       "description": "Max · 约等于Gemini3",
-      "status": "down"
+      "status": "operational"
     },
     {
       "name": "qwen3.6-max-preview",
@@ -110,7 +106,7 @@
     {
       "name": "MiniMax-M2.5",
       "description": "新 · 性价比之选 快速",
-      "status": "down"
+      "status": "operational"
     },
     {
       "name": "DeepSeek-R1",
@@ -125,7 +121,7 @@
     {
       "name": "Kimi K2.5",
       "description": "多模态 · 线路二 · 百炼",
-      "status": "down"
+      "status": "operational"
     },
     {
       "name": "DeepSeek-V3.2",
@@ -135,7 +131,7 @@
     {
       "name": "DeepSeek-V3.2-Exp",
       "description": "实验版 · 百炼",
-      "status": "down"
+      "status": "operational"
     },
     {
       "name": "GLM-4.5-Air",
@@ -145,12 +141,12 @@
     {
       "name": "MiniMax-M2.5",
       "description": "线路二 · 百炼",
-      "status": "down"
+      "status": "operational"
     },
     {
       "name": "DeepSeek-V3.1",
       "description": "百炼 · 均衡",
-      "status": "down"
+      "status": "operational"
     },
     {
       "name": "Qwen3-Coder-Plus",
@@ -165,7 +161,7 @@
     {
       "name": "Kimi-K2-Instruct",
       "description": "多模态 · 指令优化 · 百炼",
-      "status": "down"
+      "status": "operational"
     },
     {
       "name": "Qwen3.6-Plus",
