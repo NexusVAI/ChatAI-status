@@ -1,0 +1,181 @@
+{
+  "lastUpdated": "2026-05-01T16:01:00+08:00",
+  "overallStatus": "incident",
+  "incident": {
+    "title": "部分模型服务异常",
+    "description": "DeepSeek-V4-Pro、Nemotron-3-super、ling-2.6、Qwen 3.5、Qwen3-Coder、Kimi K2.5、GLM-5.1、GLM-4.7、MiniMax-M2.5、DeepSeek-V3.2-Exp、DeepSeek-V3.1、Kimi-K2-Instruct 等模型不可用",
+    "startedAt": "2026-05-01T16:01:00+08:00"
+  },
+  "services": [
+    {
+      "name": "DeepSeek-V4-Flash",
+      "description": "闪电 · 快速 · 线路一",
+      "status": "operational"
+    },
+    {
+      "name": "DeepSeek-V4-Pro",
+      "description": "Pro研究级模型",
+      "status": "down"
+    },
+    {
+      "name": "Step-3.5",
+      "description": "阶跃星辰 · 快准狠",
+      "status": "operational"
+    },
+    {
+      "name": "混元3",
+      "description": "国产腾讯旗下最新AI · 低限额",
+      "status": "operational"
+    },
+    {
+      "name": "chatGPT-OSS",
+      "description": "OpenAI · 慢",
+      "status": "operational"
+    },
+    {
+      "name": "Nemotron-3-super",
+      "description": "英伟达",
+      "status": "down"
+    },
+    {
+      "name": "ling-2.6",
+      "description": "蚂蚁集团百灵 · 大参数",
+      "status": "down"
+    },
+    {
+      "name": "spark-x2",
+      "description": "星火推理模型",
+      "status": "operational"
+    },
+    {
+      "name": "DeepSeek-R1",
+      "description": "强推理",
+      "status": "operational"
+    },
+    {
+      "name": "Qwen 3.5",
+      "description": "多模态 · 全能型AI",
+      "status": "down"
+    },
+    {
+      "name": "Qwen3-Coder",
+      "description": "多模态 · 编码专项",
+      "status": "down"
+    },
+    {
+      "name": "Kimi K2.5",
+      "description": "多模态 · 复杂任务处理",
+      "status": "down"
+    },
+    {
+      "name": "Kimi K2.6",
+      "description": "多模态 · 超复杂编程",
+      "status": "operational"
+    },
+    {
+      "name": "Kimi K2.6",
+      "description": "多模态 · 线路二 · 官方API",
+      "status": "operational"
+    },
+    {
+      "name": "GLM-5",
+      "description": "深度编程",
+      "status": "operational"
+    },
+    {
+      "name": "GLM-5.1",
+      "description": "复杂编码处理 · 线路一",
+      "status": "down"
+    },
+    {
+      "name": "GLM-5.1",
+      "description": "复杂编码处理 · 线路二",
+      "status": "down"
+    },
+    {
+      "name": "GLM-4.7",
+      "description": "Max · 约等于Gemini3",
+      "status": "down"
+    },
+    {
+      "name": "qwen3.6-max-preview",
+      "description": "预览",
+      "status": "operational"
+    },
+    {
+      "name": "qwen3.6-plus",
+      "description": "多模态 · 均衡之选",
+      "status": "operational"
+    },
+    {
+      "name": "MiniMax-M2.5",
+      "description": "新 · 性价比之选 快速",
+      "status": "down"
+    },
+    {
+      "name": "DeepSeek-R1",
+      "description": "强推理 · 百炼",
+      "status": "operational"
+    },
+    {
+      "name": "Qwen3.6-Flash",
+      "description": "多模态 · 快速 · 百炼",
+      "status": "operational"
+    },
+    {
+      "name": "Kimi K2.5",
+      "description": "多模态 · 线路二 · 百炼",
+      "status": "down"
+    },
+    {
+      "name": "DeepSeek-V3.2",
+      "description": "百炼 · 稳定",
+      "status": "operational"
+    },
+    {
+      "name": "DeepSeek-V3.2-Exp",
+      "description": "实验版 · 百炼",
+      "status": "down"
+    },
+    {
+      "name": "GLM-4.5-Air",
+      "description": "轻量 · 百炼",
+      "status": "operational"
+    },
+    {
+      "name": "MiniMax-M2.5",
+      "description": "线路二 · 百炼",
+      "status": "down"
+    },
+    {
+      "name": "DeepSeek-V3.1",
+      "description": "百炼 · 均衡",
+      "status": "down"
+    },
+    {
+      "name": "Qwen3-Coder-Plus",
+      "description": "多模态 · 专业编码 · 百炼",
+      "status": "operational"
+    },
+    {
+      "name": "Qwen3-Max",
+      "description": "多模态 · 旗舰 · 百炼",
+      "status": "operational"
+    },
+    {
+      "name": "Kimi-K2-Instruct",
+      "description": "多模态 · 指令优化 · 百炼",
+      "status": "down"
+    },
+    {
+      "name": "Qwen3.6-Plus",
+      "description": "多模态 · 2026-04-02 · 线路三 · 百炼",
+      "status": "operational"
+    },
+    {
+      "name": "DeepSeek-R1-0528",
+      "description": "强推理 · 线路三 · 百炼",
+      "status": "operational"
+    }
+  ]
+}
