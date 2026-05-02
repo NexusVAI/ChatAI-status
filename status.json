@@ -207,6 +207,21 @@
       "name": "MiMo-2.5-TTS-VoiceDesign",
       "description": "小米 · 语音定制",
       "status": "operational"
+    },
+    {
+      "name": "Claude-Opus-4.6",
+      "description": "Anthropic · 旗舰推理",
+      "status": "operational"
+    },
+    {
+      "name": "Claude-Sonnet-4.6",
+      "description": "Anthropic · 均衡全能",
+      "status": "operational"
+    },
+    {
+      "name": "Gemini-2.5-Pro",
+      "description": "Google · 多模态旗舰",
+      "status": "operational"
     }
   ]
 }
