@@ -1,0 +1,117 @@
+:root {
+    --bg-color: #000000;
+    --bg-card: #111111;
+    --bg-section: #1a1a1a;
+    --bg-footer: #000000;
+    --text-color: #ffffff;
+    --secondary-text: #888888;
+    --border-color: #1a1a1a;
+    --border-light: rgba(255, 255, 255, 0.15);
+    --nav-bg: #000000;
+    --overlay-bg: rgba(0, 0, 0, 0.3);
+    --pill-bg: rgba(255, 255, 255, 0.1);
+    --pill-hover: rgba(255, 255, 255, 0.2);
+    --nav-height: 54px;
+    --transition-smooth: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    --font-main: 'Inter', -apple-system, sans-serif;
+    --scrollbar-thumb: #444444;
+    --scrollbar-track: #1a1a1a;
+    --scrollbar-thumb-hover: #555555;
+}
+
+:root.light-theme,
+body.light-theme {
+    --bg-color: #ffffff;
+    --bg-card: #f7f7f8;
+    --bg-section: #f0f0f0;
+    --bg-footer: #ffffff;
+    --text-color: #000000;
+    --secondary-text: #666666;
+    --border-color: #e5e5e5;
+    --border-light: rgba(0, 0, 0, 0.1);
+    --nav-bg: #ffffff;
+    --overlay-bg: rgba(255, 255, 255, 0.3);
+    --pill-bg: rgba(0, 0, 0, 0.05);
+    --pill-hover: rgba(0, 0, 0, 0.1);
+    --scrollbar-thumb: #c1c1c1;
+    --scrollbar-track: #f0f0f0;
+    --scrollbar-thumb-hover: #a8a8a8;
+}
+
+:root.warm-theme,
+body.warm-theme {
+    --bg-color: #1a1814;
+    --bg-card: #25231e;
+    --bg-section: #2d2a24;
+    --bg-footer: #1a1814;
+    --text-color: #f5f0e6;
+    --secondary-text: #a89b85;
+    --border-color: #3d382f;
+    --border-light: rgba(245, 240, 230, 0.15);
+    --nav-bg: #1a1814;
+    --overlay-bg: rgba(26, 24, 20, 0.3);
+    --pill-bg: rgba(245, 240, 230, 0.08);
+    --pill-hover: rgba(245, 240, 230, 0.15);
+    --scrollbar-thumb: #5a5449;
+    --scrollbar-track: #2d2a24;
+    --scrollbar-thumb-hover: #6b6560;
+}
+
+:root.blue-theme,
+body.blue-theme {
+    --bg-color: #0b1220;
+    --bg-card: #121c2f;
+    --bg-section: #18253d;
+    --bg-footer: #0b1220;
+    --text-color: #eaf2ff;
+    --secondary-text: #8ca7d6;
+    --border-color: #233554;
+    --border-light: rgba(140, 167, 214, 0.18);
+    --nav-bg: #0b1220;
+    --overlay-bg: rgba(11, 18, 32, 0.35);
+    --pill-bg: rgba(140, 167, 214, 0.09);
+    --pill-hover: rgba(140, 167, 214, 0.16);
+    --scrollbar-thumb: #35507d;
+    --scrollbar-track: #18253d;
+    --scrollbar-thumb-hover: #4b6aa4;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 5px;
+    border: 2px solid var(--scrollbar-track);
+    background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+    border: 2px solid var(--scrollbar-track);
+    background-clip: padding-box;
+}
+
+/* Firefox Scrollbar */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-main);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    transition: background-color 0.3s, color 0.3s;
+}

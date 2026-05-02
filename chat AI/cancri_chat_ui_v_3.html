@@ -1,0 +1,934 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <title>Cancri</title>
+  <script>
+    window.__SUPABASE_URL__ = window.__SUPABASE_URL__ || 'https://diusqgphvybnzazgopor.supabase.co';
+    window.__PROXY_TOKEN__ = window.__PROXY_TOKEN__ || '';
+  </script>
+  <link rel="stylesheet" href="./cancri_chat.css?v=maintenance-0501" />
+</head>
+<body>
+  <div class="app" id="appRoot">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-topbar">
+        <button class="brand-mark" id="brandHomeBtn" aria-label="回到首页">
+          <img src="../Logo/Cancri.png" alt="Cancri" width="20" height="20" style="border-radius:4px;object-fit:cover;display:block;">
+        </button>
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="切换侧边栏">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <rect x="4" y="4.5" width="16" height="15" rx="3"></rect>
+            <path d="M10 4.5v15"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="sidebar-body">
+        <div class="nav-group">
+          <div class="nav-row active" data-view-target="home" id="newChatBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 5v14M5 12h14"></path></svg>
+            <span class="sidebar-label">新聊天</span>
+          </div>
+          <div class="section-title">聊天记录</div>
+          <div class="recent-wrap" id="chatHistoryList">
+            <!-- 聊天记录列表将在这里动态生成 -->
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="theme-switcher" id="themeSwitcher">
+          <button class="theme-btn" data-theme="light" title="浅色">
+            <span class="theme-dot" style="background:#ffffff;border:1.5px solid rgba(0,0,0,.2);"></span>
+          </button>
+          <button class="theme-btn" data-theme="dark" title="深色">
+            <span class="theme-dot" style="background:#111111;border:1.5px solid rgba(255,255,255,.2);"></span>
+          </button>
+          <button class="theme-btn" data-theme="yellow" title="暖黄">
+            <span class="theme-dot" style="background:#fef9e7;border:1.5px solid #d4af37;"></span>
+          </button>
+          <button class="theme-btn" data-theme="blue" title="淡蓝">
+            <span class="theme-dot" style="background:#f0f4f8;border:1.5px solid #6495ed;"></span>
+          </button>
+        </div>
+        <div class="account-strip" id="accountTrigger">
+          <div class="avatar">MR</div>
+          <div class="account-meta">
+            <div class="account-name">Mr.Jony</div>
+            <div class="account-plan">免费版</div>
+          </div>
+          <button class="upgrade-btn" id="donateBtn">资助本站</button>
+          <svg class="account-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m9 6 6 6-6 6"></path></svg>
+        </div>
+      </div>
+
+      <div class="popover more-popover" id="morePopover">
+        <div class="popover-inner">
+          <div class="popover-item" id="openImagesFromMore">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="3"></rect><circle cx="9" cy="9" r="1.6"></circle><path d="m20 15-4.8-4.8L6 19"></path></svg>
+            <span>图片</span>
+          </div>
+          <div class="popover-item" id="openResearchToast">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l2.1 4.6 5 .6-3.7 3.5 1 5-4.4-2.5-4.4 2.5 1-5L4.9 8.2l5-.6L12 3Z"></path></svg>
+            <span>深度研究</span>
+          </div>
+          <div class="popover-item" id="openAppsToast">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="6" height="6" rx="1.4"></rect><rect x="14" y="4" width="6" height="6" rx="1.4"></rect><rect x="4" y="14" width="6" height="6" rx="1.4"></rect><rect x="14" y="14" width="6" height="6" rx="1.4"></rect></svg>
+            <span>应用</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="popover account-popover" id="accountPopover">
+        <div class="popover-inner">
+          <div class="popover-item">
+            <div class="avatar" style="width:28px;height:28px;">MR</div>
+            <div style="display:flex;flex-direction:column;line-height:1.15;">
+              <span style="font-size:14px;font-weight:700;">Mr.Jony</span>
+              <span style="font-size:12px;color:var(--text-soft);margin-top:3px;">免费版</span>
+            </div>
+            <span class="grow"></span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m9 6 6 6-6 6"></path></svg>
+          </div>
+          <div class="popover-sep"></div>
+          <div class="popover-item" id="themeShortcutBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v4"></path><path d="m6.3 6.3 2.8 2.8"></path><path d="M2 12h4"></path><path d="m6.3 17.7 2.8-2.8"></path><path d="M12 18v4"></path><path d="m17.7 17.7-2.8-2.8"></path><path d="M18 12h4"></path><path d="m17.7 6.3-2.8 2.8"></path><circle cx="12" cy="12" r="3.2"></circle></svg>
+            <span>个性化</span>
+          </div>
+          <div class="popover-item" id="profileToastBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"></path><path d="M19 21a7 7 0 0 0-14 0"></path></svg>
+            <span>个人资料</span>
+          </div>
+          <div class="popover-item" id="settingsBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 15.5A3.5 3.5 0 1 0 12 8.5a3.5 3.5 0 0 0 0 7Z"></path><path d="M19.4 15a1.8 1.8 0 0 0 .36 1.98l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.8 1.8 0 0 0 15 19.4a1.8 1.8 0 0 0-1.54.9l-.03.08a2 2 0 1 1-3.68 0l-.03-.08A1.8 1.8 0 0 0 8.2 19.4a1.8 1.8 0 0 0-1.98.36l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.8 1.8 0 0 0 3.75 15a1.8 1.8 0 0 0-.9-1.54l-.08-.03a2 2 0 1 1 0-3.68l.08-.03A1.8 1.8 0 0 0 3.75 8.2a1.8 1.8 0 0 0-.36-1.98l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.8 1.8 0 0 0 8.2 3.75a1.8 1.8 0 0 0 1.54-.9l.03-.08a2 2 0 1 1 3.68 0l.03.08A1.8 1.8 0 0 0 15 3.75c.73 0 1.42-.29 1.94-.81l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.8 1.8 0 0 0 19.4 8.2c0 .62.31 1.21.9 1.54l.08.03a2 2 0 1 1 0 3.68l-.08.03c-.59.33-.9.92-.9 1.54Z"></path></svg>
+            <span>设置</span>
+          </div>
+          <div class="popover-sep"></div>
+          <div class="popover-item" id="helpToastBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"></circle><path d="M9.1 9a3 3 0 1 1 5.7 1.3c-.5 1.1-1.8 1.5-2.3 2.7"></path><path d="M12 17h.01"></path></svg>
+            <span>帮助</span>
+            <span class="grow"></span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m9 6 6 6-6 6"></path></svg>
+          </div>
+          <div class="popover-item" id="logoutToastBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><path d="m10 17 5-5-5-5"></path><path d="M15 12H3"></path></svg>
+            <span>退出登录</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="main-header">
+        <div class="header-left">
+          <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="切换侧边栏">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+          </button>
+          <span class="brand-title">Cancri</span>
+          <div class="model-selector" id="modelSelector">
+            <button class="model-current" id="modelCurrentBtn">
+              <span class="model-name" id="currentModelName">DeepSeek-V4-Flash</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m6 9 6 6 6-6"></path></svg>
+            </button>
+            <div class="model-dropdown" id="modelDropdown">
+            <div class="model-dropdown-content" id="modelDropdownContent">
+              <div class="model-option" data-model="deepseek-v4-flash" data-multimodal="false">
+                <span class="model-label"><img src="./deepseek-color (1).svg" alt="" class="model-option-icon">DeepSeek-V4-Flash</span>
+                <span class="model-tag">闪电</span>
+                <span class="model-tag">快速</span>
+                <span class="model-tag">线路一</span>
+              </div>
+              <div class="model-option" data-model="deepseek-v4-pro" data-multimodal="false">
+                <span class="model-label"><img src="./deepseek-color (1).svg" alt="" class="model-option-icon">DeepSeek-V4-Pro</span>
+                <span class="model-tag">Pro研究级模型</span>
+                <span class="model-tag">线路一</span>
+              </div>
+              <div class="model-option" data-model="deepseek-v4-pro-dashscope" data-multimodal="false">
+                <span class="model-label"><img src="./deepseek-color (1).svg" alt="" class="model-option-icon">DeepSeek-V4-Pro</span>
+                <span class="model-tag">Pro研究级模型</span>
+                <span class="model-tag">线路二</span>
+              </div>
+              <div class="model-option" data-model="step-3.5-flash" data-multimodal="false">
+                <span class="model-label"><img src="./stepfun-color.svg" alt="" class="model-option-icon">Step-3.5</span>
+                <span class="model-tag">阶跃星辰</span>
+                <span class="model-tag">快准狠</span>
+              </div>
+              <div class="model-option" data-model="hy3-preview" data-multimodal="false">
+                <span class="model-label"><img src="./yuanbao-color.svg" alt="" class="model-option-icon">混元3</span>
+                <span class="model-tag">国产腾讯旗下最新AI</span>
+                <span class="model-tag warning">低限额</span>
+              </div>
+              <div class="model-option" data-model="gpt-oss-120b" data-multimodal="false">
+                <span class="model-label"><img src="./openai.svg" alt="" class="model-option-icon">chatGPT-OSS</span>
+                <span class="model-tag">OpenAI</span>
+                <span class="model-tag">慢</span>
+              </div>
+              <div class="model-option" data-model="gpt-5.4" data-multimodal="false">
+                <span class="model-label"><img src="./openai.svg" alt="" class="model-option-icon">GPT-5.4</span>
+                <span class="model-tag warning">每日限流</span>
+                <span class="model-tag">OpenAI</span>
+              </div>
+              <div class="model-option" data-model="claude-opus-4.6" data-multimodal="false">
+                <span class="model-label"><img src="./claude-color.svg" alt="" class="model-option-icon">Claude Opus 4.6</span>
+                <span class="model-tag warning">每日限流</span>
+                <span class="model-tag">Anthropic</span>
+              </div>
+              <div class="model-option" data-model="claude-sonnet-4.6" data-multimodal="false">
+                <span class="model-label"><img src="./claude-color.svg" alt="" class="model-option-icon">Claude Sonnet 4.6</span>
+                <span class="model-tag warning">每日限流</span>
+                <span class="model-tag">Anthropic</span>
+              </div>
+              <div class="model-option" data-model="gemini-2.5-pro" data-multimodal="false">
+                <span class="model-label"><img src="./gemini-color.svg" alt="" class="model-option-icon">Gemini 2.5 Pro</span>
+                <span class="model-tag warning">每日限流</span>
+                <span class="model-tag">Google</span>
+              </div>
+              <div class="model-option" data-model="nemotron-3-super" data-multimodal="false">
+                <span class="model-label"><img src="./nvidia-color.svg" alt="" class="model-option-icon">Nemotron-3-super</span>
+                <span class="model-tag">英伟达</span>
+              </div>
+              <div class="model-option" data-model="ling-2.6-1t" data-multimodal="false">
+                <span class="model-label"><img src="./antgroup-color.svg" alt="" class="model-option-icon">ling-2.6</span>
+                <span class="model-tag">蚂蚁集团百灵</span>
+                <span class="model-tag">大参数</span>
+              </div>
+              <div class="model-option" data-model="ling-2.6-1t-modelscope" data-multimodal="false">
+                <span class="model-label"><img src="./antgroup-color.svg" alt="" class="model-option-icon">ling-2.6</span>
+                <span class="model-tag">蚂蚁集团百灵</span>
+                <span class="model-tag">线路二</span>
+                <span class="model-tag">魔塔</span>
+              </div>
+              <div class="model-option" data-model="spark-x2" data-multimodal="false">
+                <span class="model-label"><img src="./spark-color.svg" alt="" class="model-option-icon">spark-x2</span>
+                <span class="model-tag">星火推理模型</span>
+              </div>
+              <div class="model-option" data-model="deepseek-r1" data-multimodal="false">
+                <span class="model-label"><img src="./deepseek-color (1).svg" alt="" class="model-option-icon">DeepSeek-R1</span>
+                <span class="model-tag">强推理</span>
+              </div>
+              <div class="model-option" data-model="qwen3.5" data-multimodal="true">
+                <span class="model-label"><img src="./qwen-color.svg" alt="" class="model-option-icon">Qwen 3.5</span>
+                <span class="model-tag multimodal">多模态</span>
+                <span class="model-tag">全能型AI</span>
+              </div>
+              <div class="model-option" data-model="qwen3-coder" data-multimodal="true">
+                <span class="model-label"><img src="./qwen-color.svg" alt="" class="model-option-icon">Qwen3-Coder</span>
+                <span class="model-tag multimodal">多模态</span>
+                <span class="model-tag">编码专项</span>
+              </div>
+              <div class="model-option" data-model="kimi-k2.5" data-multimodal="true">
+                <span class="model-label"><img src="./moonshot.svg" alt="" class="model-option-icon">Kimi K2.5</span>
+                <span class="model-tag multimodal">多模态</span>
+                <span class="model-tag">复杂任务处理</span>
+              </div>
+              <div class="model-option" data-model="kimi-k2.6" data-multimodal="true">
+                <span class="model-label"><img src="./moonshot.svg" alt="" class="model-option-icon">Kimi K2.6</span>
+                <span class="model-tag multimodal">多模态</span>
+                <span class="model-tag">超复杂编程</span>
+              </div>
+              <div class="model-option" data-model="kimi-k2.6-moonshot" data-multimodal="true">
+                <span class="model-label"><img src="./moonshot.svg" alt="" class="model-option-icon">Kimi K2.6</span>
+                <span class="model-tag multimodal">多模态</span>
+                <span class="model-tag">线路二</span>
+                <span class="model-tag">官方API</span>
+              </div>
+              <div class="model-option" data-model="kimi-k2.6-line3" data-multimodal="true">
+                <span class="model-label"><img src="./moonshot.svg" alt="" class="model-option-icon">Kimi K2.6</span>
+                <span class="model-tag multimodal">多模态</span>
+                <span class="model-tag">线路三</span>
+                <span class="model-tag">官方API</span>
+              </div>
+              <div class="model-option" data-model="glm-5" data-multimodal="false">
+                <span class="model-label"><img src="./zhipu-color.svg" alt="" class="model-option-icon">GLM-5</span>
+                <span class="model-tag">深度编程</span>
+              </div>
+              <div class="model-option" data-model="glm-5.1-dashscope" data-multimodal="false">
+                <span class="model-label"><img src="./zhipu-color.svg" alt="" class="model-option-icon">GLM-5.1</span>
+                <span class="model-tag">复杂编码处理</span>
+                <span class="model-tag">线路一</span>
+              </div>
+              <div class="model-option" data-model="glm-5.1" data-multimodal="false">
+                <span class="model-label"><img src="./zhipu-color.svg" alt="" class="model-option-icon">GLM-5.1</span>
+                <span class="model-tag">复杂编码处理</span>
+                <span class="model-tag">线路二</span>
+              </div>
+              <div class="model-option" data-model="glm-4.7" data-multimodal="false">
+                <span class="model-label"><img src="./zhipu-color.svg" alt="" class="model-option-icon">GLM-4.7</span>
+                <span class="model-tag">Max</span>
+                <span class="model-tag">约等于Gemini3</span>
+              </div>
+              <div class="model-option" data-model="qwen3.6-max-preview" data-multimodal="false">
+                <span class="model-label"><img src="./qwen-color.svg" alt="" class="model-option-icon">qwen3.6-max-preview</span>
+                <span class="model-tag">预览</span>
+              </div>
+              <div class="model-option" data-model="qwen3.6-plus" data-multimodal="true">
+                <span class="model-label"><img src="./qwen-color.svg" alt="" class="model-option-icon">qwen3.6-plus</span>
+                <span class="model-tag multimodal">多模态</span>
+                <span class="model-tag">均衡之选</span>
+              </div>
+              <div class="model-option" data-model="minimax-m2.5" data-multimodal="false">
+                <span class="model-label"><img src="./minimax-color.svg" alt="" class="model-option-icon">MiniMax-M2.5</span>
+                <span class="model-tag">新</span>
+                <span class="model-tag">性价比之选 快速</span>
+              </div>
+              <!-- 百炼新增模型 -->
+              <div class="model-option" data-model="deepseek-r1" data-multimodal="false">
+                <span class="model-label"><img src="./deepseek-color (1).svg" alt="" class="model-option-icon">DeepSeek-R1</span>
+                <span class="model-tag">强推理</span>
+                <span class="model-tag">百炼</span>
+              </div>
+              <div class="model-option" data-model="qwen3.6-flash" data-multimodal="true">
+                <span class="model-label"><img src="./qwen-color.svg" alt="" class="model-option-icon">Qwen3.6-Flash</span>
+                <span class="model-tag multimodal">多模态</span>
+                <span class="model-tag">快速</span>
+                <span class="model-tag">百炼</span>
+              </div>
+              <div class="model-option" data-model="kimi-k2.5-dashscope" data-multimodal="true">
+                <span class="model-label"><img src="./moonshot.svg" alt="" class="model-option-icon">Kimi K2.5</span>
+                <span class="model-tag multimodal">多模态</span>
+                <span class="model-tag">线路二</span>
+                <span class="model-tag">百炼</span>
+              </div>
+              <div class="model-option" data-model="deepseek-v3.2" data-multimodal="false">
+                <span class="model-label"><img src="./deepseek-color (1).svg" alt="" class="model-option-icon">DeepSeek-V3.2</span>
+                <span class="model-tag">百炼</span>
+                <span class="model-tag">稳定</span>
+              </div>
+              <div class="model-option" data-model="deepseek-v3.2-exp" data-multimodal="false">
+                <span class="model-label"><img src="./deepseek-color (1).svg" alt="" class="model-option-icon">DeepSeek-V3.2-Exp</span>
+                <span class="model-tag">实验版</span>
+                <span class="model-tag">百炼</span>
+              </div>
+              <div class="model-option" data-model="glm-4.5-air" data-multimodal="false">
+                <span class="model-label"><img src="./zhipu-color.svg" alt="" class="model-option-icon">GLM-4.5-Air</span>
+                <span class="model-tag">轻量</span>
+                <span class="model-tag">百炼</span>
+              </div>
+              <div class="model-option" data-model="minimax-m2.5-dashscope" data-multimodal="false">
+                <span class="model-label"><img src="./minimax-color.svg" alt="" class="model-option-icon">MiniMax-M2.5</span>
+                <span class="model-tag">线路二</span>
+                <span class="model-tag">百炼</span>
+              </div>
+              <div class="model-option" data-model="deepseek-v3.1" data-multimodal="false">
+                <span class="model-label"><img src="./deepseek-color (1).svg" alt="" class="model-option-icon">DeepSeek-V3.1</span>
+                <span class="model-tag">百炼</span>
+                <span class="model-tag">均衡</span>
+              </div>
+              <div class="model-option" data-model="qwen3-coder-plus" data-multimodal="true">
+                <span class="model-label"><img src="./qwen-color.svg" alt="" class="model-option-icon">Qwen3-Coder-Plus</span>
+                <span class="model-tag multimodal">多模态</span>
+                <span class="model-tag">专业编码</span>
+                <span class="model-tag">百炼</span>
+              </div>
+              <div class="model-option" data-model="qwen3-max" data-multimodal="true">
+                <span class="model-label"><img src="./qwen-color.svg" alt="" class="model-option-icon">Qwen3-Max</span>
+                <span class="model-tag multimodal">多模态</span>
+                <span class="model-tag">旗舰</span>
+                <span class="model-tag">百炼</span>
+              </div>
+              <div class="model-option" data-model="kimi-k2-instruct" data-multimodal="true">
+                <span class="model-label"><img src="./moonshot.svg" alt="" class="model-option-icon">Kimi-K2-Instruct</span>
+                <span class="model-tag multimodal">多模态</span>
+                <span class="model-tag">指令优化</span>
+                <span class="model-tag">百炼</span>
+              </div>
+              <div class="model-option" data-model="qwen3.6-plus-20260402" data-multimodal="true">
+                <span class="model-label"><img src="./qwen-color.svg" alt="" class="model-option-icon">Qwen3.6-Plus</span>
+                <span class="model-tag multimodal">多模态</span>
+                <span class="model-tag">2026-04-02</span>
+                <span class="model-tag">线路三</span>
+                <span class="model-tag">百炼</span>
+              </div>
+              <div class="model-option" data-model="deepseek-r1-0528" data-multimodal="false">
+                <span class="model-label"><img src="./deepseek-color (1).svg" alt="" class="model-option-icon">DeepSeek-R1-0528</span>
+                <span class="model-tag">强推理</span>
+                <span class="model-tag">线路三</span>
+                <span class="model-tag">百炼</span>
+              </div>
+              <div class="model-option" data-model="mimo-v2.5-pro" data-multimodal="false">
+                <span class="model-label"><img src="./xiaomimimo-color.svg" alt="" class="model-option-icon">MiMo-V2.5-Pro</span>
+                <span class="model-tag">长程任务第一</span>
+                <span class="model-tag">国产新竞</span>
+              </div>
+            </div>
+            <!-- 分页控件 -->
+            <div class="model-dropdown-footer">
+              <button class="model-page-btn" id="modelPagePrev" aria-label="上一页">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"></path></svg>
+              </button>
+              <span class="model-page-info" id="modelPageInfo">1 / 3</span>
+              <button class="model-page-btn" id="modelPageNext" aria-label="下一页">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"></path></svg>
+              </button>
+            </div>
+            </div>
+          </div>
+          <div class="context-meter" id="contextMeter" tabindex="0" aria-label="上下文额度">
+            <div class="context-meter-ring">
+              <div class="context-meter-inner" id="contextMeterValue">0</div>
+            </div>
+            <div class="context-meter-popover" id="contextMeterPopover">
+              <div class="context-meter-title">上下文额度</div>
+              <div class="context-meter-text" id="contextMeterText">当前会话上下文约使用 0 / 128K tokens。</div>
+              <div class="context-meter-subtext">悬停可查看详情，超限后会自动压缩为摘要并开启新对话继续。</div>
+            </div>
+          </div>
+        </div><!-- /.header-left -->
+        <div class="header-right">
+          <div class="theme-switcher" id="themeSwitcherHeader" style="gap:4px;padding:0;margin-right:2px">
+            <button class="theme-btn" data-theme="light" title="浅色"><span class="theme-dot" style="background:#f9f9f8;border:1.5px solid rgba(0,0,0,.18);"></span></button>
+            <button class="theme-btn" data-theme="dark" title="深色"><span class="theme-dot" style="background:#0a0a0a;border:1.5px solid rgba(255,255,255,.18);"></span></button>
+            <button class="theme-btn" data-theme="yellow" title="暖黄"><span class="theme-dot" style="background:#faf6e8;border:1.5px solid #b8860b;"></span></button>
+            <button class="theme-btn" data-theme="blue" title="淡蓝"><span class="theme-dot" style="background:#edf1f7;border:1.5px solid #4a7abf;"></span></button>
+          </div>
+          <button class="clear-btn" id="clearBtn" aria-label="清空对话">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"></path></svg>
+            清空
+          </button>
+          <button class="get-plus-btn" id="upgradeBtn">加入社区</button>
+          <button class="icon-btn" id="teamToastBtn" aria-label="添加成员" style="display:none">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"></path><circle cx="9.5" cy="7" r="3"></circle><path d="M19 8v6"></path><path d="M16 11h6"></path></svg>
+          </button>
+          <button class="icon-btn" id="tempChatBtn" aria-label="临时聊天" style="display:none">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.6" stroke-dasharray="2 2"></circle></svg>
+          </button>
+        </div>
+        <button class="top-pill" id="legacyUpgradePill" style="display:none">Plus</button>
+        <div class="header-actions" style="display:none"></div>
+      </div>
+
+      <!-- 轮播公告栏 -->
+      <div class="announcement-carousel" id="announcementCarousel">
+        <div class="announcement-track">
+          <div class="announcement-item active">
+            <span class="announcement-icon">🎉</span>
+            <span class="announcement-text">05-01.2 维护已经完成！池额度全部翻倍！</span>
+          </div>
+          <div class="announcement-item">
+            <span class="announcement-icon">📊</span>
+            <span class="announcement-text">服务状态实时监控：<a href="https://nexusvai.github.io/ChatAI-status/" target="_blank" rel="noopener">点击查看</a></span>
+          </div>
+          <div class="announcement-item">
+            <span class="announcement-icon">🚀</span>
+            <span class="announcement-text">网站即将从「聚合站」转型为「竞技场」模式，敬请期待全新体验</span>
+          </div>
+        </div>
+        <div class="announcement-indicators">
+          <span class="indicator active" data-index="0"></span>
+          <span class="indicator" data-index="1"></span>
+          <span class="indicator" data-index="2"></span>
+        </div>
+      </div>
+
+      <section class="view active" id="homeView">
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="home-center" id="homeCenter">
+          <h1 class="hero" id="heroTitle">有什么可以帮忙的？</h1>
+            <div class="composer-wrap">
+              <div class="composer-halo"></div>
+              <div class="composer">
+                <button class="plus-btn" id="plusTrigger" aria-label="更多操作">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 5v14M5 12h14"></path></svg>
+                </button>
+                <button class="attach-btn" id="attachBtn" aria-label="上传图片" title="上传图片">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="4" y="4" width="16" height="16" rx="3"></rect><circle cx="9" cy="9" r="1.5"></circle><path d="m20 15-4.8-4.8L6 19"></path></svg>
+                </button>
+                <button class="file-upload-btn" id="fileUploadBtn" aria-label="上传文件" title="上传文件">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M12 18v-6"></path><path d="M9 15l3 3 3-3"></path></svg>
+                </button>
+                <textarea class="composer-input" id="homeInput" rows="1" placeholder="有问题，尽管问"></textarea>
+                <div class="composer-right">
+                  <button class="input-icon" id="micToastBtn" aria-label="语音输入">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="9" y="3.2" width="6" height="10.8" rx="3"></rect><path d="M5 11a7 7 0 0 0 14 0"></path><path d="M12 18v2.6"></path></svg>
+                  </button>
+                  <button class="voice-btn" id="voiceToastBtn" aria-label="语音输入" title="语音输入">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 12h1"></path><path d="M8 9v6"></path><path d="M12 7v10"></path><path d="M16 9v6"></path><path d="M19.5 12h1"></path></svg>
+                  </button>
+                  <button class="expand-btn" id="expandInputBtn" aria-label="展开输入框" title="展开输入框">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6"></path><path d="M9 21H3v-6"></path><path d="M21 3l-7 7"></path><path d="M3 21l7-7"></path></svg>
+                  </button>
+                  <button class="send-btn" id="sendChatBtn" aria-label="发送消息" disabled>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                  </button>
+                </div>
+              </div>
+              <input type="file" id="attachmentInput" accept="image/*,.pdf,.txt,.doc,.docx,.md,.json,.csv" multiple hidden />
+              <input type="file" id="fileInput" accept=".pdf,.txt,.doc,.docx,.md,.json,.csv" multiple hidden />
+            </div>
+            <div class="attachment-preview" id="attachmentPreview" hidden></div>
+            <div class="token-expiry-note" id="tokenExpiryNote" aria-live="polite">
+              <div>
+                <span class="token-warning">令牌一个月后自动过期</span>
+                <span id="tokenRemainingText">· 剩余时间计算中</span>
+              </div>
+              <div class="token-dates">起始日 2026-04-28 22:52:10 · 结束日 2026-05-28 22:52:10</div>
+            </div>
+            <div class="rate-limit-note" id="rateLimitNote" aria-live="polite">
+              <div class="rate-limit-header">
+                <span class="rate-limit-title">API 额度</span>
+                <span id="rateLimitUpdateTime">更新中...</span>
+              </div>
+              <div class="rate-limit-content">
+                <div class="rate-limit-item">
+                  <span class="rate-limit-label">用户额度</span>
+                  <span class="quota-hint" aria-label="共享池说明">
+                    <svg class="quota-hint-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                    <span class="quota-tooltip">
+                      用户当天限额为多个魔塔 key 的合计；部分火热模型共享池，部分模型不受此约束。模型当天限额仅在当前选择魔塔线路模型时显示。
+                    </span>
+                  </span>
+                  <span id="userRateLimit">计算中</span>
+                </div>
+                <div class="rate-limit-item">
+                  <span class="rate-limit-label">模型额度</span>
+                  <span id="modelRateLimit">计算中</span>
+                </div>
+              </div>
+            </div>
+            <div class="chip-row">
+              <button class="ghost-chip" id="imageModeChipBtn">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="3"></rect><circle cx="9" cy="9" r="1.6"></circle><path d="m20 15-4.8-4.8L6 19"></path></svg>
+                <span>图片生成</span>
+              </button>
+              <button class="ghost-chip" id="videoModeChipBtn">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="5" width="13" height="14" rx="3"></rect><path d="m16.5 10.2 4-2.4v8.4l-4-2.4z"></path></svg>
+                <span>视频生成</span>
+              </button>
+            </div>
+
+            <div class="model-icons-scroll">
+              <div class="model-icons-track">
+                <img src="./deepseek-color (1).svg" alt="DeepSeek" class="model-icon">
+                <img src="./openai.svg" alt="OpenAI" class="model-icon">
+                <img src="./qwen-color.svg" alt="Qwen" class="model-icon">
+                <img src="./minimax-color.svg" alt="MiniMax" class="model-icon">
+                <img src="./moonshot.svg" alt="Moonshot" class="model-icon">
+                <img src="./zhipu-color.svg" alt="Zhipu" class="model-icon">
+                <img src="./stepfun-color.svg" alt="StepFun" class="model-icon">
+                <img src="./spark-color.svg" alt="Spark" class="model-icon">
+                <img src="./kling-color.svg" alt="Kling" class="model-icon">
+                <img src="./antgroup-color.svg" alt="AntGroup" class="model-icon">
+                <img src="./nvidia-color.svg" alt="NVIDIA" class="model-icon">
+                <img src="./yuanbao-color.svg" alt="Yuanbao" class="model-icon">
+                <img src="./xiaomimimo-color.svg" alt="MiMo" class="model-icon">
+                <img src="./deepseek-color (1).svg" alt="DeepSeek" class="model-icon">
+                <img src="./openai.svg" alt="OpenAI" class="model-icon">
+                <img src="./qwen-color.svg" alt="Qwen" class="model-icon">
+                <img src="./minimax-color.svg" alt="MiniMax" class="model-icon">
+                <img src="./moonshot.svg" alt="Moonshot" class="model-icon">
+                <img src="./zhipu-color.svg" alt="Zhipu" class="model-icon">
+                <img src="./stepfun-color.svg" alt="StepFun" class="model-icon">
+                <img src="./spark-color.svg" alt="Spark" class="model-icon">
+                <img src="./kling-color.svg" alt="Kling" class="model-icon">
+                <img src="./antgroup-color.svg" alt="AntGroup" class="model-icon">
+                <img src="./nvidia-color.svg" alt="NVIDIA" class="model-icon">
+                <img src="./yuanbao-color.svg" alt="Yuanbao" class="model-icon">
+                <img src="./xiaomimimo-color.svg" alt="MiMo" class="model-icon">
+                <img src="./deepseek-color (1).svg" alt="DeepSeek" class="model-icon">
+                <img src="./openai.svg" alt="OpenAI" class="model-icon">
+                <img src="./qwen-color.svg" alt="Qwen" class="model-icon">
+                <img src="./minimax-color.svg" alt="MiniMax" class="model-icon">
+                <img src="./moonshot.svg" alt="Moonshot" class="model-icon">
+                <img src="./zhipu-color.svg" alt="Zhipu" class="model-icon">
+                <img src="./stepfun-color.svg" alt="StepFun" class="model-icon">
+                <img src="./spark-color.svg" alt="Spark" class="model-icon">
+                <img src="./kling-color.svg" alt="Kling" class="model-icon">
+                <img src="./antgroup-color.svg" alt="AntGroup" class="model-icon">
+                <img src="./nvidia-color.svg" alt="NVIDIA" class="model-icon">
+                <img src="./yuanbao-color.svg" alt="Yuanbao" class="model-icon">
+                <img src="./xiaomimimo-color.svg" alt="MiMo" class="model-icon">
+                <img src="./deepseek-color (1).svg" alt="DeepSeek" class="model-icon">
+                <img src="./openai.svg" alt="OpenAI" class="model-icon">
+                <img src="./qwen-color.svg" alt="Qwen" class="model-icon">
+                <img src="./minimax-color.svg" alt="MiniMax" class="model-icon">
+                <img src="./moonshot.svg" alt="Moonshot" class="model-icon">
+                <img src="./zhipu-color.svg" alt="Zhipu" class="model-icon">
+                <img src="./stepfun-color.svg" alt="StepFun" class="model-icon">
+                <img src="./spark-color.svg" alt="Spark" class="model-icon">
+                <img src="./kling-color.svg" alt="Kling" class="model-icon">
+                <img src="./antgroup-color.svg" alt="AntGroup" class="model-icon">
+                <img src="./nvidia-color.svg" alt="NVIDIA" class="model-icon">
+                <img src="./yuanbao-color.svg" alt="Yuanbao" class="model-icon">
+              </div>
+              <div class="model-icons-text">支持全球12+大模型 免费调用</div>
+            </div>
+
+            <div class="popover plus-popover" id="plusPopover">
+              <div class="popover-inner">
+                <div class="popover-item" id="uploadToastBtn">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"></path></svg>
+                  <span>添加照片和文件</span>
+                </div>
+                <div class="popover-item" id="openImagesFromPlus">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="3"></rect><circle cx="9" cy="9" r="1.6"></circle><path d="m20 15-4.8-4.8L6 19"></path></svg>
+                  <span>创建图片</span>
+                </div>
+                <div class="popover-item" id="thinkingToastBtn">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2.5 14 8l5.7.5-4.3 3.5 1.3 5.6L12 14.9 7.3 17.6l1.3-5.6L4.3 8.5 10 8 12 2.5Z"></path></svg>
+                  <span>思考一下</span>
+                </div>
+                <div class="popover-item" id="researchToastBtn2">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l2.1 4.6 5 .6-3.7 3.5 1 5-4.4-2.5-4.4 2.5 1-5L4.9 8.2l5-.6L12 3Z"></path></svg>
+                  <span>深度研究</span>
+                </div>
+                <div class="popover-item" id="plusMoreBtn">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h.01M12 12h.01M19 12h.01"></path></svg>
+                  <span>更多</span>
+                  <span class="grow"></span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m9 6 6 6-6 6"></path></svg>
+                </div>
+                <div class="popover-sep"></div>
+                <div class="popover-item" id="createProjectFromPlus">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H10l2 2h6.5A2.5 2.5 0 0 1 21 9.5v7A2.5 2.5 0 0 1 18.5 19h-13A2.5 2.5 0 0 1 3 16.5v-9Z"></path></svg>
+                  <span>项目</span>
+                  <span class="grow"></span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m9 6 6 6-6 6"></path></svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="footer-note">
+          <span>请勿在对话中输入身份证号、银行卡号、验证码等敏感信息，详情见隐私协议。</span>
+          <button class="footer-legal-link" id="privacyPolicyBtn" type="button">隐私协议</button>
+        </div>
+        <div class="nexusv-footer" role="img" aria-label="NEXUSV 品牌区">
+          <span class="nexusv-footer-brand">NEXUSV</span>
+        </div>
+      </section>
+
+      <section class="view" id="imagesView">
+        <div class="images-page">
+          <div class="images-scroll">
+            <div class="images-inner">
+              <div class="images-title">图片</div>
+              <div class="image-search">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="3"></rect><circle cx="9" cy="9" r="1.6"></circle><path d="m20 15-4.8-4.8L6 19"></path></svg>
+                <input id="imagePromptInput" placeholder="描述新图片" />
+                <button class="input-icon" id="imageMicToastBtn" aria-label="图片语音输入">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="9" y="3.2" width="6" height="10.8" rx="3"></rect><path d="M5 11a7 7 0 0 0 14 0"></path><path d="M12 18v2.6"></path></svg>
+                </button>
+                <button class="circle-btn" id="sendImagePromptBtn" aria-label="提交图片提示词">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 5 0 14"></path><path d="m5 12 7-7 7 7"></path></svg>
+                </button>
+              </div>
+
+              <div class="section-head" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:24px;">
+                <span>AI 生成结果</span>
+                <span class="images-status" id="imageGenerationStatus">等待输入提示词</span>
+              </div>
+              <div class="image-grid generated-gallery" id="generatedImageGrid">
+                <div class="grid-card" id="generatedImageEmpty">
+                  <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:16px;text-align:center;color:var(--text-dim);font-size:13px;line-height:1.5;">
+                    生成后的图片会显示在这里
+                  </div>
+                </div>
+              </div>
+
+              <div class="section-head" style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+                <span>在图像上试用风格效果</span>
+                <div style="display:flex;gap:8px;">
+                  <button class="plain-icon" id="stylePrevBtn" aria-label="上一组风格"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m15 6-6 6 6 6"></path></svg></button>
+                  <button class="plain-icon" id="styleNextBtn" aria-label="下一组风格"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m9 6 6 6-6 6"></path></svg></button>
+                </div>
+              </div>
+
+              <div class="style-carousel" id="styleCarousel">
+                <div class="preview-card" style="--card-bg:linear-gradient(145deg,#4f4f4f,#252525);"><span>图形绘意照</span></div>
+                <div class="preview-card" style="--card-bg:linear-gradient(145deg,#f59e0b,#7c2d12);"><span>暖调海报</span></div>
+                <div class="preview-card" style="--card-bg:linear-gradient(145deg,#5b5b5b,#2e2e2e);"><span>夜拍闪光</span></div>
+                <div class="preview-card" style="--card-bg:linear-gradient(145deg,#10a37f,#083344);"><span>动漫风</span></div>
+                <div class="preview-card" style="--card-bg:linear-gradient(145deg,#ef4444,#7f1d1d);"><span>漫画</span></div>
+              </div>
+
+              <div class="section-head" style="margin-top:40px;">我的图片</div>
+              <div class="image-grid">
+                <div class="grid-card"><div class="placeholder-box"></div></div>
+                <div class="grid-card"><div class="placeholder-box"></div></div>
+                <div class="grid-card"><div class="placeholder-box"></div></div>
+                <div class="grid-card"><img alt="sample" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%23040714'/%3E%3Cstop offset='1' stop-color='%23121f40'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='800' height='800' fill='url(%23g)'/%3E%3Ccircle cx='140' cy='220' r='70' fill='%230a1837'/%3E%3Ccircle cx='675' cy='190' r='36' fill='%23f5c56d' opacity='.5'/%3E%3Crect x='362' y='110' width='78' height='300' rx='16' fill='%23101620'/%3E%3Crect x='320' y='210' width='160' height='360' rx='28' fill='%230c111a'/%3E%3Crect x='348' y='530' width='44' height='190' rx='14' fill='%230d1119'/%3E%3Crect x='408' y='530' width='44' height='190' rx='14' fill='%230d1119'/%3E%3Crect x='280' y='252' width='70' height='34' rx='10' fill='%230e1420'/%3E%3Crect x='452' y='252' width='70' height='34' rx='10' fill='%230e1420'/%3E%3Crect x='338' y='95' width='122' height='84' rx='26' fill='%23141d29'/%3E%3Crect x='360' y='117' width='78' height='40' rx='10' fill='%23242d3d'/%3E%3Cpath d='M90 540 C180 420, 260 610, 320 470' stroke='%23ff4c5d' stroke-width='18' opacity='.65'/%3E%3Cpath d='M500 610 C600 420, 700 610, 760 470' stroke='%2342a5ff' stroke-width='18' opacity='.65'/%3E%3Crect x='0' y='650' width='800' height='150' fill='%23050a12' opacity='.65'/%3E%3C/svg%3E" /></div>
+                <div class="grid-card"><div class="placeholder-box"></div></div>
+                <div class="grid-card"><div class="placeholder-box"></div></div>
+                <div class="grid-card"><div class="placeholder-box"></div></div>
+                <div class="grid-card"><div class="placeholder-box"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="scrim" id="scrim"></div>
+
+  <div class="modal large" id="settingsModal" aria-hidden="true">
+    <div class="modal-header">
+      <button class="modal-close" data-close-modal="settingsModal" aria-label="关闭设置">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"></path></svg>
+      </button>
+      <div class="modal-title" style="margin-right:auto;padding-left:10px;">设置</div>
+    </div>
+    <div class="settings-layout">
+      <div class="settings-nav">
+        <div class="settings-nav-item active" data-settings-panel="generalPanel">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 15.5A3.5 3.5 0 1 0 12 8.5a3.5 3.5 0 0 0 0 7Z"></path><path d="M19.4 15a1.8 1.8 0 0 0 .36 1.98l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.8 1.8 0 0 0 15 19.4a1.8 1.8 0 0 0-1.54.9l-.03.08a2 2 0 1 1-3.68 0l-.03-.08A1.8 1.8 0 0 0 8.2 19.4a1.8 1.8 0 0 0-1.98.36l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.8 1.8 0 0 0 3.75 15a1.8 1.8 0 0 0-.9-1.54l-.08-.03a2 2 0 1 1 0-3.68l.08-.03A1.8 1.8 0 0 0 3.75 8.2a1.8 1.8 0 0 0-.36-1.98l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.8 1.8 0 0 0 8.2 3.75a1.8 1.8 0 0 0 1.54-.9l.03-.08a2 2 0 1 1 3.68 0l.03.08A1.8 1.8 0 0 0 15 3.75c.73 0 1.42-.29 1.94-.81l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.8 1.8 0 0 0 19.4 8.2c0 .62.31 1.21.9 1.54l.08.03a2 2 0 1 1 0 3.68l-.08.03c-.59.33-.9.92-.9 1.54Z"></path></svg>
+          <span>常规</span>
+        </div>
+        <div class="settings-nav-item" data-settings-panel="notifyPanel"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 17h5l-1.4-1.4A2 2 0 0 1 18 14.2V10a6 6 0 1 0-12 0v4.2a2 2 0 0 1-.6 1.4L4 17h5"></path><path d="M9.5 17a2.5 2.5 0 0 0 5 0"></path></svg><span>通知</span></div>
+        <div class="settings-nav-item" data-settings-panel="personalPanel"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v4"></path><path d="m6.3 6.3 2.8 2.8"></path><path d="M2 12h4"></path><path d="m6.3 17.7 2.8-2.8"></path><path d="M12 18v4"></path><path d="m17.7 17.7-2.8-2.8"></path><path d="M18 12h4"></path><path d="m17.7 6.3-2.8 2.8"></path><circle cx="12" cy="12" r="3.2"></circle></svg><span>个性化</span></div>
+        <div class="settings-nav-item" data-settings-panel="appsPanel"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="6" height="6" rx="1.3"></rect><rect x="14" y="4" width="6" height="6" rx="1.3"></rect><rect x="4" y="14" width="6" height="6" rx="1.3"></rect><rect x="14" y="14" width="6" height="6" rx="1.3"></rect></svg><span>应用</span></div>
+        <div class="settings-nav-item" data-settings-panel="ordersPanel"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2h9l5 5v15a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z"></path><path d="M14 2v6h6"></path></svg><span>订单</span></div>
+        <div class="settings-nav-item" data-settings-panel="safetyPanel"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 5 6v6c0 4.6 2.6 8.7 7 10 4.4-1.3 7-5.4 7-10V6l-7-3Z"></path></svg><span>安全</span></div>
+        <div class="settings-nav-item" data-settings-panel="accountPanel"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"></circle><path d="M4 20a8 8 0 1 1 16 0"></path></svg><span>账户</span></div>
+      </div>
+
+      <div class="settings-content">
+        <div class="settings-scroll">
+          <div class="settings-panel active" id="generalPanel">
+            <h3 class="settings-heading">常规</h3>
+            <div class="mfa-box">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
+                <div>
+                  <div class="mfa-title">保护你的账户</div>
+                  <p class="mfa-text">添加多重身份验证（MFA），如短信或身份验证器应用，帮助在登录时保护您的账户。</p>
+                </div>
+                <button class="plain-icon" id="dismissMfaBtn" aria-label="关闭MFA推荐">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"></path></svg>
+                </button>
+              </div>
+              <button class="secondary-btn" id="mfaToastBtn">设置 MFA</button>
+            </div>
+            <div class="list-row" id="appearanceRow">
+              <div class="list-label">外观</div>
+              <div class="list-value"><span id="appearanceValue">深色</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 9 6 6 6-6"></path></svg></div>
+            </div>
+            <div class="list-row" id="contrastRow">
+              <div class="list-label">对比度</div>
+              <div class="list-value"><span id="contrastValue">系统</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 9 6 6 6-6"></path></svg></div>
+            </div>
+            <div class="list-row" id="accentRow">
+              <div class="list-label">重点色</div>
+              <div class="list-value"><span class="dot" id="accentDot"></span><span id="accentValue">默认</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 9 6 6 6-6"></path></svg></div>
+            </div>
+            <div class="list-row" id="languageRow">
+              <div class="list-label">语言</div>
+              <div class="list-value"><span id="languageValue">自动检测</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 9 6 6 6-6"></path></svg></div>
+            </div>
+            <div class="list-row with-note" id="speechRow">
+              <div>
+                <div class="list-label">口语</div>
+                <div class="list-sub">为获得最佳结果，请选择你使用的主要语言。即使未列出的语言也可能通过自动检测功能进行识别。</div>
+              </div>
+              <div class="list-value"><span id="speechValue">自动检测</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 9 6 6 6-6"></path></svg></div>
+            </div>
+          </div>
+
+          <div class="settings-panel" id="notifyPanel">
+            <h3 class="settings-heading">通知</h3>
+            <div class="list-row"><div class="list-label">桌面通知</div><div class="badge">已关闭</div></div>
+            <div class="list-row"><div class="list-label">产品更新</div><div class="badge">订阅</div></div>
+          </div>
+
+          <div class="settings-panel" id="personalPanel">
+            <h3 class="settings-heading">个性化</h3>
+            <div class="list-row"><div class="list-label">称呼偏好</div><div class="list-value">Mr.Jony</div></div>
+            <div class="list-row"><div class="list-label">默认首页</div><div class="list-value">聊天</div></div>
+          </div>
+
+          <div class="settings-panel" id="appsPanel">
+            <h3 class="settings-heading">应用</h3>
+            <div class="list-row"><div class="list-label">已连接应用</div><div class="badge">0</div></div>
+            <div class="list-row"><div class="list-label">文件访问权限</div><div class="badge">默认</div></div>
+          </div>
+
+          <div class="settings-panel" id="ordersPanel">
+            <h3 class="settings-heading">订单</h3>
+            <div class="list-row"><div class="list-label">当前计划</div><div class="list-value">免费版</div></div>
+            <div class="list-row"><div class="list-label">升级方案</div><div class="badge">Plus</div></div>
+          </div>
+
+          <div class="settings-panel" id="safetyPanel">
+            <h3 class="settings-heading">安全</h3>
+            <div class="list-row"><div class="list-label">登录设备</div><div class="badge">1 台</div></div>
+            <div class="list-row"><div class="list-label">双重验证</div><div class="badge">未开启</div></div>
+          </div>
+
+          <div class="settings-panel" id="accountPanel">
+            <h3 class="settings-heading">账户</h3>
+            <div class="list-row"><div class="list-label">邮箱</div><div class="list-value">mrjony@example.com</div></div>
+            <div class="list-row"><div class="list-label">昵称</div><div class="list-value">Mr.Jony</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal small" id="tempChatModal" aria-hidden="true">
+    <div class="modal-header">
+      <div class="modal-title">临时聊天</div>
+      <button class="modal-close" data-close-modal="tempChatModal" aria-label="关闭临时聊天">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"></path></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="temp-card">
+        <div class="temp-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5" stroke-dasharray="3 2"></circle></svg>
+          <div>
+            <h4>不包含在历史记录中</h4>
+            <p>临时聊天不会出现在你的历史记录中。为了安全考虑，我们可能会保留对话记录最多30天。</p>
+          </div>
+        </div>
+        <div class="temp-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 12h4l2-6 4 12 2-6h4"></path></svg>
+          <div>
+            <h4>不会用于模型训练</h4>
+            <p>临时聊天不会被用来改进我们的模型。</p>
+          </div>
+        </div>
+        <div class="temp-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="6" y="4" width="12" height="16" rx="2"></rect></svg>
+          <div>
+            <h4>记忆关闭</h4>
+            <p>使用临时聊天时，Cancri 不会使用或更新记忆。系统仍然会遵循你的自定义指令。</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="primary-btn" id="continueTempChatBtn">继续</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal medium" id="projectModal" aria-hidden="true">
+    <div class="modal-header" style="padding-bottom:0;">
+      <div class="modal-title">创建项目</div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button class="plain-icon" id="projectSettingToastBtn" aria-label="项目设置">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 15.5A3.5 3.5 0 1 0 12 8.5a3.5 3.5 0 0 0 0 7Z"></path><path d="M19.4 15a1.8 1.8 0 0 0 .36 1.98l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.8 1.8 0 0 0 15 19.4a1.8 1.8 0 0 0-1.54.9l-.03.08a2 2 0 1 1-3.68 0l-.03-.08A1.8 1.8 0 0 0 8.2 19.4a1.8 1.8 0 0 0-1.98.36l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.8 1.8 0 0 0 3.75 15a1.8 1.8 0 0 0-.9-1.54l-.08-.03a2 2 0 1 1 0-3.68l.08-.03A1.8 1.8 0 0 0 3.75 8.2a1.8 1.8 0 0 0-.36-1.98l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.8 1.8 0 0 0 8.2 3.75a1.8 1.8 0 0 0 1.54-.9l.03-.08a2 2 0 1 1 3.68 0l.03.08A1.8 1.8 0 0 0 15 3.75c.73 0 1.42-.29 1.94-.81l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.8 1.8 0 0 0 19.4 8.2c0 .62.31 1.21.9 1.54l.08.03a2 2 0 1 1 0 3.68l-.08.03c-.59.33-.9.92-.9 1.54Z"></path></svg>
+        </button>
+        <button class="modal-close" data-close-modal="projectModal" aria-label="关闭创建项目">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"></path></svg>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label" for="projectNameInput">项目名称</label>
+        <input class="form-input" id="projectNameInput" placeholder="哥本哈根之旅" />
+      </div>
+      <div class="hint-box">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg>
+        <div>项目功能可将聊天、文件和自定义指令集中保存，以便用于持续进行的工作，或者单纯用于整理内容，让一切更井然有序。</div>
+      </div>
+      <div class="modal-actions">
+        <button class="muted-btn" id="createProjectConfirmBtn">创建项目</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal large" id="privacyPolicyModal" aria-hidden="true">
+    <div class="modal-header">
+      <div class="modal-title">隐私协议</div>
+      <button class="modal-close" data-close-modal="privacyPolicyModal" aria-label="关闭隐私协议">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"></path></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="privacy-policy-content">
+        <div class="privacy-policy-note">更新日期：2026年4月30日。本协议适用于 Cancri 在中国大陆地区提供的聊天、图片生成、文件处理、搜索与历史记录相关功能。</div>
+
+        <section class="privacy-policy-section">
+          <h4>一、我们收集的信息</h4>
+          <p>为提供基础功能、改进体验和保障安全，我们可能收集你主动输入的聊天内容、上传的图片或文件、搜索关键词、反馈内容，以及与服务相关的设备信息、浏览器信息、IP 地址、访问时间、错误日志、Cookie 和本地存储中的偏好设置。</p>
+        </section>
+
+        <section class="privacy-policy-section">
+          <h4>二、我们如何使用信息</h4>
+          <ul class="privacy-policy-list">
+            <li>向你提供聊天、图片生成、文件分析、联网搜索和历史记录等功能。</li>
+            <li>保存你的主题、语言、模型选择与会话状态等本地偏好。</li>
+            <li>进行故障排查、性能优化、风控检测与滥用防护。</li>
+            <li>在你发起请求时，将必要内容发送给对应的模型服务、搜索服务或存储服务完成处理。</li>
+          </ul>
+        </section>
+
+        <section class="privacy-policy-section">
+          <h4>三、信息共享与委托处理</h4>
+          <p>为了实现具体功能，你的请求内容可能会被发送至第三方模型服务商、搜索服务商、云基础设施或托管服务商进行处理。我们仅在实现服务所必需的范围内共享必要信息，不会向无关第三方出售个人信息。</p>
+        </section>
+
+        <section class="privacy-policy-section">
+          <h4>四、信息存储与保护</h4>
+          <p>我们会采取合理的技术与管理措施保护信息安全，并尽量减少数据收集范围。你的本地偏好通常保存在浏览器本地存储中；聊天历史可能会按账号或会话进行保存。若你清空对话或要求删除，我们会在可行范围内处理相关记录。</p>
+        </section>
+
+        <section class="privacy-policy-section">
+          <h4>五、你的权利</h4>
+          <ul class="privacy-policy-list">
+            <li>你可以查看、复制、清空或删除本地会话内容。</li>
+            <li>你可以撤回已授予的部分授权，并关闭不必要的权限。</li>
+            <li>如需查阅、更正、删除个人信息，或对本协议有疑问，可通过站内反馈或社区渠道联系我们。</li>
+          </ul>
+        </section>
+
+        <section class="privacy-policy-section">
+          <h4>六、未成年人保护</h4>
+          <p>如你是未成年人，请在监护人的陪同或授权下使用本服务，并避免提交身份证号、银行卡号、验证码、密钥等敏感信息。</p>
+        </section>
+
+        <section class="privacy-policy-section">
+          <h4>七、协议更新</h4>
+          <p>我们可能会根据产品变化、法律法规或监管要求更新本协议。更新后会在此页面公布，继续使用即表示你接受更新后的内容。</p>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <div class="page-watermark" id="pageWatermark" aria-hidden="true">
+    <div class="page-watermark-grid" id="pageWatermarkGrid"></div>
+  </div>
+
+  <div class="custom-context-menu" id="customContextMenu" aria-hidden="true">
+    <button class="context-menu-btn" type="button" data-menu-action="copy">复制</button>
+    <button class="context-menu-btn" type="button" data-menu-action="paste">粘贴</button>
+  </div>
+
+  <div class="devtools-shield" id="devtoolsShield" aria-hidden="true">
+    <div class="devtools-card">
+      <div class="devtools-kicker">开发者工具已打开</div>
+      <h2 class="devtools-title">请关闭开发者工具后继续使用</h2>
+      <p class="devtools-text">为保护服务安全，部分功能在开发者工具打开时受限。关闭 F12 即可恢复正常体验。</p>
+    </div>
+  </div>
+
+  <div class="modal medium" id="announcementModal" aria-hidden="true">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">五一维护完成公告</div>
+        <button class="modal-close" data-close-modal="announcementModal" aria-label="关闭公告">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"></path></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="announcement-content">
+          <p class="announcement-highlight">🎉 05-01.2 维护已圆满完成！模型额度池全面翻倍，GLM-5.1、DeepSeek V4-Pro 等核心模型已「满血回归」！<br><br>值此五一佳节，团队将每日为你接入更多优质模型，请持续关注～</p>
+        </div>
+        <label style="display:flex;align-items:center;gap:8px;margin:16px 0 4px;font-size:13px;color:var(--text-soft);cursor:pointer;">
+          <input type="checkbox" id="dismissNoticeCheckbox" style="width:16px;height:16px;cursor:pointer;">
+          <span>下次不再提示</span>
+        </label>
+        <div class="modal-actions">
+          <button class="primary-btn" id="closeAnnouncementBtn">我知道了</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="./cancri_chat.js?v=diagnostic-0501c"></script>
+</body>
+</html>
