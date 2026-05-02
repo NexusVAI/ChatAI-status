@@ -1,16 +1,21 @@
 {
-  "lastUpdated": "2026-05-01T16:01:00+08:00",
-  "overallStatus": "operational",
-  "incident": null,
+  "lastUpdated": "2026-05-02T09:53:00+08:00",
+  "overallStatus": "degraded",
+  "incident": "部分模型服务异常或中断",
   "services": [
     {
       "name": "DeepSeek-V4-Flash",
       "description": "闪电 · 快速 · 线路一",
+      "status": "degraded"
+    },
+    {
+      "name": "DeepSeek-V4-Pro",
+      "description": "Pro研究级模型 · 线路一",
       "status": "operational"
     },
     {
       "name": "DeepSeek-V4-Pro",
-      "description": "Pro研究级模型",
+      "description": "Pro研究级模型 · 线路二",
       "status": "operational"
     },
     {
@@ -22,6 +27,11 @@
       "name": "混元3",
       "description": "国产腾讯旗下最新AI · 低限额",
       "status": "operational"
+    },
+    {
+      "name": "GPT-5.4",
+      "description": "OpenAI · 每日限流",
+      "status": "degraded"
     },
     {
       "name": "chatGPT-OSS",
@@ -36,6 +46,11 @@
     {
       "name": "ling-2.6",
       "description": "蚂蚁集团百灵 · 大参数",
+      "status": "down"
+    },
+    {
+      "name": "ling-2.6",
+      "description": "蚂蚁集团百灵 · 魔塔线路二",
       "status": "down"
     },
     {
@@ -65,12 +80,17 @@
     },
     {
       "name": "Kimi K2.6",
-      "description": "多模态 · 超复杂编程",
+      "description": "多模态 · 超复杂编程 · 线路一",
       "status": "operational"
     },
     {
       "name": "Kimi K2.6",
       "description": "多模态 · 线路二 · 官方API",
+      "status": "operational"
+    },
+    {
+      "name": "Kimi K2.6",
+      "description": "多模态 · 线路三",
       "status": "operational"
     },
     {
@@ -81,7 +101,7 @@
     {
       "name": "GLM-5.1",
       "description": "复杂编码处理 · 线路一",
-      "status": "operational"
+      "status": "degraded"
     },
     {
       "name": "GLM-5.1",
@@ -91,7 +111,7 @@
     {
       "name": "GLM-4.7",
       "description": "Max · 约等于Gemini3",
-      "status": "operational"
+      "status": "down"
     },
     {
       "name": "qwen3.6-max-preview",
@@ -131,12 +151,12 @@
     {
       "name": "DeepSeek-V3.2-Exp",
       "description": "实验版 · 百炼",
-      "status": "operational"
+      "status": "down"
     },
     {
       "name": "GLM-4.5-Air",
       "description": "轻量 · 百炼",
-      "status": "operational"
+      "status": "degraded"
     },
     {
       "name": "MiniMax-M2.5",
@@ -161,7 +181,7 @@
     {
       "name": "Kimi-K2-Instruct",
       "description": "多模态 · 指令优化 · 百炼",
-      "status": "operational"
+      "status": "down"
     },
     {
       "name": "Qwen3.6-Plus",
@@ -176,6 +196,16 @@
     {
       "name": "MiMo-2.5-Pro",
       "description": "小米 · 长程任务第一",
+      "status": "operational"
+    },
+    {
+      "name": "MiMo-2.5-TTS",
+      "description": "小米 · 语音合成",
+      "status": "operational"
+    },
+    {
+      "name": "MiMo-2.5-TTS-VoiceDesign",
+      "description": "小米 · 语音定制",
       "status": "operational"
     }
   ]
