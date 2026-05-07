@@ -976,65 +976,117 @@ const GATEWAY_URL = "https://diusqgphvybnzazgopor.supabase.co/functions/v1/chat-
 const BRAND_ICONS = {
   "DeepSeek": "deepseek-color (1).svg",
   "OpenAI": "openai.svg",
+  "Google": "gemini-color.svg",
+  "Grok": "grok.svg",
+  "Anthropic Claude": "claude-color.svg",
   "ZhipuAI": "zhipu-color.svg",
+  "智谱 GLM": "zhipu-color.svg",
   "Moonshot AI": "moonshot.svg",
+  "Kimi": "moonshot.svg",
   "Qwen": "qwen-color.svg",
+  "通义千问": "qwen-color.svg",
   "Alibaba Cloud": "qwen-color.svg",
   "MiniMax": "minimax-color.svg",
   "SenseTime": "sensenova-color.svg",
+  "SenseNova": "sensenova-color.svg",
   "Stepfun": "stepfun-color.svg",
+  "阶跃星辰": "stepfun-color.svg",
   "Tencent": "yuanbao-color.svg",
   "NVIDIA": "nvidia-color.svg",
   "Ant Group": "antgroup-color.svg",
+  "蚂蚁 Ling": "antgroup-color.svg",
   "iFlytek": "spark-color.svg",
   "Xiaomi": "xiaomimimo-color.svg",
+  "小米 MiMo": "xiaomimimo-color.svg",
 };
 
-/* ─── 静态兜底数据（无请求时保持列表完整） ─── */
+/* ─── 静态兜底数据（无请求时保持列表完整，与前后端模型完全同步） ─── */
 const FALLBACK_SERVICES = [
-  { "name": "DeepSeek-V4-Flash", "description": "闪电 · 快速 · 线路一", "status": "operational", "icon": "deepseek-color (1).svg" },
-  { "name": "DeepSeek-V4-Pro",   "description": "Pro研究级模型 · 线路一", "status": "operational", "icon": "deepseek-color (1).svg" },
-  { "name": "DeepSeek-V4-Pro",   "description": "Pro研究级模型 · 线路二", "status": "operational", "icon": "deepseek-color (1).svg" },
-  { "name": "Step-3.5",          "description": "阶跃星辰 · 快准狠",      "status": "operational", "icon": "stepfun-color.svg" },
-  { "name": "混元3",             "description": "国产腾讯旗下最新AI · 低限额", "status": "operational", "icon": "yuanbao-color.svg" },
-  { "name": "GPT-5.4",           "description": "OpenAI · 每日限流",      "status": "operational", "icon": "openai.svg" },
-  { "name": "chatGPT-OSS",       "description": "OpenAI · 慢",            "status": "operational", "icon": "openai.svg" },
-  { "name": "Nemotron-3-super",  "description": "英伟达",                 "status": "operational", "icon": "nvidia-color.svg" },
-  { "name": "Ling-2.6",          "description": "蚂蚁集团百灵 · 大参数",  "status": "operational", "icon": "antgroup-color.svg" },
-  { "name": "Ling-2.6",          "description": "蚂蚁集团百灵 · 魔塔线路二", "status": "operational", "icon": "antgroup-color.svg" },
-  { "name": "spark-x2",          "description": "星火推理模型",            "status": "operational", "icon": "spark-color.svg" },
-  { "name": "DeepSeek-R1",       "description": "强推理",                 "status": "operational", "icon": "deepseek-color (1).svg" },
-  { "name": "Qwen 3.5",          "description": "多模态 · 全能型AI",     "status": "operational", "icon": "qwen-color.svg" },
-  { "name": "Qwen3-Coder",       "description": "多模态 · 编码专项",      "status": "operational", "icon": "qwen-color.svg" },
-  { "name": "Kimi K2.5",         "description": "多模态 · 复杂任务处理", "status": "operational", "icon": "moonshot.svg" },
-  { "name": "Kimi K2.6",         "description": "多模态 · 官方API",      "status": "operational", "icon": "moonshot.svg" },
-  { "name": "Kimi K2.6",         "description": "多模态 · 线路二",       "status": "operational", "icon": "moonshot.svg" },
-  { "name": "GPT-5.5",           "description": "新 · TokenFlux",       "status": "operational", "icon": "openai.svg" },
-  { "name": "GLM-5",             "description": "深度编程",               "status": "operational", "icon": "zhipu-color.svg" },
-  { "name": "GLM-5.1",           "description": "复杂编码处理 · 魔塔线路一", "status": "operational", "icon": "zhipu-color.svg" },
-  { "name": "GLM-5.1",           "description": "复杂编码处理 · 魔塔线路二", "status": "operational", "icon": "zhipu-color.svg" },
-  { "name": "GLM-4.7",           "description": "Max · 约等于Gemini3",  "status": "operational", "icon": "zhipu-color.svg" },
-  { "name": "qwen3.6-max-preview","description": "预览",                  "status": "operational", "icon": "qwen-color.svg" },
-  { "name": "qwen3.6-plus",       "description": "多模态 · 均衡之选",    "status": "operational", "icon": "qwen-color.svg" },
-  { "name": "MiniMax-M2.5",      "description": "新 · 性价比之选 快速", "status": "operational", "icon": "minimax-color.svg" },
-  { "name": "DeepSeek-R1",       "description": "强推理 · 百炼",         "status": "operational", "icon": "deepseek-color (1).svg" },
-  { "name": "Qwen3.6-Flash",     "description": "多模态 · 快速 · 百炼", "status": "operational", "icon": "qwen-color.svg" },
-  { "name": "Kimi K2.5",         "description": "多模态 · 线路二 · 百炼", "status": "operational", "icon": "moonshot.svg" },
-  { "name": "DeepSeek-V3.2",     "description": "百炼 · 稳定",           "status": "operational", "icon": "deepseek-color (1).svg" },
-  { "name": "DeepSeek-V3.2-Exp", "description": "实验版 · 百炼",         "status": "operational", "icon": "deepseek-color (1).svg" },
-  { "name": "GLM-4.5-Air",       "description": "轻量 · 百炼",           "status": "operational", "icon": "zhipu-color.svg" },
-  { "name": "MiniMax-M2.5",      "description": "线路二 · 百炼",          "status": "operational", "icon": "minimax-color.svg" },
-  { "name": "DeepSeek-V3.1",     "description": "百炼 · 均衡",           "status": "operational", "icon": "deepseek-color (1).svg" },
-  { "name": "Qwen3-Coder-Plus",  "description": "多模态 · 专业编码 · 百炼", "status": "operational", "icon": "qwen-color.svg" },
-  { "name": "Qwen3-Max",         "description": "多模态 · 旗舰 · 百炼",  "status": "operational", "icon": "qwen-color.svg" },
-  { "name": "Kimi-K2-Instruct",  "description": "多模态 · 指令优化 · 百炼", "status": "operational", "icon": "moonshot.svg" },
-  { "name": "Qwen3.6-Plus",      "description": "多模态 · 线路三 · 百炼", "status": "operational", "icon": "qwen-color.svg" },
-  { "name": "DeepSeek-R1-0528",  "description": "强推理 · 线路三 · 百炼", "status": "operational", "icon": "deepseek-color (1).svg" },
-  { "name": "MiMo-2.5-Pro",      "description": "小米 · 长程任务第一",    "status": "operational", "icon": "xiaomimimo-color.svg" },
-  { "name": "MiMo-2.5-TTS",      "description": "小米 · 语音合成",        "status": "operational", "icon": "xiaomimimo-color.svg" },
-  { "name": "MiMo-2.5-TTS-VoiceDesign", "description": "小米 · 语音定制", "status": "operational", "icon": "xiaomimimo-color.svg" },
-  { "name": "SenseNova 6.7 Flash-Lite", "description": "多模态 · 快速",   "status": "operational", "icon": "sensenova-color.svg" },
-  { "name": "SenseNova U1 Fast",  "description": "图像生成",              "status": "operational", "icon": "sensenova-color.svg" }
+  { "name": "ChatGPT-5.4-Mini", "line_label": "线路一", "status": "operational", "icon": "openai.svg" },
+  { "name": "GPT-5.2", "line_label": "线路一", "status": "operational", "icon": "openai.svg" },
+  { "name": "GPT-5.3 Codex", "line_label": "线路一", "status": "operational", "icon": "openai.svg" },
+  { "name": "Grok 4.20 Fast", "line_label": "线路一", "status": "operational", "icon": "grok.svg" },
+  { "name": "GPT-5.5", "line_label": "线路一", "status": "operational", "icon": "openai.svg" },
+  { "name": "GPT Image 2", "line_label": "线路一", "status": "operational", "icon": "openai.svg" },
+  { "name": "GPT-4", "line_label": "线路二", "status": "operational", "icon": "openai.svg" },
+  { "name": "GPT Image 2", "line_label": "线路二", "status": "operational", "icon": "openai.svg" },
+  { "name": "Gemini 3.1 Pro", "line_label": "线路一", "status": "operational", "icon": "gemini-color.svg" },
+  { "name": "GPT-5.3 Codex", "line_label": "线路三", "status": "operational", "icon": "openai.svg" },
+  { "name": "Gemini 3 Flash", "line_label": "线路一", "status": "operational", "icon": "gemini-color.svg" },
+  { "name": "ChatGPT-5.4-Mini", "line_label": "线路二", "status": "operational", "icon": "openai.svg" },
+  { "name": "GPT-4.1 Nano", "line_label": "线路一", "status": "operational", "icon": "openai.svg" },
+  { "name": "GPT-OSS-120B", "line_label": "线路一", "status": "operational", "icon": "openai.svg" },
+  { "name": "GPT-OSS-20B", "line_label": "线路一", "status": "operational", "icon": "openai.svg" },
+  { "name": "GPT-5.3 Codex", "line_label": "线路二", "status": "operational", "icon": "openai.svg" },
+  { "name": "GPT-5.3 Codex Spark", "line_label": "线路一", "status": "operational", "icon": "openai.svg" },
+  { "name": "GPT-5.4", "line_label": "线路三", "status": "operational", "icon": "openai.svg" },
+  { "name": "Gemini 2.5 Pro", "line_label": "线路一", "status": "operational", "icon": "gemini-color.svg" },
+  { "name": "Gemini 3.1 Pro", "line_label": "线路二", "status": "operational", "icon": "gemini-color.svg" },
+  { "name": "Claude Opus 4.5", "line_label": "线路一", "status": "operational", "icon": "claude-color.svg" },
+  { "name": "Claude Opus 4.6", "line_label": "线路一", "status": "operational", "icon": "claude-color.svg" },
+  { "name": "Claude Sonnet 4.6", "line_label": "线路一", "status": "operational", "icon": "claude-color.svg" },
+  { "name": "Claude Sonnet 4.5", "line_label": "线路一", "status": "operational", "icon": "claude-color.svg" },
+  { "name": "GPT Image 2", "line_label": "线路三", "status": "operational", "icon": "openai.svg" },
+  { "name": "GPT-5 Nano", "line_label": "线路一", "status": "operational", "icon": "openai.svg" },
+  { "name": "Gemini 3 Flash", "line_label": "线路二", "status": "operational", "icon": "gemini-color.svg" },
+  { "name": "GPT-5 Codex Mini", "line_label": "线路一", "status": "operational", "icon": "openai.svg" },
+  { "name": "DeepSeek-V4-Pro", "line_label": "线路一", "status": "operational", "icon": "deepseek-color (1).svg" },
+  { "name": "DeepSeek-V4-Flash", "line_label": "线路一", "status": "operational", "icon": "deepseek-color (1).svg" },
+  { "name": "Ling 2.6", "line_label": "线路一", "status": "operational", "icon": "antgroup-color.svg" },
+  { "name": "GLM-5", "line_label": "线路一", "status": "operational", "icon": "zhipu-color.svg" },
+  { "name": "MiniMax M2.5", "line_label": "线路一", "status": "operational", "icon": "minimax-color.svg" },
+  { "name": "Image Fast", "line_label": "线路一", "status": "operational", "icon": "" },
+  { "name": "SenseNova 6.7 Flash-Lite", "line_label": "线路一", "status": "operational", "icon": "sensenova-color.svg" },
+  { "name": "SenseNova U1 Fast", "line_label": "线路一", "status": "operational", "icon": "sensenova-color.svg" },
+  { "name": "DeepSeek-V4-Flash", "line_label": "线路二", "status": "operational", "icon": "deepseek-color (1).svg" },
+  { "name": "Qwen3.6 Plus", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen3.6 Flash", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen3-Coder-Plus", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Kimi K2.6", "line_label": "线路一", "status": "operational", "icon": "moonshot.svg" },
+  { "name": "Kimi K2.5", "line_label": "线路一", "status": "operational", "icon": "moonshot.svg" },
+  { "name": "Kimi K2 Thinking", "line_label": "线路一", "status": "operational", "icon": "moonshot.svg" },
+  { "name": "Moonshot-Kimi-K2-Instruct", "line_label": "线路一", "status": "operational", "icon": "moonshot.svg" },
+  { "name": "Qwen3.5 Omni Plus", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "MiniMax M2.1", "line_label": "线路一", "status": "operational", "icon": "minimax-color.svg" },
+  { "name": "GLM-4.5 Air", "line_label": "线路一", "status": "operational", "icon": "zhipu-color.svg" },
+  { "name": "GLM-4.5", "line_label": "线路一", "status": "operational", "icon": "zhipu-color.svg" },
+  { "name": "GLM-4.6", "line_label": "线路一", "status": "operational", "icon": "zhipu-color.svg" },
+  { "name": "GLM-4.7", "line_label": "线路一", "status": "operational", "icon": "zhipu-color.svg" },
+  { "name": "DeepSeek-R1", "line_label": "线路一", "status": "operational", "icon": "zhipu-color.svg" },
+  { "name": "DeepSeek-V3.1", "line_label": "线路一", "status": "operational", "icon": "deepseek-color (1).svg" },
+  { "name": "DeepSeek-V3.2", "line_label": "线路一", "status": "operational", "icon": "deepseek-color (1).svg" },
+  { "name": "DeepSeek-V3", "line_label": "线路一", "status": "operational", "icon": "deepseek-color (1).svg" },
+  { "name": "DeepSeek-R1-0528", "line_label": "线路一", "status": "operational", "icon": "deepseek-color (1).svg" },
+  { "name": "DeepSeek-V3.2 Exp", "line_label": "线路一", "status": "operational", "icon": "deepseek-color (1).svg" },
+  { "name": "Qwen3.6 Max Preview", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen3.6 Flash", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen3.6 Plus", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen3-Max", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen 3.5", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen3-Coder", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "MiniMax M2.5", "line_label": "线路二", "status": "operational", "icon": "minimax-color.svg" },
+  { "name": "MiniMax M2.1", "line_label": "线路二", "status": "operational", "icon": "minimax-color.svg" },
+  { "name": "Kimi K2 Thinking", "line_label": "线路二", "status": "operational", "icon": "moonshot.svg" },
+  { "name": "Moonshot-Kimi-K2-Instruct", "line_label": "线路二", "status": "operational", "icon": "moonshot.svg" },
+  { "name": "Kimi K2.5", "line_label": "线路二", "status": "operational", "icon": "moonshot.svg" },
+  { "name": "GLM-4.6", "line_label": "线路二", "status": "operational", "icon": "zhipu-color.svg" },
+  { "name": "GLM-4.5", "line_label": "线路二", "status": "operational", "icon": "zhipu-color.svg" },
+  { "name": "DeepSeek-V3", "line_label": "线路二", "status": "operational", "icon": "deepseek-color (1).svg" },
+  { "name": "Qwen3.6 Flash", "line_label": "线路二", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen3.6 Plus", "line_label": "线路二", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "视频生成", "line_label": "线路一", "status": "operational", "icon": "" },
+  { "name": "Kimi K2.6", "line_label": "线路二", "status": "operational", "icon": "moonshot.svg" },
+  { "name": "GLM-4.7", "line_label": "线路二", "status": "operational", "icon": "zhipu-color.svg" },
+  { "name": "Step-3.5", "line_label": "线路一", "status": "operational", "icon": "stepfun-color.svg" },
+  { "name": "GLM-5.1", "line_label": "线路一", "status": "operational", "icon": "zhipu-color.svg" },
+  { "name": "GPT-5.4", "line_label": "线路一", "status": "operational", "icon": "openai.svg" },
+  { "name": "GPT-5.5", "line_label": "线路二", "status": "operational", "icon": "openai.svg" },
+  { "name": "Grok Imagine", "line_label": "线路一", "status": "operational", "icon": "grok.svg" },
+  { "name": "MiMo-V2.5-Pro", "line_label": "线路一", "status": "operational", "icon": "xiaomimimo-color.svg" },
+  { "name": "GPT Image Precise", "line_label": "线路一", "status": "operational", "icon": "openai.svg" },
+  { "name": "MiniMax M2.7", "line_label": "线路一", "status": "operational", "icon": "minimax-color.svg" },
+  { "name": "MiMo TTS", "line_label": "线路一", "status": "operational", "icon": "xiaomimimo-color.svg" },
+  { "name": "MiMo Voice Design", "line_label": "线路一", "status": "operational", "icon": "xiaomimimo-color.svg" },
 ];
 
 /* ─── 工具 ─── */
@@ -1101,7 +1153,7 @@ function mergeServices(dynamicModels) {
     if (candidates.length === 1) {
       svc = candidates[0];
     } else if (candidates.length > 1) {
-      svc = candidates.find(c => dm.line_label && c.description.includes(dm.line_label)) || candidates[0];
+      svc = candidates.find(c => dm.line_label && c.line_label === dm.line_label) || candidates[0];
     }
     if (svc) {
       svc.status = dm.status;
@@ -1110,6 +1162,7 @@ function mergeServices(dynamicModels) {
       svc.avg_latency_ms = dm.avg_latency_ms;
       svc.is_dynamic = true;
       svc.brand = dm.brand;
+      svc.line_label = dm.line_label || svc.line_label || "";
       if (dm.hourly) svc.hourly = dm.hourly;
     }
   }
@@ -1222,9 +1275,7 @@ function renderList(services) {
       el.style.animationDelay = `${0.2 + i * 0.03}s`;
 
       const iconSrc = svc.icon || BRAND_ICONS[svc.brand] || '';
-      const lineTag = svc.description && svc.description.includes('·')
-        ? svc.description.split('·').pop().trim()
-        : (svc.line_label || '');
+      const lineTag = svc.line_label || '';
 
       const statValClass = svc.status === 'down' ? 'bad' : svc.status === 'degraded' ? 'warn' : 'good';
       const srText = svc.is_dynamic && svc.success_rate != null ? `${svc.success_rate}%` : '--';
