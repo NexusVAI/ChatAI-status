@@ -702,6 +702,179 @@
             0% { transform: translateX(100%); }
             100% { transform: translateX(-100%); }
         }
+
+        /* ── 模型卡片 ── */
+        .model-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 16px 18px;
+            margin-bottom: 10px;
+            transition: border-color 0.2s, background 0.2s;
+            position: relative;
+            overflow: hidden;
+            animation: slideUp 0.4s var(--ease-expo) both;
+        }
+
+        .model-card:hover {
+            border-color: var(--border-strong);
+            background: var(--bg-card-hover);
+        }
+
+        .model-card::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 3px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .model-card:hover::before { opacity: 1; }
+        .model-card.down::before    { background: var(--red); }
+        .model-card.degraded::before { background: var(--amber); }
+        .model-card.operational::before { background: var(--green); }
+
+        .model-card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .model-card-header .service-icon {
+            width: 22px;
+            height: 22px;
+            flex-shrink: 0;
+        }
+
+        .model-name-wrap {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .model-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .model-line-tag {
+            font-size: 10px;
+            font-weight: 500;
+            padding: 1px 7px;
+            border-radius: 100px;
+            background: rgba(255,255,255,0.06);
+            color: var(--text-muted);
+            letter-spacing: 0.04em;
+        }
+
+        .model-stats-right {
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .model-stat-value {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+        }
+
+        .model-stat-value.good  { color: var(--green); }
+        .model-stat-value.warn  { color: var(--amber); }
+        .model-stat-value.bad   { color: var(--red); }
+
+        .model-stat-sub {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 1px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* ── 色块时间线 ── */
+        .model-timeline {
+            display: flex;
+            gap: 2px;
+            margin: 8px 0;
+            height: 18px;
+        }
+
+        .timeline-block {
+            flex: 1;
+            border-radius: 3px;
+            min-width: 3px;
+            transition: transform 0.15s, opacity 0.15s;
+            position: relative;
+        }
+
+        .timeline-block:hover {
+            transform: scaleY(1.3);
+            z-index: 1;
+        }
+
+        .timeline-block.good  { background: rgba(34,197,94,0.55); }
+        .timeline-block.warn  { background: rgba(245,158,11,0.55); }
+        .timeline-block.bad   { background: rgba(239,68,68,0.55); }
+        .timeline-block.empty { background: rgba(255,255,255,0.04); }
+
+        .timeline-block[data-tip]:hover::after {
+            content: attr(data-tip);
+            position: absolute;
+            bottom: calc(100% + 6px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-strong);
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-size: 10px;
+            white-space: nowrap;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .timeline-axis {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+            margin-top: 4px;
+        }
+
+        /* ── 汇总条 ── */
+        .summary-bar {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 18px;
+            margin-bottom: 24px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .summary-bar strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .summary-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
@@ -785,6 +958,9 @@
         </button>
     </div>
 
+    <!-- 汇总条 -->
+    <div class="summary-bar" id="summary-bar">加载中...</div>
+
     <!-- 服务列表 -->
     <div class="services-container">
         <div id="services-list"></div>
@@ -794,252 +970,336 @@
 </div>
 
 <script>
-/* ─── 数据 ─── */
-const STATUS_DATA = {
-    "overallStatus": "operational",
-    "incident": "",
-    "lastUpdated": "2026-05-05T00:00:00+08:00",
-    "services": [
-        { "name": "DeepSeek-V4-Flash", "description": "闪电 · 快速 · 线路一", "status": "operational", "icon": "deepseek-color (1).svg", "pingUrl": "https://api.siliconflow.cn/v1/chat/completions" },
-        { "name": "DeepSeek-V4-Pro",   "description": "Pro研究级模型 · 线路一", "status": "operational", "icon": "deepseek-color (1).svg", "pingUrl": "https://api.siliconflow.cn/v1/chat/completions" },
-        { "name": "DeepSeek-V4-Pro",   "description": "Pro研究级模型 · 线路二", "status": "operational", "icon": "deepseek-color (1).svg", "pingUrl": "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions" },
-        { "name": "Step-3.5",          "description": "阶跃星辰 · 快准狠",      "status": "operational", "icon": "stepfun-color.svg", "pingUrl": "https://api.siliconflow.cn/v1/chat/completions" },
-        { "name": "混元3",             "description": "国产腾讯旗下最新AI · 低限额", "status": "operational", "icon": "yuanbao-color.svg", "pingUrl": "https://api.siliconflow.cn/v1/chat/completions" },
-        { "name": "GPT-5.4",           "description": "额度耗尽",           "status": "operational", "icon": "openai.svg", "pingUrl": "https://openrouter.ai/api/v1/chat/completions" },
-        { "name": "chatGPT-OSS",       "description": "OpenAI · 慢",            "status": "operational", "icon": "openai.svg", "pingUrl": "https://openrouter.ai/api/v1/chat/completions" },
-        { "name": "Nemotron-3-super",  "description": "英伟达",                 "status": "operational", "icon": "nvidia-color.svg", "pingUrl": "https://openrouter.ai/api/v1/chat/completions" },
-        { "name": "ling-2.6",          "description": "蚂蚁集团百灵 · 大参数",  "status": "operational", "icon": "antgroup-color.svg", "pingUrl": "https://api.siliconflow.cn/v1/chat/completions" },
-        { "name": "ling-2.6",          "description": "蚂蚁集团百灵 · 魔塔线路二", "status": "operational", "icon": "antgroup-color.svg", "pingUrl": "https://api.modelscope.cn/v1/chat/completions" },
-        { "name": "spark-x2",          "description": "星火推理模型",            "status": "operational", "icon": "spark-color.svg", "pingUrl": "https://spark-api.xf-yun.com/v1/chat/completions" },
-        { "name": "DeepSeek-R1",       "description": "强推理",                 "status": "operational", "icon": "deepseek-color (1).svg", "pingUrl": "https://api.siliconflow.cn/v1/chat/completions" },
-        { "name": "Qwen 3.5",          "description": "多模态 · 全能型AI",     "status": "operational", "icon": "qwen-color.svg", "pingUrl": "https://api.siliconflow.cn/v1/chat/completions" },
-        { "name": "Qwen3-Coder",       "description": "多模态 · 编码专项",      "status": "operational", "icon": "qwen-color.svg", "pingUrl": "https://api.siliconflow.cn/v1/chat/completions" },
-        { "name": "Kimi K2.5",         "description": "多模态 · 复杂任务处理", "status": "operational", "icon": "moonshot.svg", "pingUrl": "https://api.moonshot.cn/v1/chat/completions" },
-        { "name": "Kimi K2.6",         "description": "多模态 · 官方API",      "status": "operational", "icon": "moonshot.svg", "pingUrl": "https://api.moonshot.cn/v1/chat/completions" },
-        { "name": "Kimi K2.6",         "description": "多模态 · 线路二",       "status": "operational", "icon": "moonshot.svg", "pingUrl": "https://api.moonshot.cn/v1/chat/completions" },
-        { "name": "GPT-5.5",           "description": "新 · TokenFlux",       "status": "operational", "icon": "openai.svg", "pingUrl": "https://openrouter.ai/api/v1/chat/completions" },
-        { "name": "GLM-5",             "description": "额度耗尽",               "status": "operational", "icon": "zhipu-color.svg", "pingUrl": "https://api.siliconflow.cn/v1/chat/completions" },
-        { "name": "GLM-5.1",           "description": "复杂编码处理 · 魔塔线路一", "status": "operational", "icon": "zhipu-color.svg", "pingUrl": "https://api.siliconflow.cn/v1/chat/completions" },
-        { "name": "GLM-5.1",           "description": "复杂编码处理 · 魔塔线路二", "status": "operational", "icon": "zhipu-color.svg", "pingUrl": "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions" },
-        { "name": "GLM-4.7",           "description": "Max · 约等于Gemini3",  "status": "operational", "icon": "zhipu-color.svg", "pingUrl": "https://api.siliconflow.cn/v1/chat/completions" },
-        { "name": "qwen3.6-max-preview","description": "预览",                  "status": "operational", "icon": "qwen-color.svg", "pingUrl": "https://api.siliconflow.cn/v1/chat/completions" },
-        { "name": "qwen3.6-plus",       "description": "多模态 · 均衡之选",    "status": "operational", "icon": "qwen-color.svg", "pingUrl": "https://api.siliconflow.cn/v1/chat/completions" },
-        { "name": "MiniMax-M2.5",      "description": "新 · 性价比之选 快速", "status": "operational", "icon": "minimax-color.svg", "pingUrl": "https://api.siliconflow.cn/v1/chat/completions" },
-        { "name": "DeepSeek-R1",       "description": "强推理 · 百炼",         "status": "operational", "icon": "deepseek-color (1).svg", "pingUrl": "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions" },
-        { "name": "Qwen3.6-Flash",     "description": "多模态 · 快速 · 百炼", "status": "operational", "icon": "qwen-color.svg", "pingUrl": "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions" },
-        { "name": "Kimi K2.5",         "description": "多模态 · 线路二 · 百炼", "status": "operational", "icon": "moonshot.svg", "pingUrl": "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions" },
-        { "name": "DeepSeek-V3.2",     "description": "百炼 · 稳定",           "status": "operational", "icon": "deepseek-color (1).svg", "pingUrl": "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions" },
-        { "name": "DeepSeek-V3.2-Exp", "description": "实验版 · 百炼",         "status": "operational", "icon": "deepseek-color (1).svg", "pingUrl": "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions" },
-        { "name": "GLM-4.5-Air",       "description": "轻量 · 百炼",           "status": "operational", "icon": "zhipu-color.svg", "pingUrl": "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions" },
-        { "name": "MiniMax-M2.5",      "description": "线路二 · 百炼",          "status": "operational", "icon": "minimax-color.svg", "pingUrl": "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions" },
-        { "name": "DeepSeek-V3.1",     "description": "百炼 · 均衡",           "status": "operational", "icon": "deepseek-color (1).svg", "pingUrl": "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions" },
-        { "name": "Qwen3-Coder-Plus",  "description": "多模态 · 专业编码 · 百炼", "status": "operational", "icon": "qwen-color.svg", "pingUrl": "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions" },
-        { "name": "Qwen3-Max",         "description": "多模态 · 旗舰 · 百炼",  "status": "operational", "icon": "qwen-color.svg", "pingUrl": "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions" },
-        { "name": "Kimi-K2-Instruct",  "description": "多模态 · 指令优化 · 百炼", "status": "operational", "icon": "moonshot.svg", "pingUrl": "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions" },
-        { "name": "Qwen3.6-Plus",      "description": "多模态 · 2026-04-02 · 线路三 · 百炼", "status": "operational", "icon": "qwen-color.svg", "pingUrl": "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions" },
-        { "name": "DeepSeek-R1-0528",  "description": "强推理 · 线路三 · 百炼", "status": "operational", "icon": "deepseek-color (1).svg", "pingUrl": "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions" },
-        { "name": "MiMo-2.5-Pro",      "description": "小米 · 长程任务第一",    "status": "operational", "icon": "xiaomimimo-color.svg", "pingUrl": "https://api.xiaomimimo.com/v1/chat/completions" },
-        { "name": "MiMo-2.5-TTS",      "description": "小米 · 语音合成",        "status": "operational", "icon": "xiaomimimo-color.svg", "pingUrl": "https://api.xiaomimimo.com/v1/audio/speech" },
-        { "name": "MiMo-2.5-TTS-VoiceDesign", "description": "小米 · 语音定制", "status": "operational", "icon": "xiaomimimo-color.svg", "pingUrl": "https://api.xiaomimimo.com/v1/audio/voice-design" },
-        { "name": "SenseNova 6.7 Flash-Lite", "description": "多模态 · 快速",   "status": "operational", "icon": "sensenova-color.svg", "pingUrl": "https://api.siliconflow.cn/v1/chat/completions" },
-        { "name": "SenseNova U1 Fast",  "description": "图像生成",              "status": "operational", "icon": "sensenova-color.svg", "pingUrl": "https://api.siliconflow.cn/v1/chat/completions" }
-    ]
+/* ─── 配置 ─── */
+const GATEWAY_URL = "https://diusqgphvybnzazgopor.supabase.co/functions/v1/chat-gateway";
+
+const BRAND_ICONS = {
+  "DeepSeek": "deepseek-color (1).svg",
+  "OpenAI": "openai.svg",
+  "ZhipuAI": "zhipu-color.svg",
+  "Moonshot AI": "moonshot.svg",
+  "Qwen": "qwen-color.svg",
+  "Alibaba Cloud": "qwen-color.svg",
+  "MiniMax": "minimax-color.svg",
+  "SenseTime": "sensenova-color.svg",
+  "Stepfun": "stepfun-color.svg",
+  "Tencent": "yuanbao-color.svg",
+  "NVIDIA": "nvidia-color.svg",
+  "Ant Group": "antgroup-color.svg",
+  "iFlytek": "spark-color.svg",
+  "Xiaomi": "xiaomimimo-color.svg",
 };
+
+/* ─── 静态兜底数据（无请求时保持列表完整） ─── */
+const FALLBACK_SERVICES = [
+  { "name": "DeepSeek-V4-Flash", "description": "闪电 · 快速 · 线路一", "status": "operational", "icon": "deepseek-color (1).svg" },
+  { "name": "DeepSeek-V4-Pro",   "description": "Pro研究级模型 · 线路一", "status": "operational", "icon": "deepseek-color (1).svg" },
+  { "name": "DeepSeek-V4-Pro",   "description": "Pro研究级模型 · 线路二", "status": "operational", "icon": "deepseek-color (1).svg" },
+  { "name": "Step-3.5",          "description": "阶跃星辰 · 快准狠",      "status": "operational", "icon": "stepfun-color.svg" },
+  { "name": "混元3",             "description": "国产腾讯旗下最新AI · 低限额", "status": "operational", "icon": "yuanbao-color.svg" },
+  { "name": "GPT-5.4",           "description": "OpenAI · 每日限流",      "status": "operational", "icon": "openai.svg" },
+  { "name": "chatGPT-OSS",       "description": "OpenAI · 慢",            "status": "operational", "icon": "openai.svg" },
+  { "name": "Nemotron-3-super",  "description": "英伟达",                 "status": "operational", "icon": "nvidia-color.svg" },
+  { "name": "Ling-2.6",          "description": "蚂蚁集团百灵 · 大参数",  "status": "operational", "icon": "antgroup-color.svg" },
+  { "name": "Ling-2.6",          "description": "蚂蚁集团百灵 · 魔塔线路二", "status": "operational", "icon": "antgroup-color.svg" },
+  { "name": "spark-x2",          "description": "星火推理模型",            "status": "operational", "icon": "spark-color.svg" },
+  { "name": "DeepSeek-R1",       "description": "强推理",                 "status": "operational", "icon": "deepseek-color (1).svg" },
+  { "name": "Qwen 3.5",          "description": "多模态 · 全能型AI",     "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen3-Coder",       "description": "多模态 · 编码专项",      "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Kimi K2.5",         "description": "多模态 · 复杂任务处理", "status": "operational", "icon": "moonshot.svg" },
+  { "name": "Kimi K2.6",         "description": "多模态 · 官方API",      "status": "operational", "icon": "moonshot.svg" },
+  { "name": "Kimi K2.6",         "description": "多模态 · 线路二",       "status": "operational", "icon": "moonshot.svg" },
+  { "name": "GPT-5.5",           "description": "新 · TokenFlux",       "status": "operational", "icon": "openai.svg" },
+  { "name": "GLM-5",             "description": "深度编程",               "status": "operational", "icon": "zhipu-color.svg" },
+  { "name": "GLM-5.1",           "description": "复杂编码处理 · 魔塔线路一", "status": "operational", "icon": "zhipu-color.svg" },
+  { "name": "GLM-5.1",           "description": "复杂编码处理 · 魔塔线路二", "status": "operational", "icon": "zhipu-color.svg" },
+  { "name": "GLM-4.7",           "description": "Max · 约等于Gemini3",  "status": "operational", "icon": "zhipu-color.svg" },
+  { "name": "qwen3.6-max-preview","description": "预览",                  "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "qwen3.6-plus",       "description": "多模态 · 均衡之选",    "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "MiniMax-M2.5",      "description": "新 · 性价比之选 快速", "status": "operational", "icon": "minimax-color.svg" },
+  { "name": "DeepSeek-R1",       "description": "强推理 · 百炼",         "status": "operational", "icon": "deepseek-color (1).svg" },
+  { "name": "Qwen3.6-Flash",     "description": "多模态 · 快速 · 百炼", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Kimi K2.5",         "description": "多模态 · 线路二 · 百炼", "status": "operational", "icon": "moonshot.svg" },
+  { "name": "DeepSeek-V3.2",     "description": "百炼 · 稳定",           "status": "operational", "icon": "deepseek-color (1).svg" },
+  { "name": "DeepSeek-V3.2-Exp", "description": "实验版 · 百炼",         "status": "operational", "icon": "deepseek-color (1).svg" },
+  { "name": "GLM-4.5-Air",       "description": "轻量 · 百炼",           "status": "operational", "icon": "zhipu-color.svg" },
+  { "name": "MiniMax-M2.5",      "description": "线路二 · 百炼",          "status": "operational", "icon": "minimax-color.svg" },
+  { "name": "DeepSeek-V3.1",     "description": "百炼 · 均衡",           "status": "operational", "icon": "deepseek-color (1).svg" },
+  { "name": "Qwen3-Coder-Plus",  "description": "多模态 · 专业编码 · 百炼", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen3-Max",         "description": "多模态 · 旗舰 · 百炼",  "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Kimi-K2-Instruct",  "description": "多模态 · 指令优化 · 百炼", "status": "operational", "icon": "moonshot.svg" },
+  { "name": "Qwen3.6-Plus",      "description": "多模态 · 线路三 · 百炼", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "DeepSeek-R1-0528",  "description": "强推理 · 线路三 · 百炼", "status": "operational", "icon": "deepseek-color (1).svg" },
+  { "name": "MiMo-2.5-Pro",      "description": "小米 · 长程任务第一",    "status": "operational", "icon": "xiaomimimo-color.svg" },
+  { "name": "MiMo-2.5-TTS",      "description": "小米 · 语音合成",        "status": "operational", "icon": "xiaomimimo-color.svg" },
+  { "name": "MiMo-2.5-TTS-VoiceDesign", "description": "小米 · 语音定制", "status": "operational", "icon": "xiaomimimo-color.svg" },
+  { "name": "SenseNova 6.7 Flash-Lite", "description": "多模态 · 快速",   "status": "operational", "icon": "sensenova-color.svg" },
+  { "name": "SenseNova U1 Fast",  "description": "图像生成",              "status": "operational", "icon": "sensenova-color.svg" }
+];
 
 /* ─── 工具 ─── */
 const statusMeta = {
-    operational: {
-        label: '正常运行',
-        iconSvg: `<path d="M3 8l3.5 3.5L13 4.5" stroke="#22c55e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`,
-        ringClass: 'operational'
-    },
-    degraded: {
-        label: '性能降级',
-        iconSvg: `<path d="M8 4v5M8 11v1.5" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round"/>`,
-        ringClass: 'degraded'
-    },
-    incident: {
-        label: '服务中断',
-        iconSvg: `<path d="M8 4v5M8 11v1.5" stroke="#ef4444" stroke-width="1.8" stroke-linecap="round"/>`,
-        ringClass: 'incident'
-    }
-};
-
-const badgeIcon = {
-    operational: `<svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-    degraded:    `<svg viewBox="0 0 10 10" fill="none"><path d="M5 2.5v3.5M5 7.5v.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>`,
-    down:        `<svg viewBox="0 0 10 10" fill="none"><path d="M3 3l4 4M7 3l-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>`
-};
-
-const badgeLabel = {
-    operational: '正常运行',
-    degraded:    '性能降级',
-    down:        '服务中断'
+  operational: {
+    label: '正常运行',
+    iconSvg: `<path d="M3 8l3.5 3.5L13 4.5" stroke="#22c55e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`,
+    ringClass: 'operational'
+  },
+  degraded: {
+    label: '性能降级',
+    iconSvg: `<path d="M8 4v5M8 11v1.5" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round"/>`,
+    ringClass: 'degraded'
+  },
+  incident: {
+    label: '服务中断',
+    iconSvg: `<path d="M8 4v5M8 11v1.5" stroke="#ef4444" stroke-width="1.8" stroke-linecap="round"/>`,
+    ringClass: 'incident'
+  }
 };
 
 function formatTime(iso) {
-    return new Date(iso).toLocaleString('zh-CN', {
-        month: '2-digit', day: '2-digit',
-        hour: '2-digit', minute: '2-digit'
-    });
+  return new Date(iso).toLocaleString('zh-CN', {
+    month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit'
+  });
 }
 
 function timeSince(iso) {
-    const diff = Math.floor((Date.now() - new Date(iso)) / 60000);
-    if (diff < 1)  return '刚刚';
-    if (diff < 60) return `${diff} 分钟前`;
-    const h = Math.floor(diff / 60), m = diff % 60;
-    return m > 0 ? `${h} 小时 ${m} 分钟前` : `${h} 小时前`;
+  const diff = Math.floor((Date.now() - new Date(iso)) / 60000);
+  if (diff < 1)  return '刚刚';
+  if (diff < 60) return `${diff} 分钟前`;
+  const h = Math.floor(diff / 60), m = diff % 60;
+  return m > 0 ? `${h} 小时 ${m} 分钟前` : `${h} 小时前`;
+}
+
+function fmtHourLabel(iso) {
+  const d = new Date(iso);
+  return `${String(d.getHours()).padStart(2,'0')}:00`;
+}
+
+/* ─── 数据获取与合并 ─── */
+let currentFilter = 'all';
+let lastDynamicData = null;
+let lastFetchError = false;
+
+function mergeServices(dynamicModels) {
+  const base = FALLBACK_SERVICES.map(s => ({...s, hourly: []}));
+  const byName = new Map();
+  for (const s of base) {
+    const key = s.name;
+    if (!byName.has(key)) byName.set(key, []);
+    byName.get(key).push(s);
+    const lowerKey = key.toLowerCase();
+    if (lowerKey !== key) {
+      if (!byName.has(lowerKey)) byName.set(lowerKey, []);
+      byName.get(lowerKey).push(s);
+    }
+  }
+
+  for (const dm of dynamicModels || []) {
+    const candidates = byName.get(dm.display_name) || byName.get(dm.display_name.toLowerCase()) || [];
+    let svc = null;
+    if (candidates.length === 1) {
+      svc = candidates[0];
+    } else if (candidates.length > 1) {
+      svc = candidates.find(c => dm.line_label && c.description.includes(dm.line_label)) || candidates[0];
+    }
+    if (svc) {
+      svc.status = dm.status;
+      svc.total_requests = dm.total_requests;
+      svc.success_rate = dm.success_rate;
+      svc.avg_latency_ms = dm.avg_latency_ms;
+      svc.is_dynamic = true;
+      svc.brand = dm.brand;
+      if (dm.hourly) svc.hourly = dm.hourly;
+    }
+  }
+  return base;
+}
+
+async function fetchModelHealth() {
+  try {
+    const resp = await fetch(GATEWAY_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ endpoint: "model_health" }),
+    });
+    if (!resp.ok) return null;
+    return await resp.json();
+  } catch {
+    return null;
+  }
 }
 
 /* ─── 渲染 ─── */
-let currentFilter = 'all';
-
 function renderPage() {
-    const data = STATUS_DATA;
-    const services = data.services;
-    const cntDown = services.filter(s => s.status === 'down').length;
-    const cntOk   = services.filter(s => s.status === 'operational').length;
-    const cntTotal = services.length;
+  const services = mergeServices(lastDynamicData?.models);
+  const cntDown = services.filter(s => s.status === 'down').length;
+  const cntDegraded = services.filter(s => s.status === 'degraded').length;
+  const cntOk = services.filter(s => s.status === 'operational').length;
+  const cntTotal = services.length;
 
-    /* 统计卡片 */
-    document.getElementById('stat-operational').textContent = cntOk;
-    document.getElementById('stat-down').textContent        = cntDown;
-    document.getElementById('stat-total').textContent       = cntTotal;
+  document.getElementById('stat-operational').textContent = cntOk;
+  document.getElementById('stat-down').textContent = cntDown;
+  document.getElementById('stat-total').textContent = cntTotal;
 
-    /* Tab 计数 */
-    document.getElementById('tab-all-count').textContent  = cntTotal;
-    document.getElementById('tab-down-count').textContent = cntDown;
-    document.getElementById('tab-ok-count').textContent   = cntOk;
+  document.getElementById('tab-all-count').textContent  = cntTotal;
+  document.getElementById('tab-down-count').textContent = cntDown + cntDegraded;
+  document.getElementById('tab-ok-count').textContent   = cntOk;
 
-    /* 总状态 */
-    const overallKey = data.overallStatus === 'incident' ? 'incident'
-                     : services.some(s => s.status === 'degraded') ? 'degraded'
-                     : 'operational';
-    const meta = statusMeta[overallKey];
-    const ring = document.getElementById('status-ring');
-    ring.className = `status-ring ${meta.ringClass}`;
-    document.getElementById('status-icon').innerHTML = meta.iconSvg;
-    document.getElementById('overall-status-text').textContent = meta.label;
+  const overallKey = services.some(s => s.status === 'down') ? 'incident'
+                   : services.some(s => s.status === 'degraded') ? 'degraded'
+                   : 'operational';
+  const meta = statusMeta[overallKey];
+  const ring = document.getElementById('status-ring');
+  ring.className = `status-ring ${meta.ringClass}`;
+  document.getElementById('status-icon').innerHTML = meta.iconSvg;
+  document.getElementById('overall-status-text').textContent = meta.label;
 
-    /* 事故横幅 */
-    const banner = document.getElementById('incident-banner');
-    if (data.incident && data.overallStatus === 'incident') {
-        banner.classList.remove('hidden');
-        document.getElementById('incident-title').textContent = data.incident.title;
-        document.getElementById('incident-desc').textContent  = data.incident.description;
-        const start = data.incident.startedAt;
-        document.getElementById('incident-time').textContent =
-            `${formatTime(start)} 开始 · 已持续 ${timeSince(start)}`;
-    } else {
-        banner.classList.add('hidden');
+  const banner = document.getElementById('incident-banner');
+  if (overallKey === 'incident') {
+    banner.classList.remove('hidden');
+    document.getElementById('incident-title').textContent = '部分模型服务异常';
+    document.getElementById('incident-desc').textContent =
+      `检测到 ${cntDown} 个模型服务中断，${cntDegraded} 个性能降级`;
+    document.getElementById('incident-time').textContent =
+      `基于最近24小时请求数据 · ${lastDynamicData ? timeSince(lastDynamicData.generated_at) : '数据待更新'}`;
+  } else if (overallKey === 'degraded') {
+    banner.classList.remove('hidden');
+    document.getElementById('incident-title').textContent = '部分模型性能降级';
+    document.getElementById('incident-desc').textContent =
+      `检测到 ${cntDegraded} 个模型响应延迟或成功率下降`;
+    document.getElementById('incident-time').textContent =
+      `基于最近24小时请求数据 · ${lastDynamicData ? timeSince(lastDynamicData.generated_at) : '数据待更新'}`;
+  } else {
+    banner.classList.add('hidden');
+  }
+
+  /* 汇总条 */
+  let totalReqAll = 0, totalSuccessAll = 0;
+  for (const s of services) {
+    if (s.is_dynamic && s.total_requests != null) {
+      totalReqAll += s.total_requests;
+      totalSuccessAll += Math.round(s.total_requests * (s.success_rate || 0) / 100);
     }
+  }
+  const avgSuccessAll = totalReqAll > 0 ? Math.round((totalSuccessAll / totalReqAll) * 100) : 0;
+  const summaryBar = document.getElementById('summary-bar');
+  if (summaryBar) {
+    summaryBar.innerHTML = `
+      <span><strong>${totalReqAll.toLocaleString()}</strong> 总请求</span>
+      <span class="footer-dot"></span>
+      <span><strong>${avgSuccessAll}%</strong> 平均成功率</span>
+      <span class="footer-dot"></span>
+      <span><span class="summary-dot" style="background:var(--green)"></span> ${cntOk} 正常</span>
+      <span><span class="summary-dot" style="background:var(--amber)"></span> ${cntDegraded} 降级</span>
+      <span><span class="summary-dot" style="background:var(--red)"></span> ${cntDown} 中断</span>
+      <span style="margin-left:auto">${lastDynamicData ? timeSince(lastDynamicData.generated_at) + ' 更新' : '数据待更新'}</span>
+    `;
+  }
 
-    /* 服务列表 */
-    renderList(services);
+  renderList(services);
 }
 
 function renderList(services) {
-    const list = document.getElementById('services-list');
-    const empty = document.getElementById('empty-state');
-    list.innerHTML = '';
+  const list = document.getElementById('services-list');
+  const empty = document.getElementById('empty-state');
+  list.innerHTML = '';
 
-    const filtered = currentFilter === 'all'
-        ? services
-        : services.filter(s =>
-            currentFilter === 'down' ? s.status !== 'operational'
-            : s.status === 'operational'
-        );
+  const filtered = currentFilter === 'all'
+    ? services
+    : services.filter(s =>
+        currentFilter === 'down' ? s.status !== 'operational'
+        : s.status === 'operational'
+      );
 
-    if (filtered.length === 0) {
-        empty.classList.add('show');
-    } else {
-        empty.classList.remove('show');
-        filtered.forEach((svc, i) => {
-            const el = document.createElement('div');
-            el.className = `service-item ${svc.status}`;
-            el.style.animationDelay = `${0.3 + i * 0.035}s`;
-            const globalIdx = services.indexOf(svc) + 1;
-            el.innerHTML = `
-                <span class="service-index">${String(globalIdx).padStart(2,'0')}</span>
-                ${svc.icon ? `<img class="service-icon" src="${svc.icon}" alt="" onerror="this.style.display='none'">` : ''}
-                <div class="service-led ${svc.status}"></div>
-                <div class="service-info">
-                    <div class="service-name">${svc.name}</div>
-                    ${svc.description ? `<div class="service-desc">${svc.description}${svc.latency != null ? ` · <span class="latency-tag" style="color:${svc.latency < 300 ? '#86efac' : svc.latency < 800 ? '#fcd34d' : '#fca5a5'}">${svc.latency}ms</span>` : ''}</div>` : ''}
-                </div>
-                <div class="service-badge ${svc.status}">
-                    ${badgeIcon[svc.status]}
-                    ${badgeLabel[svc.status]}
-                </div>
-            `;
-            list.appendChild(el);
-        });
-    }
+  if (filtered.length === 0) {
+    empty.classList.add('show');
+  } else {
+    empty.classList.remove('show');
+    filtered.forEach((svc, i) => {
+      const el = document.createElement('div');
+      el.className = `model-card ${svc.status}`;
+      el.style.animationDelay = `${0.2 + i * 0.03}s`;
+
+      const iconSrc = svc.icon || BRAND_ICONS[svc.brand] || '';
+      const lineTag = svc.description && svc.description.includes('·')
+        ? svc.description.split('·').pop().trim()
+        : (svc.line_label || '');
+
+      const statValClass = svc.status === 'down' ? 'bad' : svc.status === 'degraded' ? 'warn' : 'good';
+      const srText = svc.is_dynamic && svc.success_rate != null ? `${svc.success_rate}%` : '--';
+      const reqText = svc.is_dynamic && svc.total_requests != null ? `${svc.total_requests.toLocaleString()}次` : '--';
+      const latText = svc.is_dynamic && svc.avg_latency_ms != null ? `${svc.avg_latency_ms}ms` : '--';
+
+      let timelineHtml = '';
+      if (svc.hourly && svc.hourly.length > 0) {
+        const blocks = svc.hourly.map(h => {
+          if (h.total === 0) return '<div class="timeline-block empty"></div>';
+          const cls = h.success_rate >= 90 ? 'good' : h.success_rate >= 50 ? 'warn' : 'bad';
+          const tip = `${fmtHourLabel(h.hour)} · 成功率 ${h.success_rate}% · ${h.total}次 · 延迟 ${h.avg_latency_ms}ms`;
+          return `<div class="timeline-block ${cls}" data-tip="${tip}"></div>`;
+        }).join('');
+        timelineHtml = `
+          <div class="model-timeline">${blocks}</div>
+          <div class="timeline-axis">
+            <span>24小时前</span>
+            <span>12小时前</span>
+            <span>现在</span>
+          </div>
+        `;
+      } else {
+        timelineHtml = `
+          <div class="model-timeline">${Array(24).fill('<div class="timeline-block empty"></div>').join('')}</div>
+          <div class="timeline-axis"><span>24小时前</span><span>12小时前</span><span>现在</span></div>
+        `;
+      }
+
+      el.innerHTML = `
+        <div class="model-card-header">
+          ${iconSrc ? `<img class="service-icon" src="${iconSrc}" alt="" onerror="this.style.display='none'">` : ''}
+          <div class="model-name-wrap">
+            <div class="model-name">
+              ${svc.name}
+              ${lineTag ? `<span class="model-line-tag">${lineTag}</span>` : ''}
+            </div>
+          </div>
+          <div class="model-stats-right">
+            <div class="model-stat-value ${statValClass}">${srText}</div>
+            <div class="model-stat-sub">${reqText} · ${latText}</div>
+          </div>
+        </div>
+        ${timelineHtml}
+      `;
+      list.appendChild(el);
+    });
+  }
 }
 
 /* ─── 筛选交互 ─── */
 document.getElementById('filter-tabs').addEventListener('click', e => {
-    const btn = e.target.closest('.filter-tab');
-    if (!btn) return;
-    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    currentFilter = btn.dataset.filter;
-    renderList(STATUS_DATA.services);
+  const btn = e.target.closest('.filter-tab');
+  if (!btn) return;
+  document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentFilter = btn.dataset.filter;
+  renderPage();
 });
 
-/* ─── Ping 延迟检测 ─── */
-const pingLatencies = {};
-const PING_INTERVAL = 60000; // 1分钟
-
-async function pingProvider(url) {
-    try {
-        const start = performance.now();
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 5000);
-        const resp = await fetch(url, {
-            method: 'HEAD',
-            mode: 'no-cors',
-            signal: controller.signal
-        });
-        clearTimeout(timeout);
-        const latency = Math.round(performance.now() - start);
-        return latency;
-    } catch {
-        return -1;
-    }
-}
-
-async function runPingCycle() {
-    const uniqueUrls = new Map();
-    STATUS_DATA.services.forEach(svc => {
-        if (svc.pingUrl && !uniqueUrls.has(svc.pingUrl)) {
-            uniqueUrls.set(svc.pingUrl, []);
-        }
-        if (svc.pingUrl) uniqueUrls.get(svc.pingUrl).push(svc.name);
-    });
-
-    const results = await Promise.all(
-        [...uniqueUrls.entries()].map(async ([url, names]) => {
-            const lat = await pingProvider(url);
-            names.forEach(n => { pingLatencies[n] = lat; });
-            return lat;
-        })
-    );
-
-    // 更新服务延迟数据并重新渲染
-    STATUS_DATA.services.forEach(svc => {
-        if (pingLatencies[svc.name] !== undefined) {
-            svc.latency = pingLatencies[svc.name];
-        }
-    });
-    renderList(STATUS_DATA.services);
+/* ─── 刷新循环 ─── */
+async function refreshData() {
+  const data = await fetchModelHealth();
+  if (data) {
+    lastDynamicData = data;
+    lastFetchError = false;
+  } else {
+    lastFetchError = true;
+  }
+  renderPage();
 }
 
 /* ─── 启动 ─── */
-renderPage();
-runPingCycle();
-setInterval(runPingCycle, PING_INTERVAL);
+refreshData();
+setInterval(refreshData, 30000);
 </script>
 </body>
 </html>
