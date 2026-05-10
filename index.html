@@ -376,6 +376,75 @@
             font-family: 'JetBrains Mono', monospace;
         }
 
+        /* ── 搜索栏 ── */
+        .search-wrap {
+            position: relative;
+            margin-bottom: 12px;
+            animation: slideUp 0.6s var(--ease-expo) 0.22s both;
+        }
+
+        .search-input {
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 38px 10px 38px;
+            color: var(--text-primary);
+            font-size: 13px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s var(--ease-expo), background 0.2s;
+        }
+
+        .search-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-input:focus {
+            border-color: var(--border-strong);
+            background: var(--bg-card-hover);
+        }
+
+        .search-icon,
+        .search-clear {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-icon {
+            left: 12px;
+            width: 16px;
+            height: 16px;
+        }
+
+        .search-clear {
+            right: 8px;
+            width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            pointer-events: auto;
+            opacity: 0;
+            transition: opacity 0.15s, background 0.15s;
+        }
+
+        .search-clear:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-secondary);
+        }
+
+        .search-wrap.has-value .search-clear {
+            opacity: 1;
+        }
+
         /* ── 筛选标签 ── */
         .filter-tabs {
             display: flex;
@@ -947,6 +1016,28 @@
         </div>
     </div>
 
+    <!-- 搜索栏 -->
+    <div class="search-wrap" id="search-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="7"></circle>
+            <path d="m21 21-4.3-4.3"></path>
+        </svg>
+        <input
+            type="text"
+            id="search-input"
+            class="search-input"
+            placeholder="搜索模型名称或厂商，例如 Claude / GPT-5.5 / Qwen…"
+            autocomplete="off"
+            spellcheck="false"
+        />
+        <button class="search-clear" id="search-clear" aria-label="清空搜索">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 6 6 18"></path>
+                <path d="m6 6 12 12"></path>
+            </svg>
+        </button>
+    </div>
+
     <!-- 筛选标签 -->
     <div class="filter-tabs" id="filter-tabs">
         <button class="filter-tab active" data-filter="all">
@@ -1131,8 +1222,24 @@ function fmtHourLabel(iso) {
 
 /* ─── 数据获取与合并 ─── */
 let currentFilter = 'all';
+let currentSearch = '';      // 用户输入的搜索词，已 trim + toLowerCase
 let lastDynamicData = null;
 let lastFetchError = false;
+
+/* 搜索匹配：名字、厂商、线路任一命中即可。多关键字按空格分，全部命中才算 */
+function matchesSearch(svc, queryLower) {
+    if (!queryLower) return true;
+    const haystack = (
+        (svc.name || '') + ' ' +
+        (svc.brand || '') + ' ' +
+        (svc.line_label || '')
+    ).toLowerCase();
+    const tokens = queryLower.split(/\s+/).filter(Boolean);
+    for (const t of tokens) {
+        if (!haystack.includes(t)) return false;
+    }
+    return true;
+}
 
 function mergeServices(dynamicModels) {
   const base = FALLBACK_SERVICES.map(s => ({...s, hourly: []}));
@@ -1259,15 +1366,21 @@ function renderList(services) {
   const empty = document.getElementById('empty-state');
   list.innerHTML = '';
 
-  const filtered = currentFilter === 'all'
-    ? services
-    : services.filter(s =>
-        currentFilter === 'down' ? s.status !== 'operational'
-        : s.status === 'operational'
-      );
+  // 1) 状态筛选 → 2) 搜索筛选；先后都通过才显示
+  const queryLower = currentSearch;
+  const filtered = services
+    .filter(s =>
+      currentFilter === 'all' ? true
+      : currentFilter === 'down' ? s.status !== 'operational'
+      : s.status === 'operational'
+    )
+    .filter(s => matchesSearch(s, queryLower));
 
   if (filtered.length === 0) {
     empty.classList.add('show');
+    empty.textContent = queryLower
+      ? `没有找到匹配 "${currentSearch}" 的服务`
+      : '该分类暂无服务';
   } else {
     empty.classList.remove('show');
     filtered.forEach((svc, i) => {
@@ -1336,6 +1449,47 @@ document.getElementById('filter-tabs').addEventListener('click', e => {
   currentFilter = btn.dataset.filter;
   renderPage();
 });
+
+/* ─── 搜索交互 ─── */
+(function setupSearch() {
+  const input = document.getElementById('search-input');
+  const wrap = document.getElementById('search-wrap');
+  const clearBtn = document.getElementById('search-clear');
+  if (!input || !wrap) return;
+
+  // 用 requestAnimationFrame 节流，避免快速输入时频繁重排
+  let scheduled = false;
+  function applySearch() {
+    scheduled = false;
+    const raw = input.value || '';
+    currentSearch = raw.trim().toLowerCase();
+    wrap.classList.toggle('has-value', raw.length > 0);
+    renderPage();
+  }
+  function schedule() {
+    if (scheduled) return;
+    scheduled = true;
+    requestAnimationFrame(applySearch);
+  }
+
+  input.addEventListener('input', schedule);
+  // Esc 键直接清空
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && input.value) {
+      input.value = '';
+      schedule();
+      e.preventDefault();
+    }
+  });
+  if (clearBtn) {
+    clearBtn.addEventListener('click', () => {
+      if (!input.value) return;
+      input.value = '';
+      input.focus();
+      schedule();
+    });
+  }
+})();
 
 /* ─── 刷新循环 ─── */
 async function refreshData() {
