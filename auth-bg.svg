@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  2026-05-15 v3: 登录页深色等高线背景，按 参考物体/beij.html 的 pipeline 1:1 重写。
+  beij.html 原版用 4 层 fractalNoise 不同 baseFrequency 多频叠加 → blur → diffuseLighting
+  → CSS filter: brightness(20) 把 dim 区压黑、ridge 顶推到饱和。
+  浏览器外部 image 拿不到 CSS filter，所以 brightness(20) 内联进 SVG：
+    feComponentTransfer slope=20 等价 CSS brightness(20) 在 SVG 链路里做。
+  最后用 feColorMatrix 把 luminance 写进 alpha：dim ≈ alpha 0（透明），
+  ridge 饱和 ≈ alpha 1（不透明），让 SVG 自然挂在 .auth-bg-island 的 #1a120c
+  bg 上方，无需 mix-blend-mode（normal 合成即天然只露 ridge）。
+  filter 只在 image rasterize 阶段跑一次，结果被 cache，零持续开销。
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <filter id="topo" x="0%" y="0%" width="100%" height="100%" filterUnits="userSpaceOnUse">
+      <!-- 4 层多频噪声叠加，参考 beij.html 第 6-34 行 -->
+      <feTurbulence type="fractalNoise" baseFrequency="0.0004" numOctaves="8" seed="4" result="t1"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.0008" numOctaves="8" seed="4" result="t2"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.0001" numOctaves="8" seed="4" result="t3"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.0018" numOctaves="8" seed="4" result="t4"/>
+      <feMerge result="merged">
+        <feMergeNode in="t1"/>
+        <feMergeNode in="t3"/>
+        <feMergeNode in="t2"/>
+        <feMergeNode in="t4"/>
+      </feMerge>
+      <feGaussianBlur in="merged" stdDeviation="5" result="b1"/>
+      <!-- 第二轮：再加两层中高频 + blur，让 ridge 更密、更细 -->
+      <feTurbulence type="fractalNoise" baseFrequency="0.0016" numOctaves="8" seed="4" result="t5"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.002" numOctaves="8" seed="4" result="t6"/>
+      <feMerge result="merged2">
+        <feMergeNode in="t5"/>
+        <feMergeNode in="t6"/>
+        <feMergeNode in="b1"/>
+      </feMerge>
+      <feGaussianBlur in="merged2" stdDeviation="5" result="b2"/>
+      <!-- 漫反射光照，warm tan = beij 用的 #d7bb98 -->
+      <feDiffuseLighting in="b2" surfaceScale="12" diffuseConstant="1" lighting-color="#d7bb98" result="lit">
+        <feDistantLight azimuth="90" elevation="55"/>
+      </feDiffuseLighting>
+      <!-- 内联 brightness(20)，等价 CSS filter: brightness(20) -->
+      <feComponentTransfer in="lit" result="bright">
+        <feFuncR type="linear" slope="20" intercept="0"/>
+        <feFuncG type="linear" slope="20" intercept="0"/>
+        <feFuncB type="linear" slope="20" intercept="0"/>
+      </feComponentTransfer>
+      <!-- luminance → alpha：dim 像素透明，ridge 顶不透明，自然挂在 bg 上 -->
+      <feColorMatrix in="bright" type="matrix" values="
+        1 0 0 0 0
+        0 1 0 0 0
+        0 0 1 0 0
+        0.33 0.59 0.11 0 0" result="alphified"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="1000" filter="url(#topo)"/>
+</svg>
