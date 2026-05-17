@@ -779,46 +779,44 @@ function matchesSearch(svc, queryLower) {
     return true;
 }
 
+/* 名称归一化：去掉空格/连字符/大小写差异，用于模糊匹配 */
+function normalizeModelKey(s) {
+  return String(s || '').toLowerCase().replace(/[\s\-_\.]+/g, '').replace(/^chat/, '');
+}
+
 function mergeServices(dynamicModels) {
-  const base = FALLBACK_SERVICES.map(s => ({...s, hourly: []}));
-  const byName = new Map();
-  for (const s of base) {
-    const key = s.name;
-    if (!byName.has(key)) byName.set(key, []);
-    byName.get(key).push(s);
-    const lowerKey = key.toLowerCase();
-    if (lowerKey !== key) {
-      if (!byName.has(lowerKey)) byName.set(lowerKey, []);
-      byName.get(lowerKey).push(s);
+  const dynList = (dynamicModels || []).map(dm => ({
+    name: dm.display_name || dm.model_id || 'Unknown',
+    display_name: dm.display_name || dm.model_id || 'Unknown',
+    brand: dm.brand || '',
+    line_label: dm.line_label || '',
+    status: dm.status || 'operational',
+    total_requests: dm.total_requests ?? null,
+    success_rate: dm.success_rate ?? null,
+    avg_latency_ms: dm.avg_latency_ms ?? null,
+    last_check: dm.last_check || null,
+    is_dynamic: true,
+    hourly: dm.hourly || [],
+    icon: '',
+  }));
+
+  /* 用 API 数据的名称归一化建索引，用于去重 fallback */
+  const dynKeys = new Set(dynList.map(s => normalizeModelKey(s.name)));
+
+  /* fallback 中未出现在 API 数据里的条目追加进去 */
+  for (const fb of FALLBACK_SERVICES) {
+    const fbKey = normalizeModelKey(fb.name);
+    if (!dynKeys.has(fbKey)) {
+      dynList.push({ ...fb, hourly: [], is_dynamic: false });
     }
   }
 
-  for (const dm of dynamicModels || []) {
-    const candidates = byName.get(dm.display_name) || byName.get(dm.display_name.toLowerCase()) || [];
-    let svc = null;
-    if (candidates.length === 1) {
-      svc = candidates[0];
-    } else if (candidates.length > 1) {
-      svc = candidates.find(c => dm.line_label && c.line_label === dm.line_label) || candidates[0];
-    }
-    if (svc) {
-      svc.display_name = dm.display_name || svc.display_name || svc.name;
-      svc.status = dm.status;
-      svc.total_requests = dm.total_requests;
-      svc.success_rate = dm.success_rate;
-      svc.avg_latency_ms = dm.avg_latency_ms;
-      svc.is_dynamic = true;
-      svc.brand = dm.brand;
-      svc.line_label = dm.line_label || svc.line_label || "";
-      if (dm.hourly) svc.hourly = dm.hourly;
-    }
+  /* 补品牌 */
+  for (const svc of dynList) {
+    if (!svc.brand) svc.brand = getServiceBrandProfile(svc).label;
+    if (!svc.icon) svc.icon = getServiceIconSrc(svc);
   }
-  for (const svc of base) {
-    if (!svc.brand) {
-      svc.brand = getServiceBrandProfile(svc).label;
-    }
-  }
-  return base;
+  return dynList;
 }
 
 function renderBrandChips(services) {
