@@ -674,24 +674,50 @@ const BRAND_ICONS = {
   "iFlytek": "spark-color.svg",
   "Xiaomi": "xiaomimimo-color.svg",
   "小米 MiMo": "xiaomimimo-color.svg",
+  "Tencent": "yuanbao-color.svg",
+  "腾讯": "yuanbao-color.svg",
+  "Meta": "meta-color.svg",
+  "Cohere": "cohere-color.svg",
+  "Mistral": "mistral-color.svg",
+  "Doubao": "doubao-color.svg",
+  "HuggingFace": "huggingface-color.svg",
+  "OpenRouter": "openrouter.svg",
+  "Baichuan": "qwen-color.svg",
+  "百川": "qwen-color.svg",
+  "Microsoft": "microsoft-color.svg",
+  "IBM": "ibm.svg",
+  "xAI": "grok.svg",
 };
 
 const BRAND_PROFILES = [
   { key: 'anthropic', label: 'Anthropic', icon: 'claude-color.svg', match: /claude|anthropic/i },
-  { key: 'openai', label: 'OpenAI', icon: 'openai.svg', match: /gpt|openai/i },
+  { key: 'openai', label: 'OpenAI', icon: 'openai.svg', match: /gpt|openai|chatgpt/i },
   { key: 'google', label: 'Google', icon: 'gemini-color.svg', match: /gemini|google/i },
   { key: 'deepseek', label: 'DeepSeek', icon: 'deepseek-color (1).svg', match: /deepseek/i },
-  { key: 'qwen', label: 'Qwen', icon: 'qwen-color.svg', match: /qwen|通义|alibaba/i },
+  { key: 'qwen', label: 'Qwen', icon: 'qwen-color.svg', match: /qwen|通义|alibaba|tongyi/i },
   { key: 'moonshot', label: 'Moonshot AI', icon: 'moonshot.svg', match: /kimi|moonshot/i },
   { key: 'zhipuai', label: 'ZhipuAI', icon: 'zhipu-color.svg', match: /glm|zhipu|智谱/i },
   { key: 'minimax', label: 'MiniMax', icon: 'minimax-color.svg', match: /minimax/i },
   { key: 'sensenova', label: 'SenseNova', icon: 'sensenova-color.svg', match: /sensenova|sensetime|商汤/i },
-  { key: 'stepfun', label: 'Stepfun', icon: 'stepfun-color.svg', match: /step/i },
+  { key: 'stepfun', label: 'Stepfun', icon: 'stepfun-color.svg', match: /step(?:fun)?|阶跃/i },
   { key: 'xiaomi', label: 'Xiaomi', icon: 'xiaomimimo-color.svg', match: /xiaomi|mimo|小米/i },
   { key: 'nvidia', label: 'NVIDIA', icon: 'nvidia-color.svg', match: /nvidia|nemotron/i },
   { key: 'ant-group', label: 'Ant Group', icon: 'antgroup-color.svg', match: /ant|ling|百灵/i },
   { key: 'iflytek', label: 'iFlytek', icon: 'spark-color.svg', match: /spark|iflytek|讯飞/i },
-  { key: 'grok', label: 'Grok', icon: 'grok.svg', match: /grok/i },
+  { key: 'grok', label: 'Grok', icon: 'grok.svg', match: /grok|xai/i },
+  { key: 'tencent', label: 'Tencent', icon: 'yuanbao-color.svg', match: /混元|hunyuan|tencent|腾讯/i },
+  { key: 'meta', label: 'Meta', icon: 'meta-color.svg', match: /meta|llama/i },
+  { key: 'cohere', label: 'Cohere', icon: 'cohere-color.svg', match: /cohere|aya/i },
+  { key: 'mistral', label: 'Mistral', icon: 'mistral-color.svg', match: /mistral|hermes/i },
+  { key: 'doubao', label: 'Doubao', icon: 'doubao-color.svg', match: /doubao|豆包|volcengine|火山/i },
+  { key: 'huggingface', label: 'HuggingFace', icon: 'huggingface-color.svg', match: /huggingface|^hf:/i },
+  { key: 'openrouter', label: 'OpenRouter', icon: 'openrouter.svg', match: /^or:/i },
+  { key: 'cloudflare', label: 'Cloudflare', icon: 'openai.svg', match: /^cf:/i },
+  { key: 'baichuan', label: 'Baichuan', icon: 'qwen-color.svg', match: /baichuan|百川/i },
+  { key: 'microsoft', label: 'Microsoft', icon: 'microsoft-color.svg', match: /microsoft|微软/i },
+  { key: 'ibm', label: 'IBM', icon: 'ibm.svg', match: /ibm/i },
+  { key: 'inclusionai', label: 'InclusionAI', icon: 'openrouter.svg', match: /inclusion/i },
+  { key: 'arcee', label: 'Arcee', icon: 'openrouter.svg', match: /arcee/i },
 ];
 
 const BRAND_ICON_FALLBACK = 'openai.svg';
@@ -748,7 +774,7 @@ const FALLBACK_SERVICES = [
   { "name": "GLM-4.5", "line_label": "线路一", "status": "operational", "icon": "zhipu-color.svg" },
   { "name": "GLM-4.6", "line_label": "线路一", "status": "operational", "icon": "zhipu-color.svg" },
   { "name": "GLM-4.7", "line_label": "线路一", "status": "operational", "icon": "zhipu-color.svg" },
-  { "name": "DeepSeek-R1", "line_label": "线路一", "status": "operational", "icon": "zhipu-color.svg" },
+  { "name": "DeepSeek-R1", "line_label": "线路一", "status": "operational", "icon": "deepseek-color (1).svg" },
   { "name": "DeepSeek-V3.1", "line_label": "线路一", "status": "operational", "icon": "deepseek-color (1).svg" },
   { "name": "DeepSeek-V3.2", "line_label": "线路一", "status": "operational", "icon": "deepseek-color (1).svg" },
   { "name": "DeepSeek-V3", "line_label": "线路一", "status": "operational", "icon": "deepseek-color (1).svg" },
@@ -868,6 +894,7 @@ let currentWindowDays = 7;
 let currentSearch = '';      // 用户输入的搜索词，已 trim + toLowerCase
 let lastDynamicData = null;
 let lastFetchError = false;
+let lastFetchErrorDetail = null;
 
 /* 搜索匹配：名字、厂商、人类可读线路任一命中即可。多关键字按空格分，全部命中才算
    注意：故意不把 svc.line_label（api456 / pwcen / supxh 等原始上游标识）放入
@@ -1018,7 +1045,7 @@ function updateHeaderMeta() {
   if (overallMeta) {
     overallMeta.textContent = lastDynamicData
       ? `统计窗口 ${windowDays} 天 · ${lastDynamicData.models?.length || 0} 个模型 · 后端实时计算`
-      : (lastFetchError ? '后端暂时不可用，稍后将自动重试。' : '正在从后端拉取数据...');
+      : (lastFetchError ? `后端暂时不可用：${lastFetchErrorDetail || '未知错误'}，稍后将自动重试。` : '正在从后端拉取数据...');
   }
 }
 
@@ -1029,9 +1056,16 @@ async function fetchModelHealth(windowDays = currentWindowDays) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ endpoint: "model_health", window_days: windowDays }),
     });
-    if (!resp.ok) return null;
-    return await resp.json();
-  } catch {
+    const data = await resp.json();
+    if (!resp.ok) {
+      // 后端返回了结构化错误，保存供 UI 展示
+      lastFetchErrorDetail = data?.error || data?.code || `HTTP ${resp.status}`;
+      return null;
+    }
+    lastFetchErrorDetail = null;
+    return data;
+  } catch (e) {
+    lastFetchErrorDetail = e?.message || '网络异常';
     return null;
   }
 }
