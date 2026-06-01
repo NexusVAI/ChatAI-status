@@ -11,44 +11,32 @@
     
     
     <style>
-@font-face {
-    font-family: 'AnthropicSans';
-    src: url('../chat/fonts/AnthropicSans-Roman-Variable.ttf') format('truetype');
-    font-weight: 100 900;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'AnthropicSans';
-    src: url('../chat/fonts/AnthropicSans-Italic-Variable.ttf') format('truetype');
-    font-weight: 100 900;
-    font-style: italic;
-}
 
 :root {
-    --bg-color: #fafafa;
+    --bg-color: #ffffff;
     --bg-elevated: #ffffff;
-    --text-primary: #0a0a0a;
-    --text-secondary: #6b7280;
-    --text-tertiary: #9ca3af;
-    --border-color: #e5e7eb;
-    --border-strong: #d1d5db;
-    --border-light: rgba(0, 0, 0, 0.04);
-    --green-ok: #10a37f;
-    --green-soft: rgba(16,163,127,0.08);
-    --yellow-warn: #f59e0b;
-    --yellow-soft: rgba(245,158,11,0.08);
-    --red-down: #ef4444;
-    --red-soft: rgba(239,68,68,0.08);
+    --text-primary: #1f2328;
+    --text-secondary: #656d76;
+    --text-tertiary: #8b949e;
+    --border-color: #d1d9e0;
+    --border-strong: #b1bac4;
+    --border-light: rgba(27, 31, 36, 0.04);
+    --green-ok: #1a7f37;
+    --green-soft: rgba(26,127,55,0.08);
+    --yellow-warn: #9a6700;
+    --yellow-soft: rgba(154,103,0,0.08);
+    --red-down: #cf222e;
+    --red-soft: rgba(207,34,46,0.08);
     --card-bg: #ffffff;
-    --hover-bg: #f3f4f6;
-    --accent: #111827;
-    --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
-    --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
-    --shadow-lg: 0 10px 28px rgba(0,0,0,0.08);
-    --font-stack: 'AnthropicSans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --hover-bg: #f6f8fa;
+    --accent: #1f2328;
+    --shadow-sm: 0 1px 0 rgba(27,31,36,0.04);
+    --shadow-md: 0 3px 6px rgba(140,149,159,0.15);
+    --shadow-lg: 0 8px 24px rgba(140,149,159,0.2);
+    --font-stack: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
     --radius-sm: 6px;
-    --radius-md: 10px;
-    --radius-lg: 14px;
+    --radius-md: 6px;
+    --radius-lg: 12px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -66,9 +54,9 @@ body {
 .bg-grid, .bg-mesh { display: none; }
 
 .container {
-    max-width: 960px;
+    max-width: 1012px;
     margin: 0 auto;
-    padding: 40px 20px 56px;
+    padding: 32px 32px 64px;
 }
 
 /* Announcement Bar */
@@ -76,23 +64,23 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 12px 16px;
-    background: linear-gradient(180deg, #ffffff 0%, #f9fafb 100%);
+    padding: 10px 16px;
+    background: var(--hover-bg);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
-    margin-bottom: 28px;
-    font-size: 13.5px;
-    box-shadow: var(--shadow-sm);
+    margin-bottom: 24px;
+    font-size: 13px;
 }
 .announcement-pill {
     font-weight: 600;
-    color: var(--text-primary);
-    background: #e5e7eb;
-    padding: 4px 10px;
-    border-radius: 999px;
-    font-size: 11.5px;
-    letter-spacing: 0.01em;
+    color: var(--text-secondary);
+    background: var(--bg-color);
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+    font-size: 11px;
+    letter-spacing: 0.02em;
     flex-shrink: 0;
+    border: 1px solid var(--border-color);
 }
 .announcement-text {
     flex: 1;
@@ -104,275 +92,259 @@ body {
 .announcement-action {
     background: none;
     border: none;
-    color: var(--text-primary);
+    color: #0969da;
     font-weight: 500;
     cursor: pointer;
     font-size: 13px;
-    text-decoration: underline;
-    text-underline-offset: 3px;
     flex-shrink: 0;
     transition: opacity 0.15s;
 }
-.announcement-action:hover { opacity: 0.7; }
+.announcement-action:hover { text-decoration: underline; }
 
 /* Header */
-.header { margin-bottom: 28px; }
+.header { margin-bottom: 24px; }
 .header-top { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; }
-.header-eyebrow { font-size: 12px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; font-weight: 500; }
-.header h1 { font-size: 34px; font-weight: 600; letter-spacing: -0.025em; line-height: 1.15; }
+.header-eyebrow { font-size: 12px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; font-weight: 500; }
+.header h1 { font-size: 32px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.15; color: var(--text-primary); }
 .header h1 span { color: var(--text-primary); }
-.header-subtitle { font-size: 15px; color: var(--text-secondary); margin-top: 8px; max-width: 540px; }
+.header-subtitle { font-size: 14px; color: var(--text-secondary); margin-top: 6px; max-width: 540px; }
 
-.header-actions { display: flex; gap: 10px; }
+.header-actions { display: flex; gap: 8px; }
 .header-action, .github-button {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 8px 14px; font-size: 13.5px; font-weight: 500;
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 12px; font-size: 13px; font-weight: 500;
     background: var(--card-bg); border: 1px solid var(--border-color);
     border-radius: var(--radius-sm); color: var(--text-primary);
     text-decoration: none; cursor: pointer;
-    transition: background 0.15s, border-color 0.15s, transform 0.15s;
+    transition: background 0.15s, border-color 0.15s;
 }
 .header-action:hover, .github-button:hover { background: var(--hover-bg); border-color: var(--border-strong); }
-.header-action:active, .github-button:active { transform: translateY(1px); }
 .github-button svg { fill: var(--text-primary); width: 16px; height: 16px; }
 
 /* Tabs */
 .window-tabs {
     display: inline-flex;
     background: var(--hover-bg);
-    padding: 3px;
+    padding: 2px;
     border-radius: var(--radius-sm);
-    margin-bottom: 24px;
+    margin-bottom: 20px;
     border: 1px solid var(--border-color);
 }
 .window-tab {
-    padding: 6px 14px;
+    padding: 5px 12px;
     border: none; background: none;
-    font-size: 13px; color: var(--text-secondary);
+    font-size: 12px; color: var(--text-secondary);
     cursor: pointer; border-radius: 4px;
     font-family: inherit;
-    transition: color 0.15s;
+    transition: color 0.15s, background 0.15s;
 }
-.window-tab:hover { color: var(--text-primary); }
+.window-tab:hover { color: var(--text-primary); background: rgba(0,0,0,0.04); }
 .window-tab.active {
     background: var(--card-bg);
     color: var(--text-primary);
-    box-shadow: var(--shadow-sm);
-    font-weight: 500;
+    box-shadow: 0 1px 0 rgba(27,31,36,0.04);
+    font-weight: 600;
 }
 
 /* Stats */
-.stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 28px; }
+.stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
 .stat-card {
-    padding: 20px 22px; border: 1px solid var(--border-color);
+    padding: 16px 20px; border: 1px solid var(--border-color);
     border-radius: var(--radius-md); background: var(--card-bg);
-    transition: border-color 0.15s, box-shadow 0.15s;
 }
-.stat-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-sm); }
-.stat-label { font-size: 12.5px; color: var(--text-secondary); margin-bottom: 10px; font-weight: 500; }
-.stat-value { font-size: 30px; font-weight: 600; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.stat-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; font-weight: 500; }
+.stat-value { font-size: 28px; font-weight: 600; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace; }
 .stat-value.green { color: var(--green-ok); }
 .stat-value.red { color: var(--red-down); }
-.stat-sub { font-size: 11.5px; color: var(--text-tertiary); margin-top: 4px; }
+.stat-sub { font-size: 12px; color: var(--text-tertiary); margin-top: 2px; }
 @media (max-width: 640px) { .stats-grid { grid-template-columns: 1fr; } }
 
 /* Overall Status Bar */
 .status-bar-wrap {
     display: flex; justify-content: space-between; align-items: center;
-    padding: 18px 22px; border: 1px solid var(--border-color);
-    border-radius: var(--radius-md); margin-bottom: 24px;
+    padding: 16px 20px; border: 1px solid var(--border-color);
+    border-radius: var(--radius-md); margin-bottom: 20px;
     background: var(--card-bg);
     gap: 16px; flex-wrap: wrap;
 }
-.status-indicator { display: flex; align-items: center; gap: 14px; }
+.status-indicator { display: flex; align-items: center; gap: 12px; }
 .status-ring {
     display: flex; align-items: center; justify-content: center;
-    width: 28px; height: 28px; border-radius: 50%;
-    position: relative;
+    width: 10px; height: 10px; border-radius: 50%;
+    position: relative; flex-shrink: 0;
 }
-.status-ring::before {
-    content: ''; position: absolute; inset: -6px; border-radius: 50%;
-    opacity: 0; transition: opacity 0.3s;
-}
-.status-ring.operational { background: var(--green-soft); color: var(--green-ok); }
-.status-ring.operational::before { background: var(--green-soft); opacity: 1; animation: pulse-ring 2.4s ease-out infinite; }
-.status-ring.degraded { background: var(--yellow-soft); color: var(--yellow-warn); }
-.status-ring.incident { background: var(--red-soft); color: var(--red-down); }
-.status-ring.incident::before { background: var(--red-soft); opacity: 1; animation: pulse-ring 1.6s ease-out infinite; }
-.status-ring svg { width: 14px; height: 14px; position: relative; z-index: 1; }
-@keyframes pulse-ring {
-    0% { transform: scale(0.85); opacity: 0.6; }
-    100% { transform: scale(1.25); opacity: 0; }
-}
-.status-text-wrap h2 { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; }
-.status-text-wrap p { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+.status-ring::before { display: none; }
+.status-ring.operational { background: var(--green-ok); color: var(--green-ok); }
+.status-ring.degraded { background: var(--yellow-warn); color: var(--yellow-warn); }
+.status-ring.incident { background: var(--red-down); color: var(--red-down); }
+.status-ring svg { display: none; }
+.status-text-wrap h2 { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
+.status-text-wrap p { font-size: 13px; color: var(--text-secondary); margin-top: 1px; }
 .status-meta-right { display: flex; gap: 8px; flex-wrap: wrap; }
-.status-meta-chip { font-size: 11.5px; color: var(--text-secondary); background: var(--hover-bg); padding: 5px 10px; border-radius: 999px; font-variant-numeric: tabular-nums; }
+.status-meta-chip { font-size: 12px; color: var(--text-secondary); background: var(--hover-bg); padding: 3px 10px; border-radius: var(--radius-sm); font-variant-numeric: tabular-nums; border: 1px solid var(--border-color); }
 
 /* Search & Filters */
 .search-wrap {
     display: flex; align-items: center; gap: 10px;
-    padding: 11px 16px; border: 1px solid var(--border-color);
-    border-radius: var(--radius-md); margin-bottom: 16px;
+    padding: 7px 12px; border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm); margin-bottom: 16px;
     background: var(--card-bg);
-    transition: border-color 0.15s, box-shadow 0.15s;
+    transition: border-color 0.15s;
 }
-.search-wrap:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(17,24,39,0.06); }
+.search-wrap:focus-within { border-color: #0969da; box-shadow: 0 0 0 3px rgba(9,105,218,0.12); }
 .search-icon { width: 16px; height: 16px; color: var(--text-tertiary); flex-shrink: 0; }
 .search-input { border: none; outline: none; font-size: 14px; flex: 1; font-family: var(--font-stack); background: transparent; color: var(--text-primary); }
-.search-input::placeholder { color: #a1a1aa; }
+.search-input::placeholder { color: var(--text-tertiary); }
 .search-clear {
     background: none; border: none; color: var(--text-tertiary); cursor: pointer;
     padding: 4px; border-radius: 4px; display: none; align-items: center;
-    transition: color 0.15s, background 0.15s;
+    transition: color 0.15s;
 }
 .search-wrap.has-value .search-clear { display: inline-flex; }
-.search-clear:hover { color: var(--text-primary); background: var(--hover-bg); }
+.search-clear:hover { color: var(--text-primary); }
 
-.brand-filter-wrap { margin-bottom: 18px; }
-.brand-filter-label { font-size: 11.5px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
-.brand-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.brand-filter-wrap { margin-bottom: 16px; }
+.brand-filter-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px; }
+.brand-chips { display: flex; flex-wrap: wrap; gap: 6px; max-height: 84px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent; }
+.brand-chips::-webkit-scrollbar { width: 4px; }
+.brand-chips::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
 .brand-chip {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 6px 11px; border: 1px solid var(--border-color);
-    border-radius: 999px; background: var(--card-bg); color: var(--text-primary);
-    font-size: 12.5px; cursor: pointer; transition: background 0.15s, border-color 0.15s, color 0.15s;
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 10px; border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm); background: var(--card-bg); color: var(--text-secondary);
+    font-size: 12px; cursor: pointer; transition: background 0.15s, border-color 0.15s;
     font-family: inherit;
 }
-.brand-chip:hover { background: var(--hover-bg); border-color: var(--border-strong); }
+.brand-chip:hover { background: var(--hover-bg); border-color: var(--border-strong); color: var(--text-primary); }
 .brand-chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
-.brand-chip.active strong { color: rgba(255,255,255,0.85); }
+.brand-chip.active strong { color: rgba(255,255,255,0.75); }
 .brand-chip img { width: 14px; height: 14px; }
 .brand-chip strong { font-weight: 500; color: var(--text-tertiary); font-variant-numeric: tabular-nums; }
 
-.filter-tabs { display: flex; gap: 6px; margin-bottom: 18px; }
+.filter-tabs { display: flex; gap: 6px; margin-bottom: 16px; }
 .filter-tab {
-    padding: 6px 14px; border: 1px solid var(--border-color);
-    border-radius: 999px; background: var(--card-bg); color: var(--text-secondary);
-    font-size: 13px; cursor: pointer; transition: all 0.15s;
+    padding: 5px 12px; border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm); background: var(--card-bg); color: var(--text-secondary);
+    font-size: 12px; cursor: pointer; transition: all 0.15s;
     font-family: inherit;
     display: inline-flex; align-items: center; gap: 6px;
 }
 .filter-tab:hover { background: var(--hover-bg); color: var(--text-primary); }
 .filter-tab.active { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 500; }
-.filter-tab .count { background: var(--hover-bg); padding: 1px 7px; border-radius: 999px; font-size: 11px; font-variant-numeric: tabular-nums; color: var(--text-secondary); }
+.filter-tab .count { background: var(--hover-bg); padding: 1px 6px; border-radius: var(--radius-sm); font-size: 11px; font-variant-numeric: tabular-nums; color: var(--text-secondary); }
 .filter-tab.active .count { background: rgba(255,255,255,0.16); color: #fff; }
 
 /* Summary Bar */
-.summary-bar { font-size: 12.5px; color: var(--text-secondary); display: flex; gap: 14px; margin-bottom: 16px; align-items: center; flex-wrap: wrap; }
+.summary-bar { font-size: 12px; color: var(--text-secondary); display: flex; gap: 12px; margin-bottom: 16px; align-items: center; flex-wrap: wrap; }
 .summary-bar strong { color: var(--text-primary); font-weight: 600; font-variant-numeric: tabular-nums; }
-.summary-bar span { display: inline-flex; align-items: center; gap: 6px; }
-.footer-dot, .summary-dot { width: 4px; height: 4px; border-radius: 50%; display: inline-block; background: #d4d4d8; }
-.summary-dot { width: 7px; height: 7px; }
+.summary-bar span { display: inline-flex; align-items: center; gap: 5px; }
+.footer-dot, .summary-dot { width: 4px; height: 4px; border-radius: 50%; display: inline-block; background: var(--border-color); }
+.summary-dot { width: 8px; height: 8px; }
 
 /* Service List */
-#services-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+#services-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
 @media (max-width: 768px) { #services-list { grid-template-columns: 1fr; } }
 .model-card {
     border: 1px solid var(--border-color); border-radius: var(--radius-md);
-    padding: 16px 18px; background: var(--card-bg);
-    transition: border-color 0.15s, box-shadow 0.18s, transform 0.18s;
-    animation: card-fade-in 0.35s ease both;
-    opacity: 0;
+    padding: 16px 20px; background: var(--card-bg);
+    transition: border-color 0.15s, box-shadow 0.15s;
+    cursor: pointer;
 }
+.model-card.degraded { border-left: 3px solid var(--yellow-warn); }
+.model-card.down { border-left: 3px solid var(--red-down); }
 .model-card:hover {
     border-color: var(--border-strong);
-    box-shadow: var(--shadow-md);
-    transform: translateY(-1px);
+    box-shadow: 0 1px 3px rgba(140,149,159,0.12);
+    background: var(--hover-bg);
 }
-@keyframes card-fade-in {
-    from { opacity: 0; transform: translateY(4px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+.model-card.degraded:hover { border-left-color: var(--yellow-warn); }
+.model-card.down:hover { border-left-color: var(--red-down); }
 .model-card-header { display: flex; gap: 12px; margin-bottom: 12px; align-items: flex-start; }
 .model-card-avatar {
-    width: 38px; height: 38px; border: 1px solid var(--border-color);
+    width: 36px; height: 36px; border: 1px solid var(--border-color);
     border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center;
-    background: var(--bg-elevated);
+    background: var(--hover-bg);
     flex-shrink: 0;
 }
-.service-icon { width: 22px; height: 22px; }
+.service-icon { width: 20px; height: 20px; }
 .model-name-wrap { flex: 1; min-width: 0; }
-.model-name { font-size: 15px; font-weight: 600; margin-bottom: 6px; letter-spacing: -0.01em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.model-brand-row { display: flex; gap: 5px; flex-wrap: wrap; align-items: center; }
+.model-name { font-size: 14px; font-weight: 600; margin-bottom: 5px; letter-spacing: -0.01em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-primary); }
+.model-brand-row { display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
 .model-brand-badge, .model-line-tag, .model-pill {
-    font-size: 10.5px; padding: 2px 7px; border-radius: 999px;
+    font-size: 11px; padding: 1px 7px; border-radius: var(--radius-sm);
     background: var(--hover-bg); color: var(--text-secondary); border: 1px solid var(--border-color);
     display: inline-flex; align-items: center; gap: 4px;
-    line-height: 1.55;
+    line-height: 1.6;
 }
-.model-brand-badge img { width: 11px; height: 11px; }
+.model-brand-badge img { width: 12px; height: 12px; }
 .model-line-tag { font-variant-numeric: tabular-nums; color: var(--text-tertiary); }
-.model-pill.model-pill--status { color: var(--green-ok); border-color: rgba(16,163,127,0.22); background: var(--green-soft); }
-.model-pill.warn { color: var(--yellow-warn); border-color: rgba(245,158,11,0.22); background: var(--yellow-soft); }
-.model-pill.bad { color: var(--red-down); border-color: rgba(239,68,68,0.22); background: var(--red-soft); }
+.model-pill.model-pill--status { color: var(--green-ok); border-color: rgba(26,127,55,0.2); background: var(--green-soft); }
+.model-pill.warn { color: var(--yellow-warn); border-color: rgba(154,103,0,0.2); background: var(--yellow-soft); }
+.model-pill.bad { color: var(--red-down); border-color: rgba(207,34,46,0.2); background: var(--red-soft); }
 
 .model-stats-right { text-align: right; flex-shrink: 0; }
-.model-stat-value { font-size: 18px; font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+.model-stat-value { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace; }
 .model-stat-value.good { color: var(--green-ok); }
 .model-stat-value.warn { color: var(--yellow-warn); }
 .model-stat-value.bad { color: var(--red-down); }
 .model-stat-sub { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; font-variant-numeric: tabular-nums; }
 
 /* Timeline */
-.model-timeline { display: flex; height: 18px; gap: 2px; margin-bottom: 6px; }
-.timeline-block { flex: 1; border-radius: 3px; transition: opacity 0.15s, transform 0.15s; }
-.timeline-block:hover { transform: scaleY(1.08); }
-.timeline-block.good { background: var(--green-ok); opacity: 0.78; }
-.timeline-block.warn { background: var(--yellow-warn); opacity: 0.82; }
-.timeline-block.bad { background: var(--red-down); opacity: 0.82; }
-.timeline-block.empty { background: var(--border-color); opacity: 0.45; }
+.model-timeline { display: flex; height: 16px; gap: 2px; margin-bottom: 6px; }
+.timeline-block { flex: 1; border-radius: 2px; transition: opacity 0.12s; }
+.timeline-block.good { background: var(--green-ok); opacity: 0.85; }
+.timeline-block.warn { background: var(--yellow-warn); opacity: 0.85; }
+.timeline-block.bad { background: var(--red-down); opacity: 0.85; }
+.timeline-block.empty { background: var(--border-color); opacity: 0.4; }
+.timeline-block:hover { opacity: 1; }
 .timeline-axis { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-tertiary); font-variant-numeric: tabular-nums; }
 
 /* Empty state */
 .empty-state {
-    text-align: center; padding: 56px 20px; color: var(--text-secondary); font-size: 14px;
-    display: none; border: 1px dashed var(--border-color); border-radius: var(--radius-md);
+    text-align: center; padding: 48px 20px; color: var(--text-secondary); font-size: 14px;
+    display: none; border: 1px solid var(--border-color); border-radius: var(--radius-md);
     background: var(--card-bg);
 }
 .empty-state.show { display: block; }
-.empty-state svg { width: 32px; height: 32px; opacity: 0.4; margin-bottom: 12px; }
+.empty-state svg { width: 28px; height: 28px; opacity: 0.35; margin-bottom: 10px; }
 
 /* Incident Banner */
-.incident-banner { background: var(--red-soft); border: 1px solid rgba(239,68,68,0.22); padding: 16px 20px; border-radius: var(--radius-md); margin-bottom: 24px; }
+.incident-banner { background: var(--red-soft); border: 1px solid rgba(207,34,46,0.2); padding: 14px 18px; border-radius: var(--radius-md); margin-bottom: 20px; }
 .incident-banner.hidden { display: none; }
-.incident-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-.incident-badge { font-size: 11.5px; font-weight: 600; color: var(--red-down); display: flex; align-items: center; gap: 7px; text-transform: uppercase; letter-spacing: 0.06em; }
-.pulse-dot { width: 7px; height: 7px; background: var(--red-down); border-radius: 50%; box-shadow: 0 0 0 0 rgba(239,68,68,0.5); animation: incident-pulse 1.6s ease-out infinite; }
-@keyframes incident-pulse {
-    0% { box-shadow: 0 0 0 0 rgba(239,68,68,0.6); }
-    70% { box-shadow: 0 0 0 8px rgba(239,68,68,0); }
-    100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); }
-}
-.incident-title { font-weight: 600; font-size: 14.5px; }
-.incident-desc { font-size: 13.5px; color: var(--text-secondary); }
-.incident-time { font-size: 11.5px; color: var(--text-tertiary); margin-top: 6px; }
+.incident-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.incident-badge { font-size: 12px; font-weight: 600; color: var(--red-down); display: flex; align-items: center; gap: 6px; text-transform: uppercase; letter-spacing: 0.04em; }
+.pulse-dot { width: 8px; height: 8px; background: var(--red-down); border-radius: 50%; }
+@keyframes incident-pulse { /* removed — no pulse animation */ }
+.incident-title { font-weight: 600; font-size: 14px; }
+.incident-desc { font-size: 13px; color: var(--text-secondary); }
+.incident-time { font-size: 12px; color: var(--text-tertiary); margin-top: 4px; }
 
 /* Footer */
-.page-footer { text-align: center; margin-top: 48px; font-size: 12.5px; color: var(--text-tertiary); display: flex; justify-content: center; gap: 12px; align-items: center; flex-wrap: wrap; }
-.page-footer-dot { width: 3px; height: 3px; border-radius: 50%; display: inline-block; background: #d4d4d8; }
+.page-footer { text-align: center; margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--border-color); font-size: 12px; color: var(--text-tertiary); display: flex; justify-content: center; gap: 12px; align-items: center; flex-wrap: wrap; }
+.page-footer-dot { width: 3px; height: 3px; border-radius: 50%; display: inline-block; background: var(--border-color); }
 
 /* Modal */
-.announcement-modal { position: fixed; inset: 0; z-index: 100; display: none; align-items: center; justify-content: center; }
-.announcement-modal.is-open { display: flex; }
-.announcement-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.4); }
-.announcement-panel { position: relative; background: #fff; width: 100%; max-width: 600px; border-radius: 8px; max-height: 80vh; display: flex; flex-direction: column; box-shadow: 0 4px 24px rgba(0,0,0,0.1); margin: 20px; }
-.announcement-panel-header { display: flex; justify-content: space-between; padding: 20px; border-bottom: 1px solid var(--border-color); }
-.announcement-panel h3 { font-size: 18px; font-weight: 600; }
-.announcement-kicker { font-size: 12px; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 4px; }
-.announcement-close { background: none; border: none; cursor: pointer; color: var(--text-secondary); }
+.announcement-modal { position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.2s ease, visibility 0.2s ease; }
+.announcement-modal.is-open { opacity: 1; visibility: visible; }
+.announcement-backdrop { position: absolute; inset: 0; background: rgba(27,31,36,0.5); }
+.announcement-panel { position: relative; background: var(--card-bg); width: 100%; max-width: 600px; border-radius: var(--radius-lg); max-height: 80vh; display: flex; flex-direction: column; box-shadow: var(--shadow-lg); margin: 20px; border: 1px solid var(--border-color); }
+.announcement-panel-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border-color); }
+.announcement-panel h3 { font-size: 16px; font-weight: 600; }
+.announcement-kicker { font-size: 11px; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 2px; letter-spacing: 0.04em; }
+.announcement-close { background: none; border: none; cursor: pointer; color: var(--text-secondary); padding: 4px; border-radius: var(--radius-sm); transition: background 0.15s; }
+.announcement-close:hover { background: var(--hover-bg); }
 .announcement-panel-body { padding: 20px; overflow-y: auto; }
-.announcement-timeline { list-style: none; display: flex; flex-direction: column; gap: 24px; }
+.announcement-timeline { list-style: none; display: flex; flex-direction: column; gap: 20px; }
 .timeline-item { position: relative; padding-left: 20px; border-left: 2px solid var(--border-color); }
-.timeline-dot { width: 10px; height: 10px; background: var(--text-primary); border-radius: 50%; position: absolute; left: -6px; top: 4px; }
-.timeline-title { font-weight: 600; margin-bottom: 8px; }
-.timeline-body { font-size: 14px; color: var(--text-secondary); margin-bottom: 8px; }
-.timeline-date { font-size: 12px; color: #a1a1aa; }
-.timeline-tier-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 12px 0; }
-.timeline-tier-card { border: 1px solid var(--border-color); padding: 12px; border-radius: 6px; }
-.timeline-tier-price { font-weight: 600; font-size: 16px; color: var(--text-primary); display: block; margin: 4px 0; }
+.timeline-dot { width: 8px; height: 8px; background: var(--text-primary); border-radius: 50%; position: absolute; left: -5px; top: 4px; }
+.timeline-title { font-weight: 600; margin-bottom: 6px; font-size: 14px; }
+.timeline-body { font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; line-height: 1.5; }
+.timeline-date { font-size: 12px; color: var(--text-tertiary); }
+.timeline-tier-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 10px 0; }
+.timeline-tier-card { border: 1px solid var(--border-color); padding: 10px; border-radius: var(--radius-sm); }
+.timeline-tier-price { font-weight: 600; font-size: 15px; color: var(--text-primary); display: block; margin: 2px 0; }
 .timeline-tier-quota { font-size: 12px; color: var(--text-secondary); }
-.timeline-link { color: var(--green-ok); text-decoration: none; }
+.timeline-link { color: #0969da; text-decoration: none; }
 .timeline-link:hover { text-decoration: underline; }
 
 /* Tooltip for timeline block */
@@ -380,15 +352,151 @@ body {
 .timeline-block[data-tip]:hover::after {
     content: attr(data-tip);
     position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
-    background: #111827; color: #fff; padding: 6px 10px; border-radius: 6px;
-    font-size: 11px; white-space: nowrap; margin-bottom: 8px; z-index: 10;
-    box-shadow: var(--shadow-md);
+    background: var(--text-primary); color: #fff; padding: 4px 8px; border-radius: var(--radius-sm);
+    font-size: 11px; white-space: nowrap; margin-bottom: 6px; z-index: 10;
     pointer-events: none;
 }
 .timeline-block[data-tip]:hover::before {
     content: ''; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
-    border: 4px solid transparent; border-top-color: #111827;
-    margin-bottom: 0; z-index: 10; pointer-events: none;
+    border: 4px solid transparent; border-top-color: var(--text-primary);
+    margin-bottom: -2px; z-index: 10; pointer-events: none;
+}
+
+/* ─── Detail Drawer ─── */
+.drawer-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(27,31,36,0.3);
+    opacity: 0; visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+.drawer-overlay.open { opacity: 1; visibility: visible; }
+.drawer {
+    position: fixed; top: 0; right: 0; bottom: 0; z-index: 201;
+    width: 420px; max-width: 100vw;
+    background: var(--card-bg);
+    border-left: 1px solid var(--border-color);
+    box-shadow: var(--shadow-lg);
+    transform: translateX(100%);
+    transition: transform 0.25s ease;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+}
+.drawer-overlay.open .drawer { transform: translateX(0); }
+.drawer-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 20px; border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+.drawer-header-avatar {
+    width: 36px; height: 36px; border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center;
+    background: var(--hover-bg); flex-shrink: 0;
+}
+.drawer-header-avatar img { width: 20px; height: 20px; }
+.drawer-header-info { flex: 1; min-width: 0; }
+.drawer-header-name { font-size: 15px; font-weight: 600; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.drawer-header-brand { font-size: 12px; color: var(--text-secondary); }
+.drawer-close {
+    background: none; border: none; cursor: pointer; color: var(--text-secondary);
+    padding: 4px; border-radius: var(--radius-sm); transition: background 0.15s;
+}
+.drawer-close:hover { background: var(--hover-bg); }
+.drawer-body { flex: 1; overflow-y: auto; padding: 20px; }
+
+.drawer-section { margin-bottom: 24px; }
+.drawer-section-title { font-size: 12px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 10px; }
+
+.drawer-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+.drawer-stat {
+    padding: 10px 12px; border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm); background: var(--hover-bg);
+}
+.drawer-stat-label { font-size: 11px; color: var(--text-tertiary); margin-bottom: 4px; }
+.drawer-stat-value { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; font-family: 'JetBrains Mono', monospace; }
+.drawer-stat-value.good { color: var(--green-ok); }
+.drawer-stat-value.warn { color: var(--yellow-warn); }
+.drawer-stat-value.bad { color: var(--red-down); }
+
+/* Daily heatmap */
+.daily-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+.daily-cell {
+    aspect-ratio: 1; border-radius: 2px;
+    position: relative; cursor: default;
+    transition: opacity 0.12s;
+}
+.daily-cell:hover { opacity: 0.8; }
+.daily-cell.good { background: var(--green-ok); opacity: 0.7; }
+.daily-cell.warn { background: var(--yellow-warn); opacity: 0.7; }
+.daily-cell.bad { background: var(--red-down); opacity: 0.7; }
+.daily-cell.empty { background: var(--border-color); opacity: 0.3; }
+.daily-cell[data-tip] { position: relative; }
+.daily-cell[data-tip]:hover::after {
+    content: attr(data-tip);
+    position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
+    background: var(--text-primary); color: #fff; padding: 4px 8px; border-radius: var(--radius-sm);
+    font-size: 11px; white-space: nowrap; margin-bottom: 4px; z-index: 10;
+    pointer-events: none;
+}
+.daily-labels { display: flex; justify-content: space-between; margin-top: 6px; }
+.daily-labels span { font-size: 10px; color: var(--text-tertiary); }
+
+/* API Endpoint */
+.api-endpoint-box {
+    padding: 12px 14px; border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm); background: var(--hover-bg);
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    color: var(--text-primary); word-break: break-all;
+    margin-bottom: 10px;
+}
+.api-endpoint-method {
+    display: inline-block; padding: 1px 6px; border-radius: 3px;
+    font-size: 10px; font-weight: 600; margin-right: 6px;
+    background: #0969da; color: #fff;
+}
+.latency-test-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 12px; font-size: 12px; font-weight: 500;
+    background: var(--card-bg); border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm); color: var(--text-primary);
+    cursor: pointer; transition: background 0.15s, border-color 0.15s;
+    font-family: inherit;
+}
+.latency-test-btn:hover { background: var(--hover-bg); border-color: var(--border-strong); }
+.latency-result { font-size: 12px; color: var(--text-secondary); margin-top: 6px; font-family: 'JetBrains Mono', monospace; }
+.latency-result .ms { font-weight: 600; color: var(--green-ok); }
+
+@media (max-width: 640px) {
+    .drawer { width: 100vw; }
+    .drawer-stats-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ─── 响应式 ─── */
+@media (max-width: 640px) {
+    .container { padding: 16px 16px 40px; }
+    h1 { font-size: 24px; }
+    .header-subtitle { font-size: 13px; }
+    .stat-value { font-size: 22px; }
+    .stat-card { padding: 12px 16px; }
+    .stats-grid { gap: 10px; }
+    .model-card { padding: 12px 14px; }
+    .model-name { font-size: 13px; }
+    .model-stat-value { font-size: 14px; }
+    .brand-chips { max-height: 68px; }
+    .announcement-bar { font-size: 12px; padding: 8px 12px; }
+    .summary-bar { font-size: 11px; gap: 8px; }
+    .window-tab { padding: 4px 10px; font-size: 11px; }
+    .search-wrap { padding: 6px 10px; }
+    .search-input { font-size: 13px; }
+    .filter-tab { padding: 4px 10px; font-size: 11px; }
+    .status-bar-wrap { padding: 12px 16px; }
+}
+@media (max-width: 480px) {
+    h1 { font-size: 20px; }
+    .header-top { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .header-actions { width: 100%; }
+    .model-card-header { gap: 8px; }
+    .model-card-avatar { width: 32px; height: 32px; }
+    .service-icon { width: 18px; height: 18px; }
 }
     </style>
 
@@ -405,7 +513,7 @@ body {
     <div class="announcement-bar">
         <div class="announcement-pill">系统公告</div>
         <div class="announcement-text">
-            <span class="announcement-item">🛡️ 近期风控系统识别到高频自动化请求（固定间隔轮询、硬编码重试等），已触发滥用防护。我们已对异常请求源实施封禁（110.248.68.x、18.141.169.0/24 等网段）。风控以行为特征为核心，IP仅作辅助指标，正常用户不受影响。</span>
+            <span class="announcement-item">福利模型已搬家到纯公益子站，本站后续不再上架免费福利模型。<a href="https://api.nexusvai.xyz/" target="_blank" rel="noopener" style="color:#0969da;text-decoration:none">api.nexusvai.xyz →</a></span>
         </div>
         <button class="announcement-action" id="open-announcement" type="button">查看全部公告</button>
     </div>
@@ -557,7 +665,7 @@ body {
 
 </div>
 
-<div class="announcement-modal" id="announcement-modal" aria-hidden="true" hidden>
+<div class="announcement-modal" id="announcement-modal" aria-hidden="true">
     <div class="announcement-backdrop" id="announcement-backdrop"></div>
     <div class="announcement-panel" role="dialog" aria-modal="true" aria-labelledby="announcement-title">
         <div class="announcement-panel-header">
@@ -575,6 +683,14 @@ body {
         <div class="announcement-panel-body">
             <ol class="announcement-timeline">
                 <li class="timeline-item timeline-item--latest">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">福利模型搬家到公益子站</div>
+                        <p class="timeline-body">本站（Cancri Chat）主打模型多、价格便宜，后续不再上架免费福利模型。想体验福利模型的同学，请移步纯公益子站：<a href="https://api.nexusvai.xyz/" target="_blank" rel="noopener" class="timeline-link">api.nexusvai.xyz →</a></p>
+                        <time class="timeline-date" datetime="2026-05-31">2026-05-31</time>
+                    </div>
+                </li>
+                <li class="timeline-item">
                     <div class="timeline-dot"></div>
                     <div class="timeline-content">
                         <div class="timeline-title">Phase A：三档订阅 + 老用户 Opus 福利</div>
@@ -616,31 +732,48 @@ body {
                         <time class="timeline-date" datetime="2026-05-14">2026-05-14</time>
                     </div>
                 </li>
-                <li class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-content">
-                        <div class="timeline-title">服务状态实时监控</div>
-                        <p class="timeline-body">可随时查看各模型线路的健康状况和延迟数据。 <a href="https://nexusvai.github.io/ChatAI-status/" target="_blank" rel="noopener" class="timeline-link">前往 status 页面 →</a></p>
-                        <time class="timeline-date" datetime="2026-05-12">2026-05-12</time>
-                    </div>
-                </li>
-                <li class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-content">
-                        <div class="timeline-title">风控策略升级</div>
-                        <p class="timeline-body">针对高频自动化请求（固定间隔轮询、硬编码重试等）启用滥用防护，异常请求段已封禁。风控以行为特征为核心，正常用户不受影响。</p>
-                        <time class="timeline-date" datetime="2026-05-10">2026-05-10</time>
-                    </div>
-                </li>
-                <li class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-content">
-                        <div class="timeline-title">站内模型永久免费</div>
-                        <p class="timeline-body">20+ 主流大模型免费调用，无 token 限额，登录即用。 <strong>QQ 交流群：</strong><a href="https://qm.qq.com/q/1083892008" target="_blank" rel="noopener" class="timeline-link">1083892008</a></p>
-                        <time class="timeline-date" datetime="2026-04-28">2026-04-28</time>
-                    </div>
-                </li>
             </ol>
+        </div>
+    </div>
+</div>
+
+<!-- Detail Drawer -->
+<div class="drawer-overlay" id="drawer-overlay">
+    <div class="drawer" id="drawer">
+        <div class="drawer-header">
+            <div class="drawer-header-avatar" id="drawer-avatar"><img src="" alt=""></div>
+            <div class="drawer-header-info">
+                <div class="drawer-header-name" id="drawer-name">—</div>
+                <div class="drawer-header-brand" id="drawer-brand">—</div>
+            </div>
+            <button class="drawer-close" id="drawer-close" aria-label="关闭">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+        </div>
+        <div class="drawer-body">
+            <div class="drawer-stats-grid" id="drawer-stats"></div>
+            <div class="drawer-section">
+                <div class="drawer-section-title">30 天每日成功率</div>
+                <div class="daily-grid" id="drawer-daily"></div>
+                <div class="daily-labels"><span>30天前</span><span>15天前</span><span>今天</span></div>
+            </div>
+            <div class="drawer-section">
+                <div class="drawer-section-title">24 小时时序</div>
+                <div class="model-timeline" id="drawer-hourly" style="height:20px"></div>
+                <div class="timeline-axis"><span>24h前</span><span>12h前</span><span>现在</span></div>
+            </div>
+            <div class="drawer-section">
+                <div class="drawer-section-title">API 端点</div>
+                <div class="api-endpoint-box">
+                    <span class="api-endpoint-method">POST</span>
+                    <span id="drawer-endpoint">https://diusqgphvybnzazgopor.supabase.co/functions/v1/chat-gateway</span>
+                </div>
+                <button class="latency-test-btn" id="latency-test-btn">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                    测试延迟
+                </button>
+                <div class="latency-result" id="latency-result"></div>
+            </div>
         </div>
     </div>
 </div>
@@ -723,92 +856,192 @@ const BRAND_PROFILES = [
 const BRAND_ICON_FALLBACK = 'openai.svg';
 const WINDOW_CHOICES = [7, 15, 30];
 
-/* ─── 静态兜底数据（无请求时保持列表完整，与前后端模型完全同步） ─── */
+/* ─── 静态兜底数据（与前端 MODEL_CATALOG 完全对齐，150 个模型全覆盖） ─── */
 const FALLBACK_SERVICES = [
-  { "name": "ChatGPT-5.4-Mini", "line_label": "线路一", "status": "operational", "icon": "openai.svg" },
+  // ── OpenAI ──
+  { "name": "GPT-5.4 Mini", "line_label": "线路一", "status": "operational", "icon": "openai.svg" },
+  { "name": "GPT-5.4 Mini", "line_label": "线路二", "status": "operational", "icon": "openai.svg" },
+  { "name": "GPT-5.4", "line_label": "线路一", "status": "operational", "icon": "openai.svg" },
+  { "name": "GPT-5.4", "line_label": "线路三", "status": "operational", "icon": "openai.svg" },
+  { "name": "GPT-5.4 Nano", "line_label": "线路一", "status": "operational", "icon": "openai.svg" },
   { "name": "GPT-5.2", "line_label": "线路一", "status": "operational", "icon": "openai.svg" },
   { "name": "GPT-5.3 Codex", "line_label": "线路一", "status": "operational", "icon": "openai.svg" },
-  { "name": "GPT-5.5", "line_label": "线路一", "status": "operational", "icon": "openai.svg" },
-  { "name": "GPT Image 2", "line_label": "线路一", "status": "operational", "icon": "openai.svg" },
-  { "name": "GPT-4", "line_label": "线路二", "status": "operational", "icon": "openai.svg" },
-  { "name": "GPT Image 2", "line_label": "线路二", "status": "operational", "icon": "openai.svg" },
-  { "name": "Gemini 3.1 Pro", "line_label": "线路一", "status": "operational", "icon": "gemini-color.svg" },
+  { "name": "GPT-5.3 Codex", "line_label": "线路二", "status": "operational", "icon": "openai.svg" },
   { "name": "GPT-5.3 Codex", "line_label": "线路三", "status": "operational", "icon": "openai.svg" },
-  { "name": "Gemini 3 Flash", "line_label": "线路一", "status": "operational", "icon": "gemini-color.svg" },
-  { "name": "ChatGPT-5.4-Mini", "line_label": "线路二", "status": "operational", "icon": "openai.svg" },
-  { "name": "GPT-4.1 Nano", "line_label": "线路一", "status": "operational", "icon": "openai.svg" },
+  { "name": "GPT-5.3 Codex Spark", "line_label": "线路一", "status": "operational", "icon": "openai.svg" },
+  { "name": "GPT-5.5", "line_label": "线路一", "status": "operational", "icon": "openai.svg" },
+  { "name": "GPT-5.5", "line_label": "线路二", "status": "operational", "icon": "openai.svg" },
+  { "name": "GPT-5.5 High", "line_label": "线路一", "status": "operational", "icon": "openai.svg" },
+  { "name": "GPT 5.5 XHigh", "line_label": "线路一", "status": "operational", "icon": "openai.svg" },
+  { "name": "【福利A】GPT-5.5", "line_label": "线路一", "status": "operational", "icon": "openai.svg" },
+  { "name": "【福利】GPT 5.4 Mini", "line_label": "线路一", "status": "operational", "icon": "openai.svg" },
+  { "name": "GPT Image 2", "line_label": "线路一", "status": "operational", "icon": "openai.svg" },
+  { "name": "GPT Image 2", "line_label": "线路二", "status": "operational", "icon": "openai.svg" },
+  { "name": "GPT Image 2", "line_label": "线路三", "status": "operational", "icon": "openai.svg" },
+  { "name": "GPT Image 2 Pro", "line_label": "线路一", "status": "operational", "icon": "openai.svg" },
+  { "name": "GPT-4", "line_label": "线路一", "status": "operational", "icon": "openai.svg" },
+  { "name": "GPT-4", "line_label": "线路二", "status": "operational", "icon": "openai.svg" },
   { "name": "GPT-OSS-120B", "line_label": "线路一", "status": "operational", "icon": "openai.svg" },
   { "name": "GPT-OSS-20B", "line_label": "线路一", "status": "operational", "icon": "openai.svg" },
-  { "name": "GPT-5.3 Codex", "line_label": "线路二", "status": "operational", "icon": "openai.svg" },
-  { "name": "GPT-5.3 Codex Spark", "line_label": "线路一", "status": "operational", "icon": "openai.svg" },
-  { "name": "GPT-5.4", "line_label": "线路三", "status": "operational", "icon": "openai.svg" },
-  { "name": "Gemini 2.5 Pro", "line_label": "线路一", "status": "operational", "icon": "gemini-color.svg" },
+  // ── Google / Gemini ──
+  { "name": "Gemini 3.1 Pro", "line_label": "线路一", "status": "operational", "icon": "gemini-color.svg" },
   { "name": "Gemini 3.1 Pro", "line_label": "线路二", "status": "operational", "icon": "gemini-color.svg" },
-  { "name": "Claude Opus 4.5", "line_label": "线路一", "status": "operational", "icon": "claude-color.svg" },
-  { "name": "Claude Opus 4.6", "line_label": "线路一", "status": "operational", "icon": "claude-color.svg" },
-  { "name": "Claude Sonnet 4.6", "line_label": "线路一", "status": "operational", "icon": "claude-color.svg" },
-  { "name": "Claude Sonnet 4.5", "line_label": "线路一", "status": "operational", "icon": "claude-color.svg" },
-  { "name": "GPT Image 2", "line_label": "线路三", "status": "operational", "icon": "openai.svg" },
-  { "name": "GPT-5 Nano", "line_label": "线路一", "status": "operational", "icon": "openai.svg" },
+  { "name": "Gemini 3.1 Flash Lite", "line_label": "线路一", "status": "operational", "icon": "gemini-color.svg" },
+  { "name": "Gemini 3.5 Flash High", "line_label": "线路一", "status": "operational", "icon": "gemini-color.svg" },
+  { "name": "【福利】Gemini 3.5 Flash", "line_label": "线路一", "status": "operational", "icon": "gemini-color.svg" },
+  { "name": "【福利】Gemini 3.1 Flash Lite", "line_label": "线路一", "status": "operational", "icon": "gemini-color.svg" },
+  { "name": "Gemini 2.5 Flash", "line_label": "线路一", "status": "operational", "icon": "gemini-color.svg" },
+  { "name": "Gemini 2.5 Flash Lite", "line_label": "线路一", "status": "operational", "icon": "gemini-color.svg" },
+  { "name": "Gemini 3 Flash", "line_label": "线路一", "status": "operational", "icon": "gemini-color.svg" },
   { "name": "Gemini 3 Flash", "line_label": "线路二", "status": "operational", "icon": "gemini-color.svg" },
-  { "name": "GPT-5 Codex Mini", "line_label": "线路一", "status": "operational", "icon": "openai.svg" },
-  { "name": "DeepSeek-V4-Pro", "line_label": "线路一", "status": "operational", "icon": "deepseek-color (1).svg" },
-  { "name": "DeepSeek-V4-Flash", "line_label": "线路一", "status": "operational", "icon": "deepseek-color (1).svg" },
-  { "name": "Ling 2.6", "line_label": "线路一", "status": "operational", "icon": "antgroup-color.svg" },
-  { "name": "GLM-5", "line_label": "线路一", "status": "operational", "icon": "zhipu-color.svg" },
-  { "name": "MiniMax M2.5", "line_label": "线路一", "status": "operational", "icon": "minimax-color.svg" },
-  { "name": "Image Fast", "line_label": "线路一", "status": "operational", "icon": "" },
-  { "name": "SenseNova 6.7 Flash-Lite", "line_label": "线路一", "status": "operational", "icon": "sensenova-color.svg" },
-  { "name": "SenseNova U1 Fast", "line_label": "线路一", "status": "operational", "icon": "sensenova-color.svg" },
-  { "name": "DeepSeek-V4-Flash", "line_label": "线路二", "status": "operational", "icon": "deepseek-color (1).svg" },
-  { "name": "Qwen3.6 Plus", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
-  { "name": "Qwen3.6 Flash", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
-  { "name": "Qwen3-Coder-Plus", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Gemma 4 31B", "line_label": "线路一", "status": "operational", "icon": "gemini-color.svg" },
+  { "name": "Gemma 4 26B", "line_label": "线路一", "status": "operational", "icon": "gemini-color.svg" },
+  // ── Anthropic ──
+  { "name": "Claude Opus 4.6", "line_label": "线路一", "status": "operational", "icon": "claude-color.svg" },
+  { "name": "Claude Opus 4.5", "line_label": "线路一", "status": "operational", "icon": "claude-color.svg" },
+  { "name": "Claude Opus 4.7", "line_label": "线路一", "status": "operational", "icon": "claude-color.svg" },
+  { "name": "Claude Opus 4.7 Max", "line_label": "线路一", "status": "operational", "icon": "claude-color.svg" },
+  { "name": "Claude Opus 4.8", "line_label": "线路一", "status": "operational", "icon": "claude-color.svg" },
+  { "name": "Claude Opus 4.7 Thinking", "line_label": "线路一", "status": "operational", "icon": "claude-color.svg" },
+  { "name": "Claude Sonnet 4.6", "line_label": "线路一", "status": "operational", "icon": "claude-color.svg" },
+  { "name": "Claude Haiku 4.5", "line_label": "线路一", "status": "operational", "icon": "claude-color.svg" },
+  { "name": "Claude Haiku 4.5 Thinking", "line_label": "线路一", "status": "operational", "icon": "claude-color.svg" },
+  { "name": "【福利】Claude Haiku 4.5", "line_label": "线路一", "status": "operational", "icon": "claude-color.svg" },
+  // ── DeepSeek ──
+  { "name": "DeepSeek V4 Flash", "line_label": "线路一", "status": "operational", "icon": "deepseek-color (1).svg" },
+  { "name": "DeepSeek V4 Flash", "line_label": "线路二", "status": "operational", "icon": "deepseek-color (1).svg" },
+  { "name": "DeepSeek V4 Pro", "line_label": "线路一", "status": "operational", "icon": "deepseek-color (1).svg" },
+  { "name": "DeepSeek V3", "line_label": "线路一", "status": "operational", "icon": "deepseek-color (1).svg" },
+  { "name": "DeepSeek V3", "line_label": "线路二", "status": "operational", "icon": "deepseek-color (1).svg" },
+  { "name": "DeepSeek R1 0528", "line_label": "线路一", "status": "operational", "icon": "deepseek-color (1).svg" },
+  { "name": "DeepSeek R1", "line_label": "线路一", "status": "operational", "icon": "deepseek-color (1).svg" },
+  { "name": "DeepSeek V3.1", "line_label": "线路一", "status": "operational", "icon": "deepseek-color (1).svg" },
+  { "name": "DeepSeek R1 Distill Qwen 32B", "line_label": "线路一", "status": "operational", "icon": "deepseek-color (1).svg" },
+  // ── Qwen ──
+  { "name": "Qwen 3.7 Max", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen 3.7 Max (0520)", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen 3.5 Flash (0223)", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen 3.5 Plus (0420)", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen 3.5 Plus (0215)", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen 3.5 397B", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen 3.5 Plus", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen Max", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen 3 Max Preview", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen 3 Max", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen VL Max", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen3 Coder Plus (0722)", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen3 Coder Next", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen Coder Plus", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen Coder Turbo", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen3 Coder Flash (0728)", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen 3.6 35B A3B", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen3.5 Omni Plus (0315)", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen3 Coder 480B", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen 3.5 35B A3B", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen3 32B", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen 3.5 27B", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen3 8B", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen Math Plus (0919)", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen Plus (2025-12-01)", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen3 Max (2025-09-23)", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen VL Plus", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen Flash (2025-07-28)", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen 3.5 122B A10B", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen3 235B A22B (2507)", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen 3.5 Flash", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen3 VL 8B Thinking", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen3 30B A3B", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen3 VL 8B Instruct", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen3 Next 80B Instruct", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen3 Coder Flash", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen3 Coder Plus (2025-09-23)", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen 3.6 27B", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Qwen3 Next 80B Thinking", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  // ── Moonshot / Kimi ──
   { "name": "Kimi K2.6", "line_label": "线路一", "status": "operational", "icon": "moonshot.svg" },
-  { "name": "Kimi K2.5", "line_label": "线路一", "status": "operational", "icon": "moonshot.svg" },
-  { "name": "Kimi K2 Thinking", "line_label": "线路一", "status": "operational", "icon": "moonshot.svg" },
-  { "name": "Moonshot-Kimi-K2-Instruct", "line_label": "线路一", "status": "operational", "icon": "moonshot.svg" },
-  { "name": "Qwen3.5 Omni Plus", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
-  { "name": "MiniMax M2.1", "line_label": "线路一", "status": "operational", "icon": "minimax-color.svg" },
-  { "name": "GLM-4.5 Air", "line_label": "线路一", "status": "operational", "icon": "zhipu-color.svg" },
-  { "name": "GLM-4.5", "line_label": "线路一", "status": "operational", "icon": "zhipu-color.svg" },
-  { "name": "GLM-4.6", "line_label": "线路一", "status": "operational", "icon": "zhipu-color.svg" },
-  { "name": "GLM-4.7", "line_label": "线路一", "status": "operational", "icon": "zhipu-color.svg" },
-  { "name": "DeepSeek-R1", "line_label": "线路一", "status": "operational", "icon": "deepseek-color (1).svg" },
-  { "name": "DeepSeek-V3.1", "line_label": "线路一", "status": "operational", "icon": "deepseek-color (1).svg" },
-  { "name": "DeepSeek-V3.2", "line_label": "线路一", "status": "operational", "icon": "deepseek-color (1).svg" },
-  { "name": "DeepSeek-V3", "line_label": "线路一", "status": "operational", "icon": "deepseek-color (1).svg" },
-  { "name": "DeepSeek-R1-0528", "line_label": "线路一", "status": "operational", "icon": "deepseek-color (1).svg" },
-  { "name": "DeepSeek-V3.2 Exp", "line_label": "线路一", "status": "operational", "icon": "deepseek-color (1).svg" },
-  { "name": "Qwen3.6 Max Preview", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
-  { "name": "Qwen3.6 Flash", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
-  { "name": "Qwen3.6 Plus", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
-  { "name": "Qwen3-Max", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
-  { "name": "Qwen 3.5", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
-  { "name": "Qwen3-Coder", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
-  { "name": "MiniMax M2.5", "line_label": "线路二", "status": "operational", "icon": "minimax-color.svg" },
-  { "name": "MiniMax M2.1", "line_label": "线路二", "status": "operational", "icon": "minimax-color.svg" },
-  { "name": "Kimi K2 Thinking", "line_label": "线路二", "status": "operational", "icon": "moonshot.svg" },
-  { "name": "Moonshot-Kimi-K2-Instruct", "line_label": "线路二", "status": "operational", "icon": "moonshot.svg" },
-  { "name": "Kimi K2.5", "line_label": "线路二", "status": "operational", "icon": "moonshot.svg" },
-  { "name": "GLM-4.6", "line_label": "线路二", "status": "operational", "icon": "zhipu-color.svg" },
-  { "name": "GLM-4.5", "line_label": "线路二", "status": "operational", "icon": "zhipu-color.svg" },
-  { "name": "DeepSeek-V3", "line_label": "线路二", "status": "operational", "icon": "deepseek-color (1).svg" },
-  { "name": "Qwen3.6 Flash", "line_label": "线路二", "status": "operational", "icon": "qwen-color.svg" },
-  { "name": "Qwen3.6 Plus", "line_label": "线路二", "status": "operational", "icon": "qwen-color.svg" },
-  { "name": "视频生成", "line_label": "线路一", "status": "operational", "icon": "" },
   { "name": "Kimi K2.6", "line_label": "线路二", "status": "operational", "icon": "moonshot.svg" },
-  { "name": "GLM-4.7", "line_label": "线路二", "status": "operational", "icon": "zhipu-color.svg" },
-  { "name": "Step-3.5", "line_label": "线路一", "status": "operational", "icon": "stepfun-color.svg" },
-  { "name": "GLM-5.1", "line_label": "线路一", "status": "operational", "icon": "zhipu-color.svg" },
-  { "name": "GPT-5.4", "line_label": "线路一", "status": "operational", "icon": "openai.svg" },
-  { "name": "GPT-5.5", "line_label": "线路二", "status": "operational", "icon": "openai.svg" },
-  { "name": "Grok Imagine", "line_label": "线路一", "status": "operational", "icon": "grok.svg" },
-  { "name": "MiMo-V2.5-Pro", "line_label": "线路一", "status": "operational", "icon": "xiaomimimo-color.svg" },
-  { "name": "GPT Image Precise", "line_label": "线路一", "status": "operational", "icon": "openai.svg" },
+  { "name": "Kimi K2 Thinking", "line_label": "线路一", "status": "operational", "icon": "moonshot.svg" },
+  { "name": "Kimi K2 Thinking", "line_label": "线路二", "status": "operational", "icon": "moonshot.svg" },
+  { "name": "Moonshot-Kimi-K2-Instruct", "line_label": "线路一", "status": "operational", "icon": "moonshot.svg" },
+  { "name": "Moonshot-Kimi-K2-Instruct", "line_label": "线路二", "status": "operational", "icon": "moonshot.svg" },
+  // ── Zhipu / GLM ──
+  { "name": "GLM 5.1", "line_label": "线路一", "status": "operational", "icon": "zhipu-color.svg" },
+  { "name": "GLM 4.5 Air", "line_label": "线路一", "status": "operational", "icon": "zhipu-color.svg" },
+  { "name": "GLM 4.5", "line_label": "线路一", "status": "operational", "icon": "zhipu-color.svg" },
+  { "name": "GLM 4.5", "line_label": "线路二", "status": "operational", "icon": "zhipu-color.svg" },
+  { "name": "GLM 4.7", "line_label": "线路一", "status": "operational", "icon": "zhipu-color.svg" },
+  { "name": "GLM 4.7", "line_label": "线路二", "status": "operational", "icon": "zhipu-color.svg" },
+  { "name": "GLM 4.7 Flash", "line_label": "线路一", "status": "operational", "icon": "zhipu-color.svg" },
+  // ── MiniMax ──
   { "name": "MiniMax M2.7", "line_label": "线路一", "status": "operational", "icon": "minimax-color.svg" },
-  { "name": "MiMo TTS", "line_label": "线路一", "status": "operational", "icon": "xiaomimimo-color.svg" },
-  { "name": "MiMo Voice Design", "line_label": "线路一", "status": "operational", "icon": "xiaomimimo-color.svg" },
+  { "name": "MiniMax M2.5", "line_label": "线路一", "status": "operational", "icon": "minimax-color.svg" },
+  { "name": "MiniMax M2.5", "line_label": "线路二", "status": "operational", "icon": "minimax-color.svg" },
+  { "name": "MiniMax M3", "line_label": "线路一", "status": "operational", "icon": "minimax-color.svg" },
+  { "name": "MiniMax M2.1", "line_label": "线路一", "status": "operational", "icon": "minimax-color.svg" },
+  { "name": "MiniMax M2.1", "line_label": "线路二", "status": "operational", "icon": "minimax-color.svg" },
+  // ── Baichuan ──
+  { "name": "Baichuan M3", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Baichuan 4", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Baichuan 4 Turbo", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "Baichuan 3 Turbo 128K", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "【福利】Baichuan M2", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "【福利】Baichuan 4 Air", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "【福利】Baichuan 3 Turbo", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  { "name": "【福利】Baichuan 2 Turbo", "line_label": "线路一", "status": "operational", "icon": "qwen-color.svg" },
+  // ── xAI / Grok ──
+  { "name": "Grok 4.20", "line_label": "线路一", "status": "operational", "icon": "grok.svg" },
+  { "name": "Grok-4.20-Agent", "line_label": "线路一", "status": "operational", "icon": "grok.svg" },
+  { "name": "Grok-4.3-Thinking", "line_label": "线路一", "status": "operational", "icon": "grok.svg" },
+  { "name": "Grok 4.3", "line_label": "线路一", "status": "operational", "icon": "grok.svg" },
+  { "name": "Grok Imagine (Image)", "line_label": "线路一", "status": "operational", "icon": "grok.svg" },
+  // ── Xiaomi MiMo ──
+  { "name": "【福利】MiMo 2.5 Pro", "line_label": "线路一", "status": "operational", "icon": "xiaomimimo-color.svg" },
+  { "name": "【福利】MiMo 2.5", "line_label": "线路一", "status": "operational", "icon": "xiaomimimo-color.svg" },
+  { "name": "【福利】MiMo V2 Pro", "line_label": "线路一", "status": "operational", "icon": "xiaomimimo-color.svg" },
+  // ── SenseNova ──
+  { "name": "SenseNova 6.7 Flash Lite", "line_label": "线路一", "status": "operational", "icon": "sensenova-color.svg" },
+  // ── Stepfun ──
+  { "name": "Step 3.5 Flash", "line_label": "线路一", "status": "operational", "icon": "stepfun-color.svg" },
+  // ── Doubao ──
+  { "name": "Doubao 1.5 Pro", "line_label": "线路一", "status": "operational", "icon": "doubao-color.svg" },
+  // ── Inclusion AI / Ling ──
+  { "name": "Ling 2.6 Flash", "line_label": "线路一", "status": "operational", "icon": "antgroup-color.svg" },
+  { "name": "Ling 2.6 1T", "line_label": "线路一", "status": "operational", "icon": "antgroup-color.svg" },
+  // ── OpenRouter ──
+  { "name": "Nemotron 3 Super 120B", "line_label": "线路一", "status": "operational", "icon": "openrouter.svg" },
+  { "name": "Ring 2.6 1T", "line_label": "线路一", "status": "operational", "icon": "openrouter.svg" },
+  { "name": "Nemotron 3 Nano 30B", "line_label": "线路一", "status": "operational", "icon": "openrouter.svg" },
+  { "name": "Nemotron 3 Nano Omni 30B Reasoning", "line_label": "线路一", "status": "operational", "icon": "openrouter.svg" },
+  { "name": "Qwen3 Coder (OR)", "line_label": "线路一", "status": "operational", "icon": "openrouter.svg" },
+  { "name": "Qwen3 Next 80B A3B", "line_label": "线路一", "status": "operational", "icon": "openrouter.svg" },
+  { "name": "Llama 3.3 70B Instruct", "line_label": "线路一", "status": "operational", "icon": "openrouter.svg" },
+  // ── Cloudflare Workers AI ──
+  { "name": "Phi-2", "line_label": "线路一", "status": "operational", "icon": "microsoft-color.svg" },
+  { "name": "Gemma 2B IT", "line_label": "线路一", "status": "operational", "icon": "gemini-color.svg" },
+  { "name": "Gemma 7B IT", "line_label": "线路一", "status": "operational", "icon": "gemini-color.svg" },
+  { "name": "Llama 2 7B Chat", "line_label": "线路一", "status": "operational", "icon": "openrouter.svg" },
+  { "name": "Mistral 7B v0.2", "line_label": "线路一", "status": "operational", "icon": "mistral-color.svg" },
+  { "name": "Hermes 2 Pro Mistral 7B", "line_label": "线路一", "status": "operational", "icon": "mistral-color.svg" },
+  { "name": "Llama 3.2 1B", "line_label": "线路一", "status": "operational", "icon": "openrouter.svg" },
+  { "name": "Llama 3.2 3B", "line_label": "线路一", "status": "operational", "icon": "openrouter.svg" },
+  { "name": "Granite 4.0 H Micro", "line_label": "线路一", "status": "operational", "icon": "ibm.svg" },
+  // ── HuggingFace Router ──
+  { "name": "Qwen 3.5 9B", "line_label": "线路一", "status": "operational", "icon": "huggingface-color.svg" },
+  { "name": "Gemma 3 27B", "line_label": "线路一", "status": "operational", "icon": "huggingface-color.svg" },
+  { "name": "Llama 3.1 8B", "line_label": "线路一", "status": "operational", "icon": "huggingface-color.svg" },
+  { "name": "GLM 5", "line_label": "线路一", "status": "operational", "icon": "huggingface-color.svg" },
+  { "name": "Qwen3 Coder 30B", "line_label": "线路一", "status": "operational", "icon": "huggingface-color.svg" },
+  { "name": "Qwen 3.5 35B A3B", "line_label": "线路一", "status": "operational", "icon": "huggingface-color.svg" },
+  { "name": "Qwen 3.5 122B A10B", "line_label": "线路一", "status": "operational", "icon": "huggingface-color.svg" },
+  { "name": "Command A Plus", "line_label": "线路一", "status": "operational", "icon": "huggingface-color.svg" },
+  { "name": "Qwen3 4B Thinking", "line_label": "线路一", "status": "operational", "icon": "huggingface-color.svg" },
+  { "name": "DeepSeek R1 Distill 1.5B", "line_label": "线路一", "status": "operational", "icon": "huggingface-color.svg" },
+  { "name": "Qwen 3.5 27B", "line_label": "线路一", "status": "operational", "icon": "huggingface-color.svg" },
+  { "name": "GLM 5.1 FP8", "line_label": "线路一", "status": "operational", "icon": "huggingface-color.svg" },
+  { "name": "Qwen3 8B", "line_label": "线路一", "status": "operational", "icon": "huggingface-color.svg" },
+  { "name": "Apertus 8B", "line_label": "线路一", "status": "operational", "icon": "huggingface-color.svg" },
+  { "name": "EuroLLM 22B", "line_label": "线路一", "status": "operational", "icon": "huggingface-color.svg" },
+  { "name": "Tiny Aya Earth", "line_label": "线路一", "status": "operational", "icon": "huggingface-color.svg" },
 ];
 
 /* ─── 工具 ─── */
@@ -981,6 +1214,7 @@ function mergeServices(dynamicModels) {
     last_check: dm.last_check || null,
     is_dynamic: true,
     hourly: dm.hourly || [],
+    daily: dm.daily || [],
     icon: '',
   }));
 
@@ -991,7 +1225,7 @@ function mergeServices(dynamicModels) {
   for (const fb of FALLBACK_SERVICES) {
     const fbKey = normalizeModelKey(fb.name);
     if (!dynKeys.has(fbKey)) {
-      dynList.push({ ...fb, hourly: [], is_dynamic: false });
+      dynList.push({ ...fb, hourly: [], daily: [], is_dynamic: false });
     }
   }
 
@@ -1176,7 +1410,6 @@ function renderList(services) {
     filtered.forEach((svc, i) => {
       const el = document.createElement('div');
       el.className = `model-card ${svc.status}`;
-      el.style.animationDelay = `${0.2 + i * 0.03}s`;
 
       const displayName = getModelDisplayName(svc);
       const profile = getServiceBrandProfile(svc);
@@ -1240,6 +1473,7 @@ function renderList(services) {
         ${timelineHtml}
       `;
       list.appendChild(el);
+      el.addEventListener('click', () => openDrawer(svc));
     });
   }
 }
@@ -1290,13 +1524,13 @@ if (windowTabs) {
   if (!modal) return;
 
   const open = () => {
-    modal.hidden = false;
     modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
   };
   const close = () => {
     modal.classList.remove('is-open');
-    modal.hidden = true;
+    modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
   };
 
@@ -1349,6 +1583,94 @@ if (windowTabs) {
     });
   }
 })();
+
+/* ─── Detail Drawer ─── */
+(function setupDrawer() {
+  const overlay = document.getElementById('drawer-overlay');
+  const drawer = document.getElementById('drawer');
+  const closeBtn = document.getElementById('drawer-close');
+  const latencyBtn = document.getElementById('latency-test-btn');
+  const latencyResult = document.getElementById('latency-result');
+
+  const close = () => {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  };
+  closeBtn?.addEventListener('click', close);
+  overlay?.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+
+  // latency test
+  latencyBtn?.addEventListener('click', async () => {
+    latencyResult.innerHTML = '测试中…';
+    latencyBtn.disabled = true;
+    try {
+      const start = performance.now();
+      await fetch(GATEWAY_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ endpoint: 'model_health', window_days: 1 }),
+      });
+      const ms = Math.round(performance.now() - start);
+      latencyResult.innerHTML = `往返延迟：<span class="ms">${ms}ms</span>`;
+    } catch (err) {
+      latencyResult.innerHTML = `<span style="color:var(--red-down)">请求失败</span>`;
+    }
+    latencyBtn.disabled = false;
+  });
+})();
+
+function openDrawer(svc) {
+  const overlay = document.getElementById('drawer-overlay');
+  // avatar
+  const avatar = document.getElementById('drawer-avatar');
+  const iconSrc = getServiceIconSrc(svc);
+  avatar.querySelector('img').src = iconSrc;
+  avatar.querySelector('img').alt = svc.brand || '';
+  // name
+  document.getElementById('drawer-name').textContent = getModelDisplayName(svc);
+  const profile = getServiceBrandProfile(svc);
+  const statusLabel = statusMeta[svc.status]?.label || svc.status || '';
+  document.getElementById('drawer-brand').textContent = `${profile.label} · ${statusLabel}`;
+  // stats
+  const sr = svc.is_dynamic && svc.success_rate != null ? svc.success_rate : null;
+  const req = svc.is_dynamic && svc.total_requests != null ? svc.total_requests : null;
+  const lat = svc.is_dynamic && svc.avg_latency_ms != null ? svc.avg_latency_ms : null;
+  const srClass = sr === null ? '' : sr >= 90 ? 'good' : sr >= 50 ? 'warn' : 'bad';
+  document.getElementById('drawer-stats').innerHTML = `
+    <div class="drawer-stat"><div class="drawer-stat-label">成功率</div><div class="drawer-stat-value ${srClass}">${sr !== null ? sr + '%' : '—'}</div></div>
+    <div class="drawer-stat"><div class="drawer-stat-label">总请求</div><div class="drawer-stat-value">${req !== null ? req.toLocaleString() : '—'}</div></div>
+    <div class="drawer-stat"><div class="drawer-stat-label">延迟</div><div class="drawer-stat-value">${lat !== null ? lat + 'ms' : '—'}</div></div>
+  `;
+  // daily heatmap
+  const dailyGrid = document.getElementById('drawer-daily');
+  if (svc.daily && svc.daily.length > 0) {
+    dailyGrid.innerHTML = svc.daily.map(d => {
+      const cls = d.total === 0 ? 'empty' : d.success_rate >= 90 ? 'good' : d.success_rate >= 50 ? 'warn' : 'bad';
+      const tip = `${d.date} · ${d.total > 0 ? '成功率 ' + d.success_rate + '% · ' + d.total + '次' : '无数据'}`;
+      return `<div class="daily-cell ${cls}" data-tip="${tip}"></div>`;
+    }).join('');
+  } else {
+    dailyGrid.innerHTML = Array(30).fill('<div class="daily-cell empty"></div>').join('');
+  }
+  // hourly
+  const hourlyDiv = document.getElementById('drawer-hourly');
+  if (svc.hourly && svc.hourly.length > 0) {
+    hourlyDiv.innerHTML = svc.hourly.map(h => {
+      if (h.total === 0) return '<div class="timeline-block empty"></div>';
+      const cls = h.success_rate >= 90 ? 'good' : h.success_rate >= 50 ? 'warn' : 'bad';
+      const tip = `${fmtHourLabel(h.hour)} · 成功率 ${h.success_rate}% · ${h.total}次`;
+      return `<div class="timeline-block ${cls}" data-tip="${tip}"></div>`;
+    }).join('');
+  } else {
+    hourlyDiv.innerHTML = Array(24).fill('<div class="timeline-block empty"></div>').join('');
+  }
+  // latency result reset
+  document.getElementById('latency-result').innerHTML = '';
+
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
 
 /* ─── 刷新循环 ─── */
 async function refreshData() {
