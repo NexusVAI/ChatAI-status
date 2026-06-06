@@ -413,7 +413,55 @@ body.dark-theme .theme-toggle .moon-icon { display: block; }
 .stat-value.red { color: var(--red-down); }
 .stat-value.blue { color: var(--text-primary); }
 .stat-sub { font-size: 12px; color: var(--text-tertiary); margin-top: 6px; text-transform: uppercase; letter-spacing: 0.06em; }
-@media (max-width: 640px) { .stats-grid { grid-template-columns: 1fr; } }
+.token-hero-card {
+    padding: 28px 32px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    background: var(--bg-card);
+    margin-bottom: 24px;
+    box-shadow: var(--shadow-md);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+}
+.token-hero-label {
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    margin-bottom: 8px;
+}
+.token-hero-value {
+    font-size: clamp(2.2rem, 5vw, 3.4rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+    font-family: 'JetBrains Mono', 'SF Mono', monospace;
+    color: var(--link-color);
+    line-height: 1;
+    transition: color 0.3s;
+}
+.token-hero-value.token-flash {
+    animation: token-flash 0.7s ease;
+}
+@keyframes token-flash {
+    0%, 100% { color: var(--link-color); }
+    40% { color: var(--green-ok); transform: scale(1.02); }
+}
+.token-hero-meta {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin-top: 8px;
+}
+.token-hero-side {
+    text-align: right;
+    font-size: 12px;
+    color: var(--text-tertiary);
+    font-variant-numeric: tabular-nums;
+}
+@media (max-width: 640px) { .stats-grid { grid-template-columns: 1fr; } .token-hero-side { text-align: left; width: 100%; } }
 
 /* Overall Status Bar */
 .status-bar-wrap {
@@ -896,6 +944,16 @@ body.light-theme .model-card:hover {
         <button class="window-tab" type="button" data-window="30" aria-pressed="false">30天</button>
     </div>
 
+    <!-- 全站 Token 累计 -->
+    <div class="token-hero-card" id="token-hero-card" aria-live="polite">
+        <div>
+            <div class="token-hero-label">开站以来累计 Token</div>
+            <div class="token-hero-value" id="token-total-value">—</div>
+            <div class="token-hero-meta" id="token-total-meta">正在拉取全站统计…</div>
+        </div>
+        <div class="token-hero-side" id="token-total-side">Chat + 开放平台 API</div>
+    </div>
+
     <!-- 事故横幅 -->
     <div class="incident-banner hidden" id="incident-banner">
         <div class="incident-glow"></div>
@@ -1112,7 +1170,7 @@ body.light-theme .model-card:hover {
                 <div class="drawer-section-title">API 端点</div>
                 <div class="api-endpoint-box">
                     <span class="api-endpoint-method">POST</span>
-                    <span id="drawer-endpoint">https://diusqgphvybnzazgopor.supabase.co/functions/v1/chat-gateway</span>
+                    <span id="drawer-endpoint">https://chat.nexusvai.xyz/functions/v1/chat-gateway</span>
                 </div>
                 <button class="latency-test-btn" id="latency-test-btn">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
@@ -1126,7 +1184,8 @@ body.light-theme .model-card:hover {
 
 <script>
 /* ─── 配置 ─── */
-const GATEWAY_URL = "https://diusqgphvybnzazgopor.supabase.co/functions/v1/chat-gateway";
+const GATEWAY_URL = "https://chat.nexusvai.xyz/functions/v1/chat-gateway";
+const TOKEN_FALLBACK = 3285841471;
 
 const BRAND_ICONS = {
   "DeepSeek": "deepseek-color (1).svg",
@@ -1480,8 +1539,11 @@ let currentBrandFilter = 'all';
 let currentWindowDays = 7;
 let currentSearch = '';      // 用户输入的搜索词，已 trim + toLowerCase
 let lastDynamicData = null;
+let lastModelCatalog = null;
 let lastFetchError = false;
 let lastFetchErrorDetail = null;
+let lastTokenTotal = null;
+let tokenCountupFirst = true;
 
 /* 搜索匹配：名字、厂商、人类可读线路任一命中即可。多关键字按空格分，全部命中才算
    注意：故意不把 svc.line_label（api456 / pwcen / supxh 等原始上游标识）放入
@@ -1554,44 +1616,166 @@ function normalizeModelKey(s) {
   return String(s || '').toLowerCase().replace(/[\s\-_\.]+/g, '').replace(/^chat/, '');
 }
 
-function mergeServices(dynamicModels) {
-  const dynList = (dynamicModels || []).map(dm => ({
-    name: dm.display_name || dm.model_id || 'Unknown',
-    display_name: dm.display_name || dm.model_id || 'Unknown',
-    model_id: dm.model_id || '',
-    brand: dm.brand || '',
-    line_label: dm.line_label || '',
-    status: dm.status || 'operational',
-    total_requests: dm.total_requests ?? null,
-    success_rate: dm.success_rate ?? null,
-    avg_latency_ms: dm.avg_latency_ms ?? null,
-    last_check: dm.last_check || null,
-    is_dynamic: true,
-    hourly: dm.hourly || [],
-    daily: dm.daily || [],
+function catalogEntryToService(entry) {
+  const displayName = entry.displayName || entry.id || 'Unknown';
+  return {
+    name: displayName,
+    display_name: displayName,
+    model_id: entry.id || '',
+    brand: entry.brand || '',
+    line_label: entry.lineLabel || '',
+    status: entry.disabled ? 'down' : 'operational',
+    total_requests: null,
+    success_rate: null,
+    avg_latency_ms: null,
+    last_check: null,
+    is_dynamic: false,
+    hourly: [],
+    daily: [],
     icon: '',
-  }));
+  };
+}
 
-  /* 用 API 数据的名称归一化建索引，用于去重 fallback */
-  const dynKeys = new Set(dynList.map(s => normalizeModelKey(s.name)));
+function overlayHealthData(svc, health) {
+  if (!health) return svc;
+  return {
+    ...svc,
+    status: health.status || svc.status,
+    total_requests: health.total_requests ?? null,
+    success_rate: health.success_rate ?? null,
+    avg_latency_ms: health.avg_latency_ms ?? null,
+    last_check: health.last_check || null,
+    is_dynamic: true,
+    hourly: health.hourly || [],
+    daily: health.daily || [],
+  };
+}
 
-  /* fallback 中未出现在 API 数据里的条目追加进去 */
-  for (const fb of FALLBACK_SERVICES) {
-    const fbKey = normalizeModelKey(fb.name);
-    if (!dynKeys.has(fbKey)) {
-      dynList.push({ ...fb, hourly: [], daily: [], is_dynamic: false });
+function mergeServices(dynamicModels) {
+  const healthById = new Map((dynamicModels || []).map(dm => [dm.model_id, dm]));
+  const catalog = (lastModelCatalog || []).filter(m => m.chat !== false && m.visible !== false);
+
+  let dynList;
+  if (catalog.length > 0) {
+    dynList = catalog.map(entry => overlayHealthData(catalogEntryToService(entry), healthById.get(entry.id)));
+    const catalogIds = new Set(catalog.map(m => m.id));
+    for (const dm of (dynamicModels || [])) {
+      if (!catalogIds.has(dm.model_id)) {
+        dynList.push(overlayHealthData(catalogEntryToService({
+          id: dm.model_id,
+          displayName: dm.display_name,
+          brand: dm.brand,
+          lineLabel: dm.line_label,
+        }), dm));
+      }
+    }
+  } else {
+    dynList = (dynamicModels || []).map(dm => overlayHealthData(catalogEntryToService({
+      id: dm.model_id,
+      displayName: dm.display_name,
+      brand: dm.brand,
+      lineLabel: dm.line_label,
+    }), dm));
+    const dynKeys = new Set(dynList.map(s => normalizeModelKey(s.name)));
+    for (const fb of FALLBACK_SERVICES) {
+      const fbKey = normalizeModelKey(fb.name);
+      if (!dynKeys.has(fbKey)) {
+        dynList.push({ ...fb, hourly: [], daily: [], is_dynamic: false });
+      }
     }
   }
 
-  /* 补品牌 */
   for (const svc of dynList) {
     if (!svc.brand) svc.brand = getServiceBrandProfile(svc).label;
     if (!svc.icon) svc.icon = getServiceIconSrc(svc);
   }
 
-  /* 计算人类可读线路标签，写入 svc.line_display */
   assignLineDisplayLabels(dynList);
   return dynList;
+}
+
+async function fetchModelCatalog() {
+  try {
+    const resp = await fetch(GATEWAY_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ endpoint: 'model_public_catalog' }),
+    });
+    const data = await resp.json();
+    if (!resp.ok) return null;
+    return Array.isArray(data?.models) ? data.models : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function formatTokenTotal(n) {
+  if (n == null || isNaN(n)) return '—';
+  return Math.round(Number(n)).toLocaleString('zh-CN');
+}
+
+function easeOutCubic(t) {
+  return 1 - Math.pow(1 - t, 3);
+}
+
+function animateTokenCount(el, start, target, duration) {
+  const t0 = performance.now();
+  function step(now) {
+    const t = Math.min(1, (now - t0) / duration);
+    const v = start + (target - start) * easeOutCubic(t);
+    el.textContent = formatTokenTotal(Math.round(v));
+    if (t < 1) requestAnimationFrame(step);
+    else el.textContent = formatTokenTotal(target);
+  }
+  requestAnimationFrame(step);
+}
+
+async function fetchSiteTokenTotal() {
+  try {
+    const resp = await fetch(GATEWAY_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ endpoint: 'platform_token_stats' }),
+    });
+    const data = await resp.json();
+    if (!resp.ok || data?.tokens == null) throw new Error('stats unavailable');
+    return {
+      tokens: Number(data.tokens),
+      chat_tokens: Number(data.chat_tokens || 0),
+      api_tokens: Number(data.api_tokens || 0),
+      source: data.source || 'live',
+      refreshed_at: data.refreshed_at || null,
+    };
+  } catch (e) {
+    return { tokens: TOKEN_FALLBACK, source: 'fallback', refreshed_at: null };
+  }
+}
+
+function renderTokenHero(stats) {
+  const valueEl = document.getElementById('token-total-value');
+  const metaEl = document.getElementById('token-total-meta');
+  if (!valueEl || !metaEl) return;
+  const target = Number(stats?.tokens || 0);
+  const prev = lastTokenTotal;
+  if (tokenCountupFirst) {
+    animateTokenCount(valueEl, 0, target, 1800);
+    tokenCountupFirst = false;
+  } else if (prev != null && prev !== target) {
+    animateTokenCount(valueEl, prev, target, 800);
+    valueEl.classList.remove('token-flash');
+    void valueEl.offsetWidth;
+    valueEl.classList.add('token-flash');
+  } else if (prev == null) {
+    valueEl.textContent = formatTokenTotal(target);
+  }
+  lastTokenTotal = target;
+  const srcLabel = stats?.source === 'live' ? '实时' : stats?.source === 'fallback' ? '离线估算' : (stats?.source || '未知');
+  const timeLabel = stats?.refreshed_at ? timeSince(stats.refreshed_at) + ' 刷新' : '每 30 秒更新';
+  metaEl.textContent = `${srcLabel} · ${timeLabel}`;
+  const sideEl = document.getElementById('token-total-side');
+  if (sideEl && stats?.chat_tokens != null && stats?.api_tokens != null) {
+    sideEl.textContent = `Chat ${formatTokenTotal(stats.chat_tokens)} · API ${formatTokenTotal(stats.api_tokens)}`;
+  }
 }
 
 function renderBrandChips(services) {
@@ -2063,13 +2247,24 @@ function openDrawer(svc) {
 
 /* ─── 刷新循环 ─── */
 async function refreshData() {
-  const data = await fetchModelHealth(currentWindowDays);
-  if (data) {
-    lastDynamicData = data;
+  const [healthData, catalogData, tokenStats] = await Promise.all([
+    fetchModelHealth(currentWindowDays),
+    fetchModelCatalog(),
+    fetchSiteTokenTotal(),
+  ]);
+
+  if (healthData) {
+    lastDynamicData = healthData;
     lastFetchError = false;
   } else {
     lastFetchError = true;
   }
+
+  if (catalogData) {
+    lastModelCatalog = catalogData;
+  }
+
+  renderTokenHero(tokenStats);
   renderPage();
 }
 
