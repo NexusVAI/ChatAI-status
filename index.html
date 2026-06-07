@@ -716,21 +716,20 @@ body.light-theme .model-card:hover {
 .timeline-link { color: var(--link-color); text-decoration: none; }
 .timeline-link:hover { text-decoration: underline; }
 
-/* Tooltip for timeline block */
-.timeline-block[data-tip] { position: relative; }
-.timeline-block[data-tip]:hover::after {
-    content: attr(data-tip);
-    position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
+/* Chart tooltip (positioned via JS to avoid edge clipping) */
+.chart-tooltip {
+    position: fixed; z-index: 1300;
     background: var(--tooltip-bg); color: var(--tooltip-fg);
     padding: 4px 8px; border-radius: var(--radius-sm);
-    font-size: 11px; white-space: nowrap; margin-bottom: 6px; z-index: 10;
+    font-size: 11px; white-space: nowrap;
     pointer-events: none;
+    opacity: 0; visibility: hidden;
+    transition: opacity 0.12s, visibility 0.12s;
+    max-width: calc(100vw - 16px);
+    overflow: hidden; text-overflow: ellipsis;
 }
-.timeline-block[data-tip]:hover::before {
-    content: ''; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
-    border: 4px solid transparent; border-top-color: var(--tooltip-bg);
-    margin-bottom: -2px; z-index: 10; pointer-events: none;
-}
+.chart-tooltip.visible { opacity: 1; visibility: visible; }
+.timeline-block[data-tip], .daily-cell[data-tip] { cursor: default; }
 
 /* ─── Detail Drawer ─── */
 .drawer-overlay {
@@ -800,15 +799,6 @@ body.light-theme .model-card:hover {
 .daily-cell.warn { background: var(--yellow-warn); opacity: 0.7; }
 .daily-cell.bad { background: var(--red-down); opacity: 0.7; }
 .daily-cell.empty { background: var(--border-color); opacity: 0.3; }
-.daily-cell[data-tip] { position: relative; }
-.daily-cell[data-tip]:hover::after {
-    content: attr(data-tip);
-    position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
-    background: var(--tooltip-bg); color: var(--tooltip-fg);
-    padding: 4px 8px; border-radius: var(--radius-sm);
-    font-size: 11px; white-space: nowrap; margin-bottom: 4px; z-index: 10;
-    pointer-events: none;
-}
 .daily-labels { display: flex; justify-content: space-between; margin-top: 6px; }
 .daily-labels span { font-size: 10px; color: var(--text-tertiary); }
 
@@ -2168,6 +2158,7 @@ if (windowTabs) {
   const close = () => {
     overlay.classList.remove('open');
     document.body.style.overflow = '';
+    window.hideChartTooltip?.();
   };
   closeBtn?.addEventListener('click', close);
   overlay?.addEventListener('click', (e) => { if (e.target === overlay) close(); });
@@ -2241,6 +2232,7 @@ function openDrawer(svc) {
   // latency result reset
   document.getElementById('latency-result').innerHTML = '';
 
+  window.hideChartTooltip?.();
   overlay.classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -2313,6 +2305,73 @@ setInterval(refreshData, 30000);
     });
 
     initTheme();
+})();
+
+/* ─── Chart tooltip (viewport-aware, fixes mobile edge clipping) ─── */
+(function setupChartTooltip() {
+    const tip = document.createElement('div');
+    tip.id = 'chart-tooltip';
+    tip.className = 'chart-tooltip';
+    tip.setAttribute('role', 'tooltip');
+    document.body.appendChild(tip);
+
+    let activeEl = null;
+    const margin = 8;
+    const gap = 8;
+
+    function positionTip(target) {
+        const text = target.getAttribute('data-tip');
+        if (!text) return;
+        tip.textContent = text;
+        tip.classList.add('visible');
+        const rect = target.getBoundingClientRect();
+        const tipRect = tip.getBoundingClientRect();
+        let left = rect.left + rect.width / 2 - tipRect.width / 2;
+        left = Math.max(margin, Math.min(left, window.innerWidth - tipRect.width - margin));
+        let top = rect.top - tipRect.height - gap;
+        if (top < margin) top = rect.bottom + gap;
+        tip.style.left = left + 'px';
+        tip.style.top = top + 'px';
+    }
+
+    function showTip(el) {
+        if (!el?.hasAttribute('data-tip')) return;
+        activeEl = el;
+        positionTip(el);
+    }
+
+    function hideTip() {
+        tip.classList.remove('visible');
+        activeEl = null;
+    }
+
+    window.hideChartTooltip = hideTip;
+
+    document.addEventListener('mouseover', (e) => {
+        const el = e.target.closest('.timeline-block[data-tip], .daily-cell[data-tip]');
+        if (el) showTip(el);
+    });
+
+    document.addEventListener('mouseout', (e) => {
+        const from = e.target.closest('.timeline-block[data-tip], .daily-cell[data-tip]');
+        if (!from) return;
+        const to = e.relatedTarget?.closest?.('.timeline-block[data-tip], .daily-cell[data-tip]');
+        if (to !== from) hideTip();
+    });
+
+    document.addEventListener('touchstart', (e) => {
+        const el = e.target.closest('.timeline-block[data-tip], .daily-cell[data-tip]');
+        if (el) showTip(el);
+    }, { passive: true });
+
+    document.addEventListener('click', (e) => {
+        if (!activeEl) return;
+        const el = e.target.closest('.timeline-block[data-tip], .daily-cell[data-tip]');
+        if (el !== activeEl) hideTip();
+    });
+
+    window.addEventListener('scroll', () => { if (activeEl) positionTip(activeEl); }, true);
+    window.addEventListener('resize', () => { if (activeEl) positionTip(activeEl); });
 })();
 </script>
 </body>
