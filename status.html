@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>服务状态 | NexusV</title>
+    <link rel="icon" type="image/svg+xml" href="VAI-logo.svg">
+    <link rel="apple-touch-icon" href="logo/Cancri.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+/* ========== Design Tokens ========== */
+:root {
+    --background: #ffffff;
+    --foreground: #111111;
+    --card: #ffffff;
+    --card-foreground: #111111;
+    --muted: #f5f5f5;
+    --muted-foreground: #737373;
+    --border: #e5e5e5;
+    --ring: #111111;
+    --radius: 0.5rem;
+    --green: #22c55e;
+    --green-bg: #f0fdf4;
+    --green-text: #15803d;
+    --yellow: #eab308;
+    --yellow-bg: #fefce8;
+    --yellow-text: #a16207;
+    --red: #ef4444;
+    --red-bg: #fef2f2;
+    --red-text: #dc2626;
+    --gray: #d1d5db;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.dark {
+    --background: #0a0a0a;
+    --foreground: #fafafa;
+    --card: #171717;
+    --card-foreground: #fafafa;
+    --muted: #262626;
+    --muted-foreground: #a3a3a3;
+    --border: #2e2e2e;
+    --ring: #fafafa;
+    --green-bg: rgba(34, 197, 94, 0.12);
+    --green-text: #4ade80;
+    --yellow-bg: rgba(234, 179, 8, 0.12);
+    --yellow-text: #facc15;
+    --red-bg: rgba(239, 68, 68, 0.12);
+    --red-text: #f87171;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: var(--font);
+    background: var(--background);
+    color: var(--foreground);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.container {
+    max-width: 42rem;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+@media (min-width: 768px) {
+    .container { padding: 2rem 1.5rem; }
+}
+
+/* ========== Header ========== */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 2rem;
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--foreground);
+}
+
+.logo-link img {
+    height: 28px;
+    width: auto;
+}
+
+.logo-link span {
+    font-weight: 600;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+}
+
+.header-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.btn-subscribe {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--foreground);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+}
+
+.btn-subscribe:hover {
+    background: var(--muted);
+}
+
+.btn-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--foreground);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.btn-icon:hover { background: var(--muted); }
+
+/* ========== Status Overview Card ========== */
+.status-overview {
+    padding: 24px;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: background 0.3s;
+}
+
+.status-overview.operational {
+    background: var(--green-bg);
+}
+
+.status-overview.degraded {
+    background: var(--yellow-bg);
+}
+
+.status-overview.incident {
+    background: var(--red-bg);
+}
+
+.status-icon-ring {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.status-overview.operational .status-icon-ring { background: var(--green); }
+.status-overview.degraded .status-icon-ring { background: var(--yellow); }
+.status-overview.incident .status-icon-ring { background: var(--red); }
+
+.status-icon-ring svg {
+    color: white;
+    width: 20px;
+    height: 20px;
+}
+
+/* Pulse animation for incident */
+.status-overview.incident .status-icon-ring::before,
+.status-overview.degraded .status-icon-ring::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    background: inherit;
+    opacity: 0.3;
+    animation: pulse-ring 2s ease-in-out infinite;
+}
+
+@keyframes pulse-ring {
+    0%, 100% { transform: scale(1); opacity: 0.3; }
+    50% { transform: scale(1.3); opacity: 0.1; }
+}
+
+.status-overview-text h2 {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.status-overview.operational .status-overview-text h2 { color: var(--green-text); }
+.status-overview.degraded .status-overview-text h2 { color: var(--yellow-text); }
+.status-overview.incident .status-overview-text h2 { color: var(--red-text); }
+
+.status-overview-text p {
+    font-size: 14px;
+    color: var(--muted-foreground);
+    margin-top: 2px;
+}
+
+/* ========== System Status Card ========== */
+.system-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.system-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.system-card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted-foreground);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.period-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--muted-foreground);
+}
+
+.period-nav button {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--foreground);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+}
+
+.period-nav button:hover { background: var(--muted); }
+
+.service-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 0;
+    border-top: 1px solid var(--border);
+}
+
+.service-status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.service-status-dot.operational { background: var(--green); }
+.service-status-dot.degraded { background: var(--yellow); }
+.service-status-dot.incident { background: var(--red); }
+
+.service-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.service-name {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.service-uptime {
+    font-size: 14px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--foreground);
+    white-space: nowrap;
+    margin-left: auto;
+}
+
+.service-uptime.warn { color: var(--yellow-text); }
+.service-uptime.bad { color: var(--red-text); }
+
+/* Uptime Bar */
+.uptime-bar-wrap {
+    margin-top: 10px;
+}
+
+.uptime-bar {
+    display: flex;
+    height: 24px;
+    gap: 2px;
+}
+
+.uptime-bar-seg {
+    flex: 1;
+    border-radius: 3px;
+    transition: opacity 0.15s;
+    cursor: default;
+    position: relative;
+}
+
+.uptime-bar-seg:hover { opacity: 0.8; }
+
+.uptime-bar-seg.operational { background: var(--green); }
+.uptime-bar-seg.degraded { background: var(--yellow); }
+.uptime-bar-seg.incident { background: var(--red); }
+.uptime-bar-seg.empty { background: var(--gray); opacity: 0.3; }
+
+.uptime-bar-axis {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+    font-size: 11px;
+    color: var(--muted-foreground);
+}
+
+/* Tooltip */
+.tooltip {
+    position: fixed;
+    z-index: 1300;
+    background: var(--foreground);
+    color: var(--background);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.12s;
+}
+
+.tooltip.visible { opacity: 1; }
+
+/* ========== History Events Card ========== */
+.history-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.history-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted-foreground);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.month-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.month-nav button {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--foreground);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+}
+
+.month-nav button:hover { background: var(--muted); }
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+
+.calendar-weekday {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted-foreground);
+    padding: 8px 0;
+}
+
+.calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    border-radius: 8px;
+    cursor: default;
+    transition: all 0.15s;
+    position: relative;
+}
+
+.calendar-day.empty { visibility: hidden; }
+
+.calendar-day.today {
+    font-weight: 600;
+    background: var(--muted);
+}
+
+.calendar-day.incident {
+    border: 2px solid var(--yellow);
+    font-weight: 600;
+}
+
+.calendar-day.incident:hover {
+    background: var(--yellow-bg);
+}
+
+.calendar-day.has-data {
+    cursor: pointer;
+}
+
+.calendar-day.has-data:hover {
+    background: var(--muted);
+}
+
+/* Day detail popover */
+.day-popover {
+    position: fixed;
+    z-index: 1200;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    min-width: 200px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.15s, visibility 0.15s;
+}
+
+.day-popover.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.day-popover-title {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.day-popover-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--muted-foreground);
+    padding: 3px 0;
+}
+
+.day-popover-row strong {
+    color: var(--foreground);
+    font-variant-numeric: tabular-nums;
+}
+
+/* ========== Footer ========== */
+footer {
+    text-align: center;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--muted-foreground);
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+footer a {
+    color: var(--muted-foreground);
+    text-decoration: none;
+    transition: color 0.15s;
+}
+
+footer a:hover { color: var(--foreground); }
+
+/* ========== Loading / Error ========== */
+.loading-skeleton {
+    background: linear-gradient(90deg, var(--muted) 25%, transparent 50%, var(--muted) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+    height: 16px;
+}
+
+@keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.error-banner {
+    background: var(--red-bg);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    padding: 14px 18px;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    font-size: 13px;
+    color: var(--red-text);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.error-banner.hidden { display: none; }
+
+/* ========== Responsive ========== */
+@media (max-width: 480px) {
+    .container { padding: 1.5rem 1rem; }
+    .status-overview { padding: 18px; gap: 12px; }
+    .status-icon-ring { width: 36px; height: 36px; }
+    .status-overview-text h2 { font-size: 16px; }
+    .system-card, .history-card { padding: 16px; }
+    .service-row { flex-wrap: wrap; }
+    .uptime-bar { height: 18px; }
+}
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Header -->
+    <header>
+        <a href="https://www.nexusvai.xyz/" class="logo-link">
+            <img src="VAI-logo.svg" alt="NexusV">
+            <span>NexusV</span>
+        </a>
+        <div class="header-actions">
+            <a href="index.html" class="btn-subscribe">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                模型详情
+            </a>
+            <button class="btn-icon" id="theme-toggle" aria-label="切换主题">
+                <svg class="sun-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                <svg class="moon-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Error Banner -->
+    <div class="error-banner hidden" id="error-banner">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span id="error-text">无法连接到后端，将显示缓存数据。</span>
+    </div>
+
+    <!-- Status Overview -->
+    <div class="status-overview operational" id="status-overview">
+        <div class="status-icon-ring">
+            <svg id="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 6 9 17l-5-5"/>
+            </svg>
+        </div>
+        <div class="status-overview-text">
+            <h2 id="overall-title">加载中...</h2>
+            <p id="overall-desc">正在从后端获取数据...</p>
+        </div>
+    </div>
+
+    <!-- System Status Card -->
+    <div class="system-card">
+        <div class="system-card-header">
+            <span class="system-card-title">系统运行时间</span>
+            <div class="period-nav">
+                <button id="period-prev" aria-label="上一期">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                </button>
+                <span id="period-label">加载中...</span>
+                <button id="period-next" aria-label="下一期">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- API Service Row -->
+        <div class="service-row" id="api-service-row">
+            <div class="service-status-dot operational" id="api-dot"></div>
+            <div class="service-info">
+                <div class="service-name">API 服务</div>
+                <div class="uptime-bar-wrap">
+                    <div class="uptime-bar" id="api-uptime-bar"></div>
+                    <div class="uptime-bar-axis">
+                        <span>90天前</span>
+                        <span>45天前</span>
+                        <span>今天</span>
+                    </div>
+                </div>
+            </div>
+            <div class="service-uptime" id="api-uptime">--%</div>
+        </div>
+
+        <!-- Web Chat Service Row -->
+        <div class="service-row" id="chat-service-row">
+            <div class="service-status-dot operational" id="chat-dot"></div>
+            <div class="service-info">
+                <div class="service-name">网页对话服务</div>
+                <div class="uptime-bar-wrap">
+                    <div class="uptime-bar" id="chat-uptime-bar"></div>
+                    <div class="uptime-bar-axis">
+                        <span>90天前</span>
+                        <span>45天前</span>
+                        <span>今天</span>
+                    </div>
+                </div>
+            </div>
+            <div class="service-uptime" id="chat-uptime">--%</div>
+        </div>
+    </div>
+
+    <!-- History Events Card -->
+    <div class="history-card">
+        <div class="history-header">
+            <span class="history-title">事件历史</span>
+            <div class="month-nav">
+                <button id="month-prev" aria-label="上月">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                </button>
+                <span id="month-label">2026年6月</span>
+                <button id="month-next" aria-label="下月">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                </button>
+            </div>
+        </div>
+        <div class="calendar-grid" id="calendar-grid"></div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <span>数据由后端实时聚合</span>
+        <span style="color:var(--border)">·</span>
+        <span>基于 model_health_logs 评分</span>
+        <span style="color:var(--border)">·</span>
+        <a href="index.html">查看模型详情</a>
+    </footer>
+
+</div>
+
+<!-- Tooltip -->
+<div class="tooltip" id="tooltip"></div>
+
+<!-- Day Popover -->
+<div class="day-popover" id="day-popover">
+    <div class="day-popover-title" id="popover-title"></div>
+    <div id="popover-content"></div>
+</div>
+
+<script>
+/* ================================================================
+   Configuration
+   ================================================================ */
+const GATEWAY_URL = "https://chat.nexusvai.xyz/functions/v1/chat-gateway";
+const REFRESH_INTERVAL = 60000; // 60s
+const UPTIME_BAR_DAYS = 90;
+
+/* ================================================================
+   State
+   ================================================================ */
+let healthData = null;          // Raw response from model_health
+let dailyAggregates = null;     // Aggregated daily data for calendar
+let currentMonth = new Date();  // Calendar month view
+let fetchError = false;
+let fetchErrorMsg = '';
+
+/* ================================================================
+   Scoring Algorithm
+   ================================================================
+   核心逻辑：错误率 > 成功率 → 异常
+   - error_rate = total_errors / total_requests * 100
+   - success_rate = 100 - error_rate
+   - 判定：
+     error_rate <= 10%  → operational (绿)
+     error_rate <= 50%  → degraded (黄)
+     error_rate > 50%   → incident (红)
+   ================================================================ */
+
+function classifyStatus(successRate) {
+    if (successRate == null) return 'operational';
+    if (successRate >= 90) return 'operational';
+    if (successRate >= 50) return 'degraded';
+    return 'incident';
+}
+
+function classifyBarColor(successRate) {
+    if (successRate == null || successRate === 0) return 'empty';
+    if (successRate >= 90) return 'operational';
+    if (successRate >= 50) return 'degraded';
+    return 'incident';
+}
+
+/* ================================================================
+   Data Fetching
+   ================================================================ */
+async function fetchHealthData() {
+    try {
+        const resp = await fetch(GATEWAY_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ endpoint: 'model_health', window_days: 30 }),
+        });
+        if (!resp.ok) {
+            fetchError = true;
+            fetchErrorMsg = `HTTP ${resp.status}`;
+            return null;
+        }
+        const data = await resp.json();
+        fetchError = false;
+        fetchErrorMsg = '';
+        return data;
+    } catch (e) {
+        fetchError = true;
+        fetchErrorMsg = e?.message || '网络异常';
+        return null;
+    }
+}
+
+/* ================================================================
+   Aggregation: Models → Service Categories
+   ================================================================
+   后端不区分 Web Chat / API，所有 model 合并。
+   两行显示相同聚合数据，标记为"共享上游"。
+   ================================================================ */
+
+function aggregateService(models) {
+    if (!models || models.length === 0) {
+        return { successRate: null, totalRequests: 0, avgLatency: null, daily: [], hourly: [] };
+    }
+
+    let totalRequests = 0;
+    let weightedSuccess = 0;
+    let weightedLatency = 0;
+    let latencyCount = 0;
+
+    for (const m of models) {
+        const req = m.total_requests || 0;
+        const sr = m.success_rate ?? 100;
+        const lat = m.avg_latency_ms;
+
+        totalRequests += req;
+        weightedSuccess += req * sr;
+        if (lat != null) {
+            weightedLatency += req * lat;
+            latencyCount += req;
+        }
+    }
+
+    const successRate = totalRequests > 0 ? weightedSuccess / totalRequests : 100;
+    const avgLatency = latencyCount > 0 ? Math.round(weightedLatency / latencyCount) : null;
+
+    // Aggregate daily data across all models
+    const dailyMap = new Map(); // date → { total, success }
+    const hourlyMap = new Map(); // hour → { total, success }
+
+    for (const m of models) {
+        if (m.daily) {
+            for (const d of m.daily) {
+                const key = d.date;
+                const existing = dailyMap.get(key) || { date: key, total: 0, success: 0 };
+                existing.total += d.total || 0;
+                existing.success += Math.round((d.total || 0) * (d.success_rate || 0) / 100);
+                dailyMap.set(key, existing);
+            }
+        }
+        if (m.hourly) {
+            for (const h of m.hourly) {
+                const key = h.hour;
+                const existing = hourlyMap.get(key) || { hour: key, total: 0, success: 0 };
+                existing.total += h.total || 0;
+                existing.success += Math.round((h.total || 0) * (h.success_rate || 0) / 100);
+                hourlyMap.set(key, existing);
+            }
+        }
+    }
+
+    const daily = Array.from(dailyMap.values())
+        .map(d => ({
+            date: d.date,
+            total: d.total,
+            success_rate: d.total > 0 ? Math.round(d.success / d.total * 100) : null,
+        }))
+        .sort((a, b) => a.date.localeCompare(b.date));
+
+    const hourly = Array.from(hourlyMap.values())
+        .map(h => ({
+            hour: h.hour,
+            total: h.total,
+            success_rate: h.total > 0 ? Math.round(h.success / h.total * 100) : null,
+        }))
+        .sort((a, b) => a.hour.localeCompare(b.hour));
+
+    return { successRate, totalRequests, avgLatency, daily, hourly };
+}
+
+/* ================================================================
+   Rendering: Status Overview
+   ================================================================ */
+function renderStatusOverview(apiStatus, chatStatus) {
+    const overview = document.getElementById('status-overview');
+    const icon = document.getElementById('status-icon');
+    const title = document.getElementById('overall-title');
+    const desc = document.getElementById('overall-desc');
+
+    // Determine overall status (worst of the two)
+    const statuses = [apiStatus, chatStatus];
+    let overall;
+    if (statuses.some(s => s === 'incident')) {
+        overall = 'incident';
+    } else if (statuses.some(s => s === 'degraded')) {
+        overall = 'degraded';
+    } else {
+        overall = 'operational';
+    }
+
+    overview.className = `status-overview ${overall}`;
+
+    // Icon
+    if (overall === 'operational') {
+        icon.innerHTML = '<path d="M20 6 9 17l-5-5"/>';
+    } else {
+        icon.innerHTML = '<line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>';
+    }
+
+    // Text
+    const texts = {
+        operational: { title: '一切运行正常', desc: '所有系统均按预期运行。' },
+        degraded: { title: '部分服务性能降级', desc: '检测到部分服务响应延迟或成功率下降。' },
+        incident: { title: '服务异常', desc: '检测到服务中断，团队正在处理。' },
+    };
+
+    title.textContent = texts[overall].title;
+    desc.textContent = texts[overall].desc;
+}
+
+/* ================================================================
+   Rendering: Uptime Bars
+   ================================================================ */
+function renderUptimeBar(containerId, dailyData) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = '';
+
+    // Take last N days
+    const days = dailyData.slice(-UPTIME_BAR_DAYS);
+
+    for (const d of days) {
+        const seg = document.createElement('div');
+        const cls = d.total === 0 ? 'empty' : classifyBarColor(d.success_rate);
+        seg.className = `uptime-bar-seg ${cls}`;
+        seg.setAttribute('data-tip', `${d.date} · ${d.total > 0 ? d.success_rate + '% 成功率 · ' + d.total + ' 请求' : '无数据'}`);
+        container.appendChild(seg);
+    }
+
+    // Fill empty if less than UPTIME_BAR_DAYS
+    const emptyCount = UPTIME_BAR_DAYS - days.length;
+    for (let i = 0; i < emptyCount; i++) {
+        const seg = document.createElement('div');
+        seg.className = 'uptime-bar-seg empty';
+        container.insertBefore(seg, container.firstChild);
+    }
+}
+
+function renderServiceRow(prefix, serviceData) {
+    const dot = document.getElementById(`${prefix}-dot`);
+    const uptimeEl = document.getElementById(`${prefix}-uptime`);
+
+    const status = classifyStatus(serviceData.successRate);
+    dot.className = `service-status-dot ${status}`;
+
+    if (serviceData.successRate != null) {
+        const rate = serviceData.successRate.toFixed(2);
+        uptimeEl.textContent = `${rate}%`;
+        uptimeEl.className = `service-uptime ${serviceData.successRate >= 90 ? '' : serviceData.successRate >= 50 ? 'warn' : 'bad'}`;
+    } else {
+        uptimeEl.textContent = '--%';
+        uptimeEl.className = 'service-uptime';
+    }
+}
+
+/* ================================================================
+   Rendering: Calendar
+   ================================================================ */
+function renderCalendar() {
+    const grid = document.getElementById('calendar-grid');
+    const label = document.getElementById('month-label');
+    if (!grid) return;
+
+    const year = currentMonth.getFullYear();
+    const month = currentMonth.getMonth();
+
+    label.textContent = `${year}年${month + 1}月`;
+
+    // Weekday headers
+    const weekdays = ['一', '二', '三', '四', '五', '六', '日'];
+    grid.innerHTML = weekdays.map(d => `<div class="calendar-weekday">${d}</div>`).join('');
+
+    // First day of month (0=Sun → adjust to Mon-based)
+    const firstDay = new Date(year, month, 1).getDay();
+    const offset = firstDay === 0 ? 6 : firstDay - 1; // Mon=0, Sun=6
+
+    // Days in month
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    const today = new Date();
+    const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+
+    // Build daily lookup from health data
+    const dailyLookup = new Map();
+    if (dailyAggregates) {
+        for (const d of dailyAggregates) {
+            dailyLookup.set(d.date, d);
+        }
+    }
+
+    // Empty cells before first day
+    for (let i = 0; i < offset; i++) {
+        grid.innerHTML += '<div class="calendar-day empty"></div>';
+    }
+
+    // Day cells
+    for (let day = 1; day <= daysInMonth; day++) {
+        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const dayData = dailyLookup.get(dateStr);
+        const isToday = dateStr === todayStr;
+        const hasData = dayData && dayData.total > 0;
+        const isIncident = hasData && dayData.success_rate < 90;
+
+        let cls = 'calendar-day';
+        if (isToday) cls += ' today';
+        if (isIncident) cls += ' incident';
+        if (hasData) cls += ' has-data';
+
+        grid.innerHTML += `<div class="${cls}" data-date="${dateStr}">${day}</div>`;
+    }
+
+    // Click handler for day cells
+    grid.querySelectorAll('.calendar-day.has-data').forEach(cell => {
+        cell.addEventListener('click', (e) => {
+            const date = cell.getAttribute('data-date');
+            const data = dailyLookup.get(date);
+            if (data) showDayPopover(cell, date, data);
+        });
+    });
+}
+
+function showDayPopover(anchor, date, data) {
+    const popover = document.getElementById('day-popover');
+    const titleEl = document.getElementById('popover-title');
+    const contentEl = document.getElementById('popover-content');
+
+    titleEl.textContent = date;
+    const sr = data.success_rate ?? '--';
+    const cls = data.success_rate >= 90 ? 'color:var(--green)' : data.success_rate >= 50 ? 'color:var(--yellow)' : 'color:var(--red)';
+
+    contentEl.innerHTML = `
+        <div class="day-popover-row"><span>总请求</span><strong>${(data.total || 0).toLocaleString()}</strong></div>
+        <div class="day-popover-row"><span>成功率</span><strong style="${cls}">${typeof sr === 'number' ? sr + '%' : sr}</strong></div>
+    `;
+
+    // Position
+    const rect = anchor.getBoundingClientRect();
+    popover.style.left = `${rect.left + rect.width / 2 - 100}px`;
+    popover.style.top = `${rect.bottom + 8}px`;
+
+    // Clamp to viewport
+    requestAnimationFrame(() => {
+        const pr = popover.getBoundingClientRect();
+        if (pr.right > window.innerWidth - 8) {
+            popover.style.left = `${window.innerWidth - pr.width - 8}px`;
+        }
+        if (pr.left < 8) {
+            popover.style.left = '8px';
+        }
+        if (pr.bottom > window.innerHeight - 8) {
+            popover.style.top = `${rect.top - pr.height - 8}px`;
+        }
+    });
+
+    popover.classList.add('visible');
+
+    // Close on outside click
+    const close = (ev) => {
+        if (!popover.contains(ev.target) && ev.target !== anchor) {
+            popover.classList.remove('visible');
+            document.removeEventListener('click', close);
+        }
+    };
+    setTimeout(() => document.addEventListener('click', close), 0);
+}
+
+/* ================================================================
+   Period Label
+   ================================================================ */
+function updatePeriodLabel() {
+    const label = document.getElementById('period-label');
+    const now = new Date();
+    const start = new Date(now);
+    start.setDate(start.getDate() - 90);
+    const fmt = (d) => `${d.getFullYear()}年${d.getMonth() + 1}月`;
+    label.textContent = `${fmt(start)} - ${fmt(now)}`;
+}
+
+/* ================================================================
+   Error Banner
+   ================================================================ */
+function renderErrorBanner() {
+    const banner = document.getElementById('error-banner');
+    const text = document.getElementById('error-text');
+    if (fetchError) {
+        banner.classList.remove('hidden');
+        text.textContent = `后端暂时不可用 (${fetchErrorMsg})，将显示离线数据。`;
+    } else {
+        banner.classList.add('hidden');
+    }
+}
+
+/* ================================================================
+   Main Render
+   ================================================================ */
+function render() {
+    if (!healthData || !healthData.models) {
+        // No data yet — show loading state
+        document.getElementById('overall-title').textContent = '加载中...';
+        document.getElementById('overall-desc').textContent = '正在从后端获取数据...';
+        return;
+    }
+
+    const models = healthData.models;
+
+    // Aggregate into service categories
+    const apiService = aggregateService(models);
+    const chatService = aggregateService(models); // Same data for now
+
+    // Status classification
+    const apiStatus = classifyStatus(apiService.successRate);
+    const chatStatus = classifyStatus(chatService.successRate);
+
+    // Render overview
+    renderStatusOverview(apiStatus, chatStatus);
+
+    // Render service rows
+    renderServiceRow('api', apiService);
+    renderServiceRow('chat', chatService);
+
+    // Render uptime bars
+    renderUptimeBar('api-uptime-bar', apiService.daily);
+    renderUptimeBar('chat-uptime-bar', chatService.daily);
+
+    // Calendar data (use combined daily)
+    dailyAggregates = apiService.daily;
+    renderCalendar();
+
+    // Period label
+    updatePeriodLabel();
+
+    // Error banner
+    renderErrorBanner();
+}
+
+/* ================================================================
+   Refresh Loop
+   ================================================================ */
+async function refresh() {
+    const data = await fetchHealthData();
+    if (data) {
+        healthData = data;
+    }
+    render();
+}
+
+/* ================================================================
+   Theme Toggle
+   ================================================================ */
+(function setupTheme() {
+    const toggle = document.getElementById('theme-toggle');
+    const sunIcon = toggle.querySelector('.sun-icon');
+    const moonIcon = toggle.querySelector('.moon-icon');
+
+    function applyTheme(dark) {
+        document.documentElement.classList.toggle('dark', dark);
+        sunIcon.style.display = dark ? 'none' : 'block';
+        moonIcon.style.display = dark ? 'block' : 'none';
+        try { localStorage.setItem('status-theme', dark ? 'dark' : 'light'); } catch (e) {}
+    }
+
+    let isDark = false;
+    try { isDark = localStorage.getItem('status-theme') === 'dark'; } catch (e) {}
+    applyTheme(isDark);
+
+    toggle.addEventListener('click', () => {
+        isDark = !isDark;
+        applyTheme(isDark);
+    });
+})();
+
+/* ================================================================
+   Calendar Navigation
+   ================================================================ */
+document.getElementById('month-prev')?.addEventListener('click', () => {
+    currentMonth.setMonth(currentMonth.getMonth() - 1);
+    renderCalendar();
+});
+
+document.getElementById('month-next')?.addEventListener('click', () => {
+    currentMonth.setMonth(currentMonth.getMonth() + 1);
+    renderCalendar();
+});
+
+/* ================================================================
+   Tooltip (uptime bar hover)
+   ================================================================ */
+(function setupTooltip() {
+    const tip = document.getElementById('tooltip');
+
+    document.addEventListener('mouseover', (e) => {
+        const el = e.target.closest('[data-tip]');
+        if (!el) return;
+        tip.textContent = el.getAttribute('data-tip');
+        tip.classList.add('visible');
+        const rect = el.getBoundingClientRect();
+        tip.style.left = `${rect.left + rect.width / 2 - tip.offsetWidth / 2}px`;
+        tip.style.top = `${rect.top - tip.offsetHeight - 6}px`;
+    });
+
+    document.addEventListener('mouseout', (e) => {
+        const el = e.target.closest('[data-tip]');
+        if (el) tip.classList.remove('visible');
+    });
+})();
+
+/* ================================================================
+   Init
+   ================================================================ */
+refresh();
+setInterval(refresh, REFRESH_INTERVAL);
+
+</script>
+</body>
+</html>
