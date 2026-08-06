@@ -707,7 +707,8 @@ const UPTIME_BAR_DAYS = 90;
 /* ================================================================
    State
    ================================================================ */
-let healthData = null;          // Raw response from model_health
+let apiData = null;             // Raw response from model_health (api-chat)
+let chatData = null;            // Raw response from model_health (chat + image/video)
 let dailyAggregates = null;     // Aggregated daily data for calendar
 let currentMonth = new Date();  // Calendar month view
 let fetchError = false;
@@ -742,12 +743,14 @@ function classifyBarColor(successRate) {
 /* ================================================================
    Data Fetching
    ================================================================ */
-async function fetchHealthData() {
+async function fetchHealthData(endpointFilter = '') {
     try {
+        const body = { endpoint: 'model_health', window_days: UPTIME_BAR_DAYS };
+        if (endpointFilter) body.endpoint_filter = endpointFilter;
         const resp = await fetch(GATEWAY_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ endpoint: 'model_health', window_days: 30 }),
+            body: JSON.stringify(body),
         });
         if (!resp.ok) {
             fetchError = true;
@@ -768,8 +771,8 @@ async function fetchHealthData() {
 /* ================================================================
    Aggregation: Models → Service Categories
    ================================================================
-   后端不区分 Web Chat / API，所有 model 合并。
-   两行显示相同聚合数据，标记为"共享上游"。
+   后端已通过 endpoint_filter 分别返回 API (api-chat) 和 网页 (chat/image/video)。
+   两行分别聚合，日历展示合并数据。
    ================================================================ */
 
 function aggregateService(models) {
@@ -840,6 +843,22 @@ function aggregateService(models) {
         .sort((a, b) => a.hour.localeCompare(b.hour));
 
     return { successRate, totalRequests, avgLatency, daily, hourly };
+}
+
+function mergeDaily(dailyA, dailyB) {
+    const map = new Map();
+    for (const d of (dailyA || [])) {
+        map.set(d.date, { date: d.date, total: d.total || 0, success: d.success_rate != null ? Math.round((d.total || 0) * d.success_rate / 100) : 0 });
+    }
+    for (const d of (dailyB || [])) {
+        const existing = map.get(d.date) || { date: d.date, total: 0, success: 0 };
+        existing.total += d.total || 0;
+        existing.success += d.success_rate != null ? Math.round((d.total || 0) * d.success_rate / 100) : 0;
+        map.set(d.date, existing);
+    }
+    return Array.from(map.values())
+        .map(d => ({ date: d.date, total: d.total, success_rate: d.total > 0 ? Math.round(d.success / d.total * 100) : null }))
+        .sort((a, b) => a.date.localeCompare(b.date));
 }
 
 /* ================================================================
@@ -1068,18 +1087,16 @@ function renderErrorBanner() {
    Main Render
    ================================================================ */
 function render() {
-    if (!healthData || !healthData.models) {
+    if (!apiData || !chatData) {
         // No data yet — show loading state
         document.getElementById('overall-title').textContent = '加载中...';
         document.getElementById('overall-desc').textContent = '正在从后端获取数据...';
         return;
     }
 
-    const models = healthData.models;
-
     // Aggregate into service categories
-    const apiService = aggregateService(models);
-    const chatService = aggregateService(models); // Same data for now
+    const apiService = aggregateService(apiData.models || []);
+    const chatService = aggregateService(chatData.models || []);
 
     // Status classification
     const apiStatus = classifyStatus(apiService.successRate);
@@ -1096,8 +1113,8 @@ function render() {
     renderUptimeBar('api-uptime-bar', apiService.daily);
     renderUptimeBar('chat-uptime-bar', chatService.daily);
 
-    // Calendar data (use combined daily)
-    dailyAggregates = apiService.daily;
+    // Calendar data (merge API + Web Chat daily)
+    dailyAggregates = mergeDaily(apiService.daily, chatService.daily);
     renderCalendar();
 
     // Period label
@@ -1111,10 +1128,12 @@ function render() {
    Refresh Loop
    ================================================================ */
 async function refresh() {
-    const data = await fetchHealthData();
-    if (data) {
-        healthData = data;
-    }
+    const [api, chat] = await Promise.all([
+        fetchHealthData('api-chat'),
+        fetchHealthData('chat,image,video,video-task'),
+    ]);
+    if (api) apiData = api;
+    if (chat) chatData = chat;
     render();
 }
 
